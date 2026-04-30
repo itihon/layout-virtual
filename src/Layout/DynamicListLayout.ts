@@ -140,6 +140,9 @@ export default class DynamicListLayout {
         itemsToRemove.push(itemToRemove);
         renderedItems.delete(idx);
         renderedIndeces.delete(itemToRemove);
+          
+        // update min and max item height
+        this._updateItemHeightBounds(itemToRemove);
       }
     }
 
