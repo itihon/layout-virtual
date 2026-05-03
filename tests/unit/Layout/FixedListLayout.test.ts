@@ -78,11 +78,11 @@ describe('FixedListLayout', () => {
       { offsetTop: 0, height, data: 9, render },
     ];
 
-    layout = new FixedListLayout();
+    layout = new FixedListLayout({ container: document.createElement('div') });
     store = new ArrayItemStore();
     eventBus = new EventBus<IEventMap>();
 
-    layout.attach(document.createElement('div'), eventBus, store);
+    layout.attach(eventBus, store);
   });
 
   test('calculates offset on sequential insertion in the beginning', async () => {
@@ -343,8 +343,8 @@ describe('FixedListLayout', () => {
     const onMeasureEndCB = vi.fn();
 
     layout.detach();
-    layout = new FixedListLayout({ maxMeasuredPortionSize: 5 });
-    layout.attach(document.createElement('div'), eventBus, store);
+    layout = new FixedListLayout({ maxMeasuredPortionSize: 5, container: document.createElement('div') });
+    layout.attach(eventBus, store);
 
     layout.onMeasureStart(range => onMeasureStartCB(range.startIndex));
     layout.onPortionMeasured(range => onPortionMeasuredCB(range.startIndex, range.endIndex, range.total, range.startOffset, range.endOffset));
@@ -416,8 +416,8 @@ describe('FixedListLayout', () => {
     const onMeasureEndCB = vi.fn();
 
     layout.detach();
-    layout = new FixedListLayout({ maxMeasuredPortionSize: 9 });
-    layout.attach(document.createElement('div'), eventBus, store);
+    layout = new FixedListLayout({ maxMeasuredPortionSize: 9, container: document.createElement('div') });
+    layout.attach(eventBus, store);
 
     layout.onMeasureStart(range => onMeasureStartCB(range.startIndex));
     layout.onPortionMeasured(range => onPortionMeasuredCB(range.startIndex, range.endIndex, range.total, range.startOffset, range.endOffset));
@@ -478,8 +478,8 @@ describe('FixedListLayout', () => {
     const onMeasureEndCB = vi.fn();
 
     layout.detach();
-    layout = new FixedListLayout({ maxMeasuredPortionSize: 20 });
-    layout.attach(document.createElement('div'), eventBus, store);
+    layout = new FixedListLayout({ maxMeasuredPortionSize: 20, container: document.createElement('div') });
+    layout.attach(eventBus, store);
 
     layout.onMeasureStart(range => onMeasureStartCB(range.startIndex));
     layout.onPortionMeasured(range => onPortionMeasuredCB(range.startIndex, range.endIndex, range.total, range.startOffset, range.endOffset));

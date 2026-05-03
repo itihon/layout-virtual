@@ -17,10 +17,10 @@ function render(data: { i: number } | unknown) {
   return item;
 }
 
-const store = new ArrayItemStore();
-const layout = new FixedListLayout({ overscanHeight: 100 });
-const scrollIndicator = document.createElement('div');
 const container = document.createElement('div');
+const store = new ArrayItemStore();
+const layout = new FixedListLayout({ overscanHeight: 100, container });
+const scrollIndicator = document.createElement('div');
 container.id = 'virtualized-list';
 container.style.width = '200px';
 container.style.height = '300px';
@@ -36,7 +36,7 @@ requestAnimationFrame(updateScrollIndicator);
 
 document.body.appendChild(scrollIndicator);
 document.body.appendChild(container);
-const list = new VirtualizedList({ layout, store, container });
+const list = new VirtualizedList({ layout, store });
 
 for (let i = 0; i < 1000; i++) {
   list.insert({

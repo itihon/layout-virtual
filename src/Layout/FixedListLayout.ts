@@ -14,7 +14,10 @@ import type {
 } from "../types/types";
 import FixedListRenderer from "./FixedListRenderer";
 
+type FixedListLayoutOptions = { maxMeasuredPortionSize: number, overscanHeight: number, container: HTMLElement };
+
 export default class FixedListLayout implements IFixedListLayout {
+  private _container: HTMLElement;
   private _maxMeasuredPortionSize: number;
   private _overscanHeight: number;
   private _lastProcessedItemIndex: number = 0;
@@ -103,15 +106,16 @@ export default class FixedListLayout implements IFixedListLayout {
     );
   }
 
-  constructor({ maxMeasuredPortionSize = 100_000, overscanHeight = 100 } = {}) {
+  constructor({ maxMeasuredPortionSize = 100_000, overscanHeight = 100, container }: FixedListLayoutOptions) {
     this._maxMeasuredPortionSize = maxMeasuredPortionSize;
     this._overscanHeight = overscanHeight;
+    this._container = container;
   }
 
-  attach(container: HTMLElement, eventBus: IEventEmitter<IEventMap>, store: IItemStore<IFixedItem>) {
+  attach(eventBus: IEventEmitter<IEventMap>, store: IItemStore<IFixedItem>) {
     this._attachedHook = (index: number) => this._scheduleOffsetCalculation(index, store);
     this._eventBus = eventBus;
-    this._renderer =  new FixedListRenderer(container, eventBus, store, this._overscanHeight);
+    this._renderer =  new FixedListRenderer(this._container, eventBus, store, this._overscanHeight);
 
     eventBus.on('onInsert', this._attachedHook);
     eventBus.on('onDelete', this._attachedHook);
