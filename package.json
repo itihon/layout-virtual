@@ -40,6 +40,7 @@
     "build:demo": "vite build -c vite.demo.config.js -m DEMO_BUILD",
     "dev:demo": "vite -c vite.demo.config.js -m DEMO_DEV",
     "testserver": "vite -c vite.tests.config.js",
+    "build:fixtures": "vite build -c vite.tests.config.js -m build",
     "testserver:manual": "vite -c vite.manualtests.config.js",
     "test:playwright": "docker run --rm --ipc=host --network=host -v \"$(pwd):/work\" -w /work mcr.microsoft.com/playwright:v1.57.0-noble npx playwright test",
     "preview": "vite preview",
