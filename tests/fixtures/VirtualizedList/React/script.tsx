@@ -35,7 +35,7 @@ function App() {
   const data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
 
   return (
-    <VirtualizedListReact<Data> overscanHeight={100} data={data} itemRenderer={ListItem} />
+    <VirtualizedListReact<Data> overscanHeight={100} data={data} renderItem={ListItem} />
   );
 }
 

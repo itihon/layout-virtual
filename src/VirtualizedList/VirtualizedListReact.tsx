@@ -21,11 +21,11 @@ export interface VirtualizedListReactProps<T> {
   scrollerRef?: React.RefObject<HTMLDivElement>;
   overscanHeight?: number; 
   data: T[];
-  itemRenderer: (props: ListItemProps<T>) => React.ReactNode;
+  renderItem: (props: ListItemProps<T>) => React.ReactNode;
 }
 
 export default function VirtualizedListReact<T>(props: VirtualizedListReactProps<T>) {
-  const { overscanHeight = 200, data, itemRenderer, scrollerRef } = props;
+  const { overscanHeight = 200, data, renderItem, scrollerRef } = props;
   const containerRef = scrollerRef || useRef<HTMLDivElement>(null);
   const scrollHeightFillerRef = useRef<HTMLDivElement>(null);
   const viewportContainerRef = useRef<HTMLDivElement>(null);
@@ -53,7 +53,7 @@ export default function VirtualizedListReact<T>(props: VirtualizedListReactProps
     const list = new VirtualizedList({ store, layout });
 
     for (let idx = 0; idx < data.length; idx++) {
-      list.insert({ data: data[idx], render: itemRenderer}, idx);
+      list.insert({ data: data[idx], render: renderItem }, idx);
     }
   }, []);
 
@@ -61,30 +61,20 @@ export default function VirtualizedListReact<T>(props: VirtualizedListReactProps
     renderer.current?.commit();
   }, [listItems]);
 
+  const scrollerContent = <>
+    <div ref={scrollHeightFillerRef}></div>
+    <div ref={viewportContainerRef}>
+      <div ref={scrollCanvasRef}>
+        <div ref={topSpacerRef}></div>
+        <div ref={contentLayerRef}>{ listItems }</div>
+        <div ref={bottomSpacerRef}></div>
+      </div>
+    </div>
+  </>;
+
   return (
     scrollerRef && scrollerRef.current 
-      ? createPortal(
-          <>
-            <div ref={scrollHeightFillerRef}></div>
-            <div ref={viewportContainerRef}>
-              <div ref={scrollCanvasRef}>
-                <div ref={topSpacerRef}></div>
-                <div ref={contentLayerRef}>{ listItems }</div>
-                <div ref={bottomSpacerRef}></div>
-              </div>
-            </div>
-          </>,
-          scrollerRef.current,
-        )
-      : <div ref={containerRef}>
-          <div ref={scrollHeightFillerRef}></div>
-          <div ref={viewportContainerRef}>
-            <div ref={scrollCanvasRef}>
-              <div ref={topSpacerRef}></div>
-              <div ref={contentLayerRef}>{ listItems }</div>
-              <div ref={bottomSpacerRef}></div>
-            </div>
-          </div>
-        </div>
+      ? createPortal(scrollerContent, scrollerRef.current)
+      : <div ref={containerRef}>{ scrollerContent }</div>
   );
 };
