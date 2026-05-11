@@ -34,7 +34,7 @@ export default class VirtualizedList {
     this._eventBus.emit('onDelete', index, 1);
   }
 
-  // setItems(items: IItem[]) {
+  // setItems<T = unknown, R = HTMLElement>(data: T[], itemRenderer: (data: T, index: number) => R) {
   //   this._store.setItems(items: IItem[]);
   //   this._hooks.emit('onInsert', 0, item);
   // }

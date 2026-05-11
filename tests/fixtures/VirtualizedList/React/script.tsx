@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
-import { memo } from 'react';
 import VirtualizedListReact from '../../../../src/VirtualizedList/VirtualizedListReact';
+import type { ListItemProps } from '../../../../src/VirtualizedList/VirtualizedListReact';
 
 const auto = new URLSearchParams(window.location.search).get('auto');
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
@@ -12,16 +12,10 @@ const container = document.createElement('div');
 // container.style.overflow = 'auto';
 // document.body.appendChild(container);
 
-interface ListItemProps {
-  data: { i: number };
-  ref: React.Ref<HTMLDivElement> | undefined;
-  index: number;
-}
+type Data = { i: number };
 
-function ListItem({ data, ref, index }: ListItemProps) {
+function ListItem({ data, ref, index }: ListItemProps<Data>) {
   const i = data.i;
-
-  console.log('ListItem', i);
 
   const extraLines =
     i % 5 === 0 ? ['Second line.', 'Third line.', 'Fourth line.'] :
@@ -38,24 +32,15 @@ function ListItem({ data, ref, index }: ListItemProps) {
 };
 
 function App() {
-  const items = [];
-
-  for (let i = 0; i < itemsCount; i++) {
-    items.push({
-      data: { i: i },
-      render: ListItem,
-    });
-  }
+  const data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
 
   return (
-    <VirtualizedListReact overscanHeight={100} items={items} />
+    <VirtualizedListReact<Data> overscanHeight={100} data={data} itemRenderer={ListItem} />
   );
 }
 
 const root = createRoot(document.getElementById('root')!);
 root.render(<App />);
-
-
 
 // ------------- Test conditions for manual testing and Playwright -------------------
 

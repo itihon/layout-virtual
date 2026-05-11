@@ -5,7 +5,7 @@ body {
   height: 100vh;
 }
 
-#virtualized-list {
+.scrollableContainer {
   border: 16px solid gray;
   resize: vertical;
   width: 200px;
