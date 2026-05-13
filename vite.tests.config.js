@@ -28,6 +28,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
           './DOMConstructor': src('Renderer/DOMConstructor.ts'),
         },
       },
+      plugins: [vue()],
       build: {
         outDir: '../../dist/fixtures',
         copyPublicDir: false,
@@ -39,6 +40,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
             dynamicListLayout: fixture('VirtualizedList/DynamicListLayout/index.html'),
             unknownScrollHeight: fixture('VirtualizedList/DynamicListLayout/unknown-scroll-height.html'),
             react: fixture('VirtualizedList/React/index.html'),
+            vue: fixture('VirtualizedList/Vue/index.html'),
           },
         },
         emptyOutDir: true,
