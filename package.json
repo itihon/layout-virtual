@@ -87,6 +87,10 @@
     "vite": "$vite"
   },
   "dependencies": {
+    "@angular/common": "^21.0.0",
+    "@angular/compiler": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "@angular/platform-browser": "^21.0.0",
     "avl": "^2.0.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
