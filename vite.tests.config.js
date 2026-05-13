@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue'
 
 const fixture = (path) => new URL(`./tests/fixtures/${path}`, import.meta.url).pathname;
 const src = (path) => new URL(`./src/${path}`, import.meta.url).pathname;
@@ -15,6 +16,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
       server: {
         host: '0.0.0.0',
       },
+      plugins: [vue()],
     };
   }
   else {
