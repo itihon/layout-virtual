@@ -1,0 +1,30 @@
+{
+  "name": "react-layout-virtual",
+  "version": "0.0.1",
+  "description": "React virtual scrolling component for responsive lists and grids with dynamic item sizes.",
+  "keywords": [
+    "virtual",
+    "virtualized",
+    "list",
+    "grid",
+    "window",
+    "scroll",
+    "react"
+  ],
+  "homepage": "https://itihon.github.io/layout-virtual/",
+  "bugs": {
+    "url": "https://github.com/itihon/layout-virtual/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itihon/layout-virtual.git"
+  },
+  "license": "MIT",
+  "author": "Alexandr Kalabin",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "devDependencies": {}
+}

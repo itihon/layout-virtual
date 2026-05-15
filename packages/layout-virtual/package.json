@@ -1,0 +1,32 @@
+{
+  "name": "layout-virtual",
+  "version": "0.0.1",
+  "description": "Virtualization engine for responsive lists and grids with dynamic item sizes. Includes the core layout virtualizer and DOM renderer.",
+  "keywords": [
+    "virtual",
+    "virtualized",
+    "list",
+    "grid",
+    "window",
+    "scroll",
+    "react",
+    "vue",
+    "angular"
+  ],
+  "homepage": "https://itihon.github.io/layout-virtual/",
+  "bugs": {
+    "url": "https://github.com/itihon/layout-virtual/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itihon/layout-virtual.git"
+  },
+  "license": "MIT",
+  "author": "Alexandr Kalabin",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "devDependencies": {}
+}
