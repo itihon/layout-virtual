@@ -1,0 +1,106 @@
+{
+  "name": "@itihon/virtualized-list",
+  "version": "0.0.1",
+  "description": "A virtualized list powered by AVL-tree and based on Web Components API",
+  "homepage": "https://itihon.github.io/virtualized-list/",
+  "keywords": [
+    "virtualized",
+    "virtualized-list",
+    "window",
+    "windowing"
+  ],
+  "author": "Alexandr Kalabin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itihon/virtualized-list.git"
+  },
+  "bugs": {
+    "url": "https://github.com/itihon/virtualized-list/issues"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "browser": "dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:bundle && npm run build:types",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:bundle": "vite build",
+    "build:demo": "vite build -c vite.demo.config.js -m DEMO_BUILD",
+    "dev:demo": "vite -c vite.demo.config.js -m DEMO_DEV",
+    "testserver": "vite -c vite.tests.config.js",
+    "build:fixtures": "vite build -c vite.tests.config.js -m build",
+    "testserver:manual": "vite -c vite.manualtests.config.js",
+    "test:playwright": "docker run --rm --ipc=host --network=host -v \"$(pwd):/work\" -w /work mcr.microsoft.com/playwright:v1.57.0-noble npx playwright test",
+    "preview": "vite preview",
+    "format:check": "prettier {src,test}/**/*.{js,ts,css} --check --no-error-on-unmatched-pattern",
+    "format:write": "prettier {src,test}/**/*.{js,ts,css} --write --no-error-on-unmatched-pattern",
+    "lint": "eslint",
+    "prepare": "husky",
+    "prepublishOnly": "npm run build",
+    "test:unit": "vitest"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "@playwright/test": "^1.57.0",
+    "@types/prismjs": "^1.26.5",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/wicg-file-system-access": "^2023.10.6",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "cypress": "^14.5.0",
+    "cypress-vite": "^1.6.0",
+    "eslint": "^10.0.1",
+    "eslint-plugin-headers": "^1.3.4",
+    "globals": "^16.2.0",
+    "happy-dom": "^20.8.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "prettier": "3.6.1",
+    "prismjs": "^1.30.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.35.0",
+    "typescript-plugin-css-modules": "^5.2.0",
+    "vite": "^7.3.2",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
+    "vitest": "^4.0.18"
+  },
+  "lint-staged": {
+    "{src,test}/**/*": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "overrides": {
+    "vite": "$vite"
+  },
+  "dependencies": {
+    "@angular/common": "^21.0.0",
+    "@angular/compiler": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "@angular/platform-browser": "^21.0.0",
+    "avl": "^2.0.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "request-animation-frame-loop": "^1.0.2",
+    "vue": "^3.5.34"
+  },
+  "workspaces": [
+    "packages/layout-virtual",
+    "packages/react-layout-virtual",
+    "packages/vue-layout-virtual",
+    "packages/angular-layout-virtual"
+  ]
+}
