@@ -3,3 +3,5 @@
  * @license MIT
  * @author Alexandr Kalabin
  */
+
+export { default } from './LayoutVirtual';
