@@ -12,8 +12,8 @@ import type {
   IReactItem, 
   IVirtualizedDynamicListOptions, 
   IVirtualizedFixedListOptions 
-} from "../types/types";
-import EventBus from "../EventBus/EventBus";
+} from "./types/types";
+import EventBus from "./EventBus/EventBus";
 
 export default class VirtualizedList {
   private _store: IItemStore<IFixedItem<unknown>> & IItemStore<IItem<unknown>> & IItemStore<IReactItem<unknown>>;
