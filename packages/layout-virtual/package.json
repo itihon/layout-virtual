@@ -35,11 +35,17 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/types.d.ts",
+      "import": "./dist/types/types.js"
     }
   },
   "scripts": {
     "test": "test",
-    "build": "vite build"
+    "build": "npm run build:bundle && npm run build:types",
+    "build:bundle": "vite build",
+    "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly"
   },
   "devDependencies": {}
 }

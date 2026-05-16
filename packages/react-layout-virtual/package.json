@@ -37,7 +37,9 @@
   },
   "scripts": {
     "test": "test",
-    "build": "vite build"
+    "build": "npm run build:bundle && npm run build:types",
+    "build:bundle": "vite build",
+    "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly"
   },
   "dependencies": {
     "layout-virtual": "0.0.1"
