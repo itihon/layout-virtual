@@ -54,7 +54,9 @@ a:hover {
   outline: 1px solid lightgray;
 }
 
-main > div:first-child {
+main > div:first-child,
+main > angular-layout-virtual > div:first-child
+ {
   border: 16px solid gray;
   resize: vertical;
   width: 200px;
