@@ -1,6 +1,11 @@
 # General description
 
-A web-site showcasing my framework agnostic virtualized layout library. The library currently supports vanilla js, React, Vue, Angular. It provides a fully dynamic layout, supports responsive grid layout without the user of the library concerning about item heights and measurements. The items are rendered "as is" and are added as if in a regular non-virtualized container allowing the user to add desired styling. The library name is not decided yet.
+A web-site showcasing my framework agnostic virtualized layout library. The library currently supports vanilla js, React, Vue, Angular. It provides a fully dynamic layout, supports responsive grid layout without the user of the library concerning about item heights and measurements. The items are rendered "as is" and are added as if in a regular non-virtualized container allowing the user to add desired styling.
+
+- layout-virtual (the core)
+- react-layout-virtual (virtualization component for React)
+- vue-layout-virtual (virtualization component for Vue)
+- angular-layout-virtual (virtualization component for Angular)
 
 ## Possible use cases (with code examples for each framework)
 
@@ -56,7 +61,7 @@ Each use case should demonstrate the following capabilities:
 
 ## Content
 
-Each page has a header and footer, and shared Frameworks component which on the About page is not clickable and just shows supported frameworks, on the Examples page allows the user to select a framework to show an example for (sets "FRAMEWORK_NAME" in the route), on the API page allows the user to select a framework for which to show API documentation (sets "FRAMEWORK_NAME" in the route as well). Once "FRAMEWORK_NAME" is set, it is shared across pages.
+Each page has a header and footer, and shared Frameworks selector component which on the About page is a tab component that shows installation variant for a selected framework (sets "FRAMEWORK_NAME" in the route), on the Examples page allows the user to select a framework to show an example for (sets "FRAMEWORK_NAME" in the route), on the API page allows the user to select a framework for which to show API documentation (sets "FRAMEWORK_NAME" in the route as well). Once "FRAMEWORK_NAME" is set, it is shared across pages.
 
 ### Header
 
@@ -88,9 +93,8 @@ Contains:
 ### About page
 
 Contains:
-  - Hero section with a heading and the library description.
-  - Frameworks component with the heading and corresponding framework icons placed horizontally.
-  - Installation info with the heading and npm install command.
+  - Hero section with a heading and the library description. Possible slogan: "Virtualization has never been easier.". (It alignes with my other library slogan "Validation has never been easier.")
+  - Installation info with the heading and a tab component with npm install command specific to the selected framework.
   - [Optionally, not decided yet] virtualized resizeable auto grid example without code, that resizes from one column to multiple, for the user just to look at and play.
   - Key features block with the heading and listed features (possibly with short descriptions).
   - Use cases block with the heading and use cases (possibly with short descriptions).
@@ -108,3 +112,7 @@ Contains:
   - Frameworks component for the user to select a framework.
 
 Framework specific API documentation .md files are stored in "*/**/API/[FRAMEWORK_NAME]" and are parsed at build time.
+
+## Design notes
+
+Use TS / React. Do not use Tailwind. Instead create a design system, css variables, primary, active and secondary colors, background colors, spacing, typography etc. Color palette dark. You can use components from UI kit libraries like Radix-UI, Mantine, MUI, Chakra etc.
