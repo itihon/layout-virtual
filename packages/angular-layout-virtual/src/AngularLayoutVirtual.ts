@@ -9,15 +9,12 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChild,
-  ElementRef,
   Input,
-  QueryList,
   TemplateRef,
   ViewChild,
-  ViewChildren,
   inject,
 } from '@angular/core';
-import type { AfterViewInit } from '@angular/core';
+import type { AfterViewInit, ElementRef } from '@angular/core';
 import type { IItem, IRangeRenderer } from 'layout-virtual/types';
 import VirtualizedList, { DynamicListLayout, ArrayItemStore } from 'layout-virtual';
 import AngularRenderer, { type ListItemProps } from './AngularRenderer';
@@ -30,6 +27,9 @@ export type VirtualizedListItemContext<T> = ListItemProps<T> & {
   selector: 'angular-layout-virtual',
   standalone: true,
   imports: [CommonModule],
+  host: {
+    style: 'display: contents;',
+  },
   template: `
     <div #container>
       <div #scrollHeightFiller></div>
@@ -40,14 +40,12 @@ export type VirtualizedListItemContext<T> = ListItemProps<T> & {
             <ng-container
               *ngFor="let item of visibleItems; trackBy: trackByIndex"
             >
-              <div #itemElement [attr.data-index]="item.index">
-                <ng-container
-                  *ngTemplateOutlet="
-                    renderItemTemplate;
-                    context: getItemContext(item)
-                  "
-                ></ng-container>
-              </div>
+              <ng-container
+                *ngTemplateOutlet="
+                  renderItemTemplate;
+                  context: getItemContext(item)
+                "
+              ></ng-container>
             </ng-container>
           </div>
           <div #bottomSpacer></div>
@@ -77,8 +75,6 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
   private contentLayerRef!: ElementRef<HTMLDivElement>;
   @ViewChild('bottomSpacer', { static: true })
   private bottomSpacerRef!: ElementRef<HTMLDivElement>;
-  @ViewChildren('itemElement', { read: ElementRef })
-  private itemRefs!: QueryList<ElementRef<HTMLElement>>;
 
   visibleItems: ListItemProps<T>[] = [];
   private renderer: AngularRenderer<T> | undefined;
@@ -143,12 +139,15 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
 
   private commit() {
     const renderedRefs = new Map<number, Element>();
+    const itemElements = Array.from(
+      this.contentLayerRef.nativeElement.children,
+    );
 
-    this.itemRefs.forEach((itemRef, position) => {
+    itemElements.forEach((element, position) => {
       const item = this.visibleItems[position];
 
       if (item) {
-        renderedRefs.set(item.index, itemRef.nativeElement);
+        renderedRefs.set(item.index, element);
       }
     });
 
