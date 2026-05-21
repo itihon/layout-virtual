@@ -29,6 +29,7 @@ export default function baseUrlModifierRemarkPlugin({ basePath = '/' }) {
                 }
             }
 
+            // Does not work. Instead, src/components/Hero.astro is used to override
             if (actions) {
                 actions.forEach(action => {
                     const { link } = action;

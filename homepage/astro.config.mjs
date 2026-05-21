@@ -1,13 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import baseUrlModifierRemarkPlugin from '../base-url-remark-plugin';
-
-const BASE_URL = '/layout-virtual';
+import baseUrlModifierRemarkPlugin from './base-url-remark-plugin';
+import { BASE_URL, PROD_HOST } from './config.mjs';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://itihon.github.io',
+  site: PROD_HOST,
   base: BASE_URL,
   markdown: {
     remarkPlugins: [ 
@@ -26,6 +25,9 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples' } }],
 				},
 			],
+      components: {
+        Hero: './src/components/Hero.astro',
+      },
 		}),
 	],
 });
