@@ -1,0 +1,9 @@
+.hidden-on-wide-screens {
+  display: none;
+}
+
+@media (max-width: 50rem) {
+  .hidden-on-wide-screens {
+    display: initial;
+  }
+}

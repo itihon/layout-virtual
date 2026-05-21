@@ -1,0 +1,36 @@
+---
+const { sidebar } = Astro.locals.starlightRoute;
+
+const links = sidebar.map(item => {
+  const link = { href: '', label: '', isCurrent: false };
+
+  // @ts-ignore
+  link.href = item.href || item.entries?.[0]?.href || false;
+  // @ts-ignore
+  link.isCurrent = item.isCurrent || item.entries?.some(entry => entry.isCurrent);
+
+  link.label = item.label;
+
+  return link;
+});
+---
+
+{
+  links.map(link => <a class={`links ${link.isCurrent ? 'current' : ''}`} href={link.href}>{link.label}</a>)
+}
+
+<style>
+  a.links {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--sl-text-sm);
+    color: var(--color-text);
+    line-height: normal;
+  }
+  a.links.current {
+    text-decoration: underline;
+  }
+  a.links:hover {
+    color: var(--sl-color-text-accent);
+  }
+</style>

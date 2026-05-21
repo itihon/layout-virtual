@@ -20,14 +20,26 @@ export default defineConfig({
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/itihon/layout-virtual' }],
       pagefind: false,
 			sidebar: [
+        {
+          label: 'About',
+          link: '/',
+          attrs: { class: 'hidden-on-wide-screens' },
+        },
 				{
 					label: 'Examples',
 					items: [{ autogenerate: { directory: 'examples' } }],
 				},
+        {
+          label: 'API',
+          link: '/API',
+          attrs: { class: 'hidden-on-wide-screens' },
+        },
 			],
       components: {
         Hero: './src/components/Hero.astro',
+        Header: './src/components/Header.astro',
       },
+      customCss: [ '/src/styles/custom.css' ],
 		}),
 	],
 });
