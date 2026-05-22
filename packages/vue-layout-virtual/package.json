@@ -1,6 +1,6 @@
 {
   "name": "vue-layout-virtual",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Vue virtual scrolling component for responsive lists and grids with dynamic item sizes.",
   "keywords": [
     "virtual",
@@ -42,10 +42,9 @@
     "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly"
   },
   "dependencies": {
-    "layout-virtual": "0.0.1"
+    "layout-virtual": "^0.0.2"
   },
   "peerDependencies": {
     "vue": "^3.5.34"
-  },
-  "devDependencies": {}
+  }
 }
