@@ -267,14 +267,19 @@ export default class DynamicListLayout {
 
     if (!store) return;
 
-    const fraction = (offsetAnchor - this._scrollAnchorItemOffsetTop) / this._scrollAnchorItemOffsetHeight;
+    let fraction = (offsetAnchor - this._scrollAnchorItemOffsetTop) / this._scrollAnchorItemOffsetHeight;
 
-    console.log('_adjustScrollbarThumb scroll anchor item index:', this._scrollAnchorItemIndex)
+    if (fraction > 1 || fraction < 0) {
+      console.error('Index fraction must be between 0 and 1. fraction:', fraction, 'Corrected to 0');
+      fraction = 0;
+    }
 
     const indexRatio = (this._scrollAnchorItemIndex + fraction) / (store.size - 1);
     const scrollbarThumbPosition = indexRatio * (scrollHeight - clientHeight);
     
     scrollableContainer.setScrollTop(scrollbarThumbPosition);
+
+    console.log('_adjustScrollbarThumb scroll anchor item index:', this._scrollAnchorItemIndex, 'fraction:', fraction, 'indexRatio:', indexRatio, 'position:', scrollbarThumbPosition);
   };
 
   private _getScrollAnchorItemPosition(): number | null {
@@ -378,6 +383,8 @@ export default class DynamicListLayout {
       console.warn('ResizeObserver')
       const items = this._scrollableContainer.getItems();
       const itemsCount = items.length;
+
+      this._scrollableContainer.refresh();
 
       for (let idx = 0; idx < itemsCount; idx++) {
         if(this._detectScrollAnchorItemOffset(items[idx]!, direction)) break;
