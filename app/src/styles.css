@@ -52,6 +52,10 @@ a:hover {
 
 .list-item {
   outline: 1px solid lightgray;
+  border-radius: 4px;
+  padding: 4px;
+  margin: 16px;
+  background-color: aliceblue;
 }
 
 main > div:first-child,
