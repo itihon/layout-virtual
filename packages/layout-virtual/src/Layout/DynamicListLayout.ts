@@ -116,13 +116,18 @@ export default class DynamicListLayout {
       : viewportTop;
 
     const { offsetTop, offsetHeight } = (item as HTMLElement);
+    const contentLayerStyle = getComputedStyle(item.parentElement!);
+    const itemStyle = getComputedStyle(item);
+    const rowGap = parseFloat(contentLayerStyle.rowGap) || 0; // 0 in case rowGap returns "normal" and therefore parseFloat returns NaN
+    const marginTop = parseFloat(itemStyle.marginTop);
+    const marginBottom = parseFloat(itemStyle.marginBottom);
     const itemIndex = this._renderer.getIndex(item);
 
     if (itemIndex === undefined) return false;
 
-    if (offsetTop <= offsetAnchor && offsetTop + offsetHeight >= offsetAnchor) {
-      this._scrollAnchorItemOffsetTop = offsetTop;
-      this._scrollAnchorItemOffsetHeight = offsetHeight;
+    if (offsetTop - marginTop <= offsetAnchor && offsetTop + offsetHeight + marginBottom + rowGap >= offsetAnchor) {
+      this._scrollAnchorItemOffsetTop = offsetTop - marginTop;
+      this._scrollAnchorItemOffsetHeight = marginTop + offsetHeight + marginBottom + rowGap;
       this._scrollAnchorItemIndex = itemIndex;
       return true;
     }

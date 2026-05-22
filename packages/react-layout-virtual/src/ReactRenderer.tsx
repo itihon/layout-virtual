@@ -131,9 +131,12 @@ export default class ReactRenderer implements IRangeRenderer, IReactRenderer {
 
       if (itemToRemove) {
         const { offsetTop, offsetHeight } = itemToRemove as HTMLElement;
+        const itemStyle = getComputedStyle(itemToRemove);
+        const marginTop = parseFloat(itemStyle.marginTop);
+        const marginBottom = parseFloat(itemStyle.marginBottom);
 
-        startRange = Math.min(startRange, offsetTop);
-        endRange = Math.max(endRange, offsetTop + offsetHeight);
+        startRange = Math.min(startRange, offsetTop - marginTop);
+        endRange = Math.max(endRange, offsetTop + offsetHeight + marginBottom);
 
         renderedItems.delete(idx);
         renderedIndeces.delete(itemToRemove);

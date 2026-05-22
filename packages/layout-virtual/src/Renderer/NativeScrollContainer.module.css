@@ -40,7 +40,7 @@
 }
 
 .contentLayer {
-  display: block;
+  display: grid;
   width: 100%;
 }
 
