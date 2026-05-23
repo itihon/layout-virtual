@@ -34,7 +34,7 @@ export default class DOMRenderer implements IRangeRenderer {
         removeEndIndex = Math.min(renderStartIndex - 1, lastRenderedIndex);
         renderStartIndex = Math.max(lastRenderedIndex + 1, renderStartIndex);
        
-        if (removeStartIndex < removeEndIndex) {
+        if (removeStartIndex <= removeEndIndex) {
           removedHeight = this.removeRange(removeStartIndex, removeEndIndex);
         }
       }
@@ -44,7 +44,7 @@ export default class DOMRenderer implements IRangeRenderer {
         removeStartIndex = Math.max(renderEndIndex + 1, firstRenderedIndex);
         renderEndIndex = Math.min(firstRenderedIndex - 1, renderEndIndex);
        
-        if (removeStartIndex < removeEndIndex) {
+        if (removeStartIndex <= removeEndIndex) {
           removedHeight = this.removeRange(removeStartIndex, removeEndIndex);
         }
       }
