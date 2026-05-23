@@ -43,11 +43,7 @@ export default class AngularRenderer<T> implements IRangeRenderer<T> {
     this._itemsFlusher = opts.itemsFlusher;
   }
 
-  render(
-    startIndex: number,
-    endIndex: number,
-    direction: ScrollDirection,
-  ): number {
+  render(startIndex: number, endIndex: number, direction: ScrollDirection): number {
     const firstRenderedIndex = this.getRenderedBoundaryIndex('first');
     const lastRenderedIndex = this.getRenderedBoundaryIndex('last');
 
@@ -92,11 +88,7 @@ export default class AngularRenderer<T> implements IRangeRenderer<T> {
     return removedHeight;
   }
 
-  renderRange(
-    startIndex: number,
-    endIndex: number,
-    direction: ScrollDirection,
-  ) {
+  renderRange(startIndex: number, endIndex: number, direction: ScrollDirection) {
     const store = this._store;
     const listItems = this._listItems;
     const itemsToAdd: ListItemProps<T>[] = [];
@@ -119,11 +111,7 @@ export default class AngularRenderer<T> implements IRangeRenderer<T> {
           : this._listItems;
   }
 
-  removeRange(
-    startIndex: number,
-    endIndex: number,
-    direction: ScrollDirection,
-  ): number {
+  removeRange(startIndex: number, endIndex: number, direction: ScrollDirection): number {
     const renderedIndeces = this._renderedIndexRegistry;
     const renderedItems = this._renderedItemsRegistry;
     let removedItemsCount = 0;
