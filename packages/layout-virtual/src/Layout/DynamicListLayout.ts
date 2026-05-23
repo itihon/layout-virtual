@@ -354,6 +354,10 @@ export default class DynamicListLayout {
 
   private _updateItemHeightBounds(item: Element) {
     const itemHeight = (item as HTMLElement).offsetHeight;
+
+    // ignore 0 size items
+    if (itemHeight < 1) return;
+
     this._minItemHeight = Math.min(this._minItemHeight, itemHeight);
     this._maxItemHeight = Math.max(this._maxItemHeight, itemHeight);
   }
