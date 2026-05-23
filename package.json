@@ -5,9 +5,6 @@
     "dev:app": "npm run dev -w app",
     "build:app": "npm run build -w app",
     "preview:app": "npm run preview -w app",
-    "dev:site": "npm run dev -w site",
-    "build:site": "npm run build -w site",
-    "preview:site": "npm run preview -w site",
     "dev:homepage": "npm run dev -w homepage",
     "build:homepage": "npm run build -w homepage",
     "preview:homepage": "npm run preview -w homepage",
@@ -63,7 +60,6 @@
   },
   "workspaces": [
     "app",
-    "site",
     "packages/layout-virtual",
     "packages/react-layout-virtual",
     "packages/vue-layout-virtual",
