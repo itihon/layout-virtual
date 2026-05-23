@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import type { AfterViewInit, ElementRef } from '@angular/core';
 import type { IItem, IRangeRenderer } from 'layout-virtual/types';
-import VirtualizedList, { DynamicListLayout, ArrayItemStore } from 'layout-virtual';
+import { LayoutVirtual, DynamicListLayout, ArrayItemStore } from 'layout-virtual';
 import AngularRenderer, { type ListItemProps } from './AngularRenderer';
 
 export type VirtualizedListItemContext<T> = ListItemProps<T> & {
@@ -98,10 +98,10 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
       overscanHeight: this.overscanHeight,
       renderer: this.renderer as unknown as IRangeRenderer,
     });
-    const list = new VirtualizedList({
+    const list = new LayoutVirtual({
       store,
       layout,
-    } as unknown as ConstructorParameters<typeof VirtualizedList>[0]);
+    } as unknown as ConstructorParameters<typeof LayoutVirtual>[0]);
 
     for (let idx = 0; idx < this.data.length; idx++) {
       list.insert(

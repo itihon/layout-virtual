@@ -6,7 +6,7 @@
 
 import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import VirtualizedList, { DynamicListLayout, ArrayItemStore } from 'layout-virtual';
+import { LayoutVirtual, DynamicListLayout, ArrayItemStore } from 'layout-virtual';
 import ReactRenderer from './ReactRenderer';
 
 export interface ListItemProps<T = unknown> {
@@ -49,7 +49,7 @@ export default function VirtualizedListReact<T>(props: VirtualizedListReactProps
 
     const store = new ArrayItemStore();
     const layout = new DynamicListLayout({ overscanHeight, renderer: renderer.current });
-    const list = new VirtualizedList({ store, layout });
+    const list = new LayoutVirtual({ store, layout });
 
     for (let idx = 0; idx < data.length; idx++) {
       list.insert({ data: data[idx], render: renderItem }, idx);

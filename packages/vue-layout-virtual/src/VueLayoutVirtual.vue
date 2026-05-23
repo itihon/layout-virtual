@@ -7,7 +7,7 @@
 <script setup lang="ts" generic="T">
 import { type Ref } from 'vue';
 import { onMounted, onUpdated, ref, useSlots } from 'vue';
-import VirtualizedList, { DynamicListLayout, ArrayItemStore } from 'layout-virtual';
+import { LayoutVirtual, DynamicListLayout, ArrayItemStore } from 'layout-virtual';
 import VueRenderer, { type ListItemProps } from './VueRenderer';
 
 export interface VirtualizedListVueProps<T> {
@@ -51,7 +51,7 @@ onMounted(() => {
 
   const store = new ArrayItemStore();
   const layout = new DynamicListLayout({ overscanHeight, renderer });
-  const list = new VirtualizedList({ store, layout });
+  const list = new LayoutVirtual({ store, layout });
 
   for (let idx = 0; idx < data.length; idx++) {
     list.insert({ data: data[idx], render: ListItem }, idx);
