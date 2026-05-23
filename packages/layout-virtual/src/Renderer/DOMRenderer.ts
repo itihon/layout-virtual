@@ -131,6 +131,8 @@ export default class DOMRenderer implements IRangeRenderer {
   }
 
   clear() {
+    this._renderedIndexRegistry.clear();
+    this._renderedItemsRegistry.clear();
     this._scrollableContainer.clear();
   }
 
