@@ -14,26 +14,14 @@ export default class DOMRenderer implements IRangeRenderer {
   private _renderedIndexRegistry = new Map<Element, number>();
   private _renderedItemsRegistry = new Map<number, Element>();
 
-  private _getRenderedBoundaryIndex(boundary: 'first' | 'last'): number | undefined {
-    const renderedItem = boundary === 'first'
-      ? this._scrollableContainer.getFirstItem()
-      : boundary === 'last'
-        ? this._scrollableContainer.getLastItem()
-        : null;
-
-    if (!renderedItem) return;
-
-    return this.getIndex(renderedItem);
-  }
-
   constructor(container: HTMLElement) {
     container.classList.add(classes.scrollableContainer);
     this._scrollableContainer = new ScrollableContainer({ container });
   }
 
   render(startIndex: number, endIndex: number, direction: ScrollDirection): number {
-    const firstRenderedIndex = this._getRenderedBoundaryIndex('first');
-    const lastRenderedIndex = this._getRenderedBoundaryIndex('last');
+    const firstRenderedIndex = this.getRenderedBoundaryIndex('first');
+    const lastRenderedIndex = this.getRenderedBoundaryIndex('last');
 
     let renderStartIndex = startIndex;
     let renderEndIndex = endIndex;
@@ -144,6 +132,18 @@ export default class DOMRenderer implements IRangeRenderer {
 
   clear() {
     this._scrollableContainer.clear();
+  }
+
+  getRenderedBoundaryIndex(boundary: 'first' | 'last'): number | undefined {
+    const renderedItem = boundary === 'first'
+      ? this._scrollableContainer.getFirstItem()
+      : boundary === 'last'
+        ? this._scrollableContainer.getLastItem()
+        : null;
+
+    if (!renderedItem) return;
+
+    return this.getIndex(renderedItem);
   }
 
   getIndex(item: Element): number | undefined {

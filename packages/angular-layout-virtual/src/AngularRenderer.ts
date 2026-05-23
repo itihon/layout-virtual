@@ -37,21 +37,6 @@ export default class AngularRenderer<T> implements IRangeRenderer<T> {
   private _itemsFlusher: () => void;
   private _listItems: ListItemProps<T>[] = [];
 
-  private _getRenderedBoundaryIndex(
-    boundary: 'first' | 'last',
-  ): number | undefined {
-    const renderedItem =
-      boundary === 'first'
-        ? this._scrollableContainer.getFirstItem()
-        : boundary === 'last'
-          ? this._scrollableContainer.getLastItem()
-          : null;
-
-    if (!renderedItem) return;
-
-    return this.getIndex(renderedItem);
-  }
-
   constructor(opts: AngularRendererOptions<T>) {
     this._scrollableContainer = new ScrollableContainer({ ...opts });
     this._itemsSetter = opts.itemsSetter;
@@ -63,8 +48,8 @@ export default class AngularRenderer<T> implements IRangeRenderer<T> {
     endIndex: number,
     direction: ScrollDirection,
   ): number {
-    const firstRenderedIndex = this._getRenderedBoundaryIndex('first');
-    const lastRenderedIndex = this._getRenderedBoundaryIndex('last');
+    const firstRenderedIndex = this.getRenderedBoundaryIndex('first');
+    const lastRenderedIndex = this.getRenderedBoundaryIndex('last');
 
     let renderStartIndex = startIndex;
     let renderEndIndex = endIndex;
@@ -180,6 +165,19 @@ export default class AngularRenderer<T> implements IRangeRenderer<T> {
     this._renderedItemsRegistry.clear();
     this._listItems = [];
     this._itemsSetter(this._listItems);
+  }
+
+  getRenderedBoundaryIndex(boundary: 'first' | 'last'): number | undefined {
+    const renderedItem =
+      boundary === 'first'
+        ? this._scrollableContainer.getFirstItem()
+        : boundary === 'last'
+          ? this._scrollableContainer.getLastItem()
+          : null;
+
+    if (!renderedItem) return;
+
+    return this.getIndex(renderedItem);
   }
 
   getIndex(item: Element): number | undefined {

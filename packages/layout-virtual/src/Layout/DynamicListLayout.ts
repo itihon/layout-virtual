@@ -135,18 +135,6 @@ export default class DynamicListLayout {
     return false;
   }
 
-  private _getRenderedBoundaryIndex(boundary: 'first' | 'last'): number | undefined {
-    const renderedItem = boundary === 'first'
-      ? this._scrollableContainer.getFirstItem()
-      : boundary === 'last'
-        ? this._scrollableContainer.getLastItem()
-        : null;
-
-    if (!renderedItem) return;
-
-    return this._renderer.getIndex(renderedItem);
-  }
-
   private _renderItems = (scrollTop: number, direction: ScrollDirection) => {
     const scrollableContainer = this._scrollableContainer;
     const overscanHeight = this._overscanHeight;
@@ -168,8 +156,8 @@ export default class DynamicListLayout {
     const halfViewportHeight = viewportHeight / 2;
     const rangeToFill = halfViewportHeight + overscanHeight;
     const middleIndex = this._getItemIndexByScrollTop();
-    const firstRenderedIndex = this._getRenderedBoundaryIndex('first');
-    const lastRenderedIndex = this._getRenderedBoundaryIndex('last');
+    const firstRenderedIndex = this._renderer.getRenderedBoundaryIndex('first');
+    const lastRenderedIndex = this._renderer.getRenderedBoundaryIndex('last');
     const renderStartIndex = Math.ceil(middleIndex - rangeToFill / this._minItemHeight);
     const renderEndIndex = Math.ceil(middleIndex + rangeToFill / this._minItemHeight);
 

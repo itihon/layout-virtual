@@ -28,26 +28,14 @@ export default class ReactRenderer implements IRangeRenderer, IReactRenderer {
   private _listItems: React.ReactNode[] = [];
   private _flushItems = () => { this._itemsSetter(this._listItems); };
 
-  private _getRenderedBoundaryIndex(boundary: 'first' | 'last'): number | undefined {
-    const renderedItem = boundary === 'first'
-      ? this._scrollableContainer.getFirstItem()
-      : boundary === 'last'
-        ? this._scrollableContainer.getLastItem()
-        : null;
-
-    if (!renderedItem) return;
-
-    return this.getIndex(renderedItem);
-  }
-
   constructor(opts: ReactRendererOptions) {
     this._scrollableContainer = new ScrollableContainer({ ...opts });
     this._itemsSetter = opts.itemsSetter;
   }
 
   render(startIndex: number, endIndex: number, direction: ScrollDirection): number {
-    const firstRenderedIndex = this._getRenderedBoundaryIndex('first');
-    const lastRenderedIndex = this._getRenderedBoundaryIndex('last');
+    const firstRenderedIndex = this.getRenderedBoundaryIndex('first');
+    const lastRenderedIndex = this.getRenderedBoundaryIndex('last');
 
     let renderStartIndex = startIndex;
     let renderEndIndex = endIndex;
@@ -162,6 +150,18 @@ export default class ReactRenderer implements IRangeRenderer, IReactRenderer {
     this._renderedItemsRegistry.clear();
     this._listItems = [];
     this._itemsSetter(this._listItems);
+  }
+
+  getRenderedBoundaryIndex(boundary: 'first' | 'last'): number | undefined {
+    const renderedItem = boundary === 'first'
+      ? this._scrollableContainer.getFirstItem()
+      : boundary === 'last'
+        ? this._scrollableContainer.getLastItem()
+        : null;
+
+    if (!renderedItem) return;
+
+    return this.getIndex(renderedItem);
   }
 
   getIndex(item: Element): number | undefined {

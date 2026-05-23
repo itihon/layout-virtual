@@ -90,6 +90,7 @@ export interface IRangeRenderer<T = unknown> {
   render: (startIndex: number, endIndex: number, direction: ScrollDirection) => number;
   renderRange: (startIndex: number, endIndex: number, direction: ScrollDirection) => void;
   removeRange: (startIndex: number, endIndex: number, direction: ScrollDirection) => number;
+  getRenderedBoundaryIndex: (boundary: 'first' | 'last') => number | undefined;
   getIndex: (item: Element) => number | undefined;
   getItem: (index: number) => Element | undefined;
   attach: (store: IItemStore<IItem<T>>) => void;
