@@ -4,7 +4,7 @@
  * @author Alexandr Kalabin
  */
 
-import { ScrollableContainer } from 'layout-virtual';
+import { BaseRenderer } from 'layout-virtual';
 import type {
   IItem,
   IItemStore,
@@ -28,64 +28,16 @@ export type AngularListItem<T = unknown> = {
   render?: unknown;
 };
 
-export default class AngularRenderer<T> implements IRangeRenderer<T> {
-  private _store: IItemStore<IItem<T>> | null = null;
-  private _scrollableContainer: ScrollableContainer;
-  private _renderedIndexRegistry = new Map<Element, number>();
-  private _renderedItemsRegistry = new Map<number, Element>();
+export default class AngularRenderer<T> extends BaseRenderer implements IRangeRenderer {
+  private _store: IItemStore<IItem> | null = null;
   private _itemsSetter: (items: ListItemProps<T>[]) => void;
   private _itemsFlusher: () => void;
   private _listItems: ListItemProps<T>[] = [];
 
   constructor(opts: AngularRendererOptions<T>) {
-    this._scrollableContainer = new ScrollableContainer({ ...opts });
+    super(opts);
     this._itemsSetter = opts.itemsSetter;
     this._itemsFlusher = opts.itemsFlusher;
-  }
-
-  render(startIndex: number, endIndex: number, direction: ScrollDirection): number {
-    const firstRenderedIndex = this.getRenderedBoundaryIndex('first');
-    const lastRenderedIndex = this.getRenderedBoundaryIndex('last');
-
-    let renderStartIndex = startIndex;
-    let renderEndIndex = endIndex;
-    let removeStartIndex = firstRenderedIndex;
-    let removeEndIndex = lastRenderedIndex;
-    let removedHeight = 0;
-
-    if (direction === 'down') {
-      if (removeStartIndex !== undefined && lastRenderedIndex !== undefined) {
-        removeEndIndex = Math.min(renderStartIndex - 1, lastRenderedIndex);
-        renderStartIndex = Math.max(lastRenderedIndex + 1, renderStartIndex);
-
-        if (removeStartIndex <= removeEndIndex) {
-          removedHeight = this.removeRange(
-            removeStartIndex,
-            removeEndIndex,
-            direction,
-          );
-        }
-      }
-    } else if (direction === 'up') {
-      if (removeEndIndex !== undefined && firstRenderedIndex !== undefined) {
-        removeStartIndex = Math.max(renderEndIndex + 1, firstRenderedIndex);
-        renderEndIndex = Math.min(firstRenderedIndex - 1, renderEndIndex);
-
-        if (removeStartIndex <= removeEndIndex) {
-          removedHeight = this.removeRange(
-            removeStartIndex,
-            removeEndIndex,
-            direction,
-          );
-        }
-      }
-    }
-
-    if (renderStartIndex < renderEndIndex) {
-      this.renderRange(renderStartIndex, renderEndIndex, direction);
-    }
-
-    return removedHeight;
   }
 
   renderRange(startIndex: number, endIndex: number, direction: ScrollDirection) {
@@ -111,30 +63,9 @@ export default class AngularRenderer<T> implements IRangeRenderer<T> {
           : this._listItems;
   }
 
-  removeRange(startIndex: number, endIndex: number, direction: ScrollDirection): number {
-    const renderedIndeces = this._renderedIndexRegistry;
-    const renderedItems = this._renderedItemsRegistry;
-    let removedItemsCount = 0;
-    let startRange = Infinity;
-    let endRange = 0;
-
-    for (let idx = startIndex; idx <= endIndex; idx++) {
-      const itemToRemove = renderedItems.get(idx);
-
-      if (itemToRemove) {
-        const { offsetTop, offsetHeight } = itemToRemove as HTMLElement;
-        const itemStyle = getComputedStyle(itemToRemove);
-        const marginTop = parseFloat(itemStyle.marginTop);
-        const marginBottom = parseFloat(itemStyle.marginBottom);
-
-        startRange = Math.min(startRange, offsetTop - marginTop);
-        endRange = Math.max(endRange, offsetTop + offsetHeight + marginBottom);
-
-        renderedItems.delete(idx);
-        renderedIndeces.delete(itemToRemove);
-        removedItemsCount++;
-      }
-    }
+  removeRange(startIndex: number, endIndex: number, direction?: ScrollDirection) {
+    const removal = super.removeRange(startIndex, endIndex);
+    const removedItemsCount = removal.itemsToRemove.length;
 
     if (removedItemsCount) {
       this._listItems =
@@ -145,42 +76,16 @@ export default class AngularRenderer<T> implements IRangeRenderer<T> {
             : this._listItems;
     }
 
-    return endRange > startRange ? endRange - startRange : 0;
+    return removal;
   }
 
   clear() {
-    this._renderedIndexRegistry.clear();
-    this._renderedItemsRegistry.clear();
+    super.clear();
     this._listItems = [];
     this._itemsSetter(this._listItems);
   }
 
-  getRenderedBoundaryIndex(boundary: 'first' | 'last'): number | undefined {
-    const renderedItem =
-      boundary === 'first'
-        ? this._scrollableContainer.getFirstItem()
-        : boundary === 'last'
-          ? this._scrollableContainer.getLastItem()
-          : null;
-
-    if (!renderedItem) return;
-
-    return this.getIndex(renderedItem);
-  }
-
-  getIndex(item: Element): number | undefined {
-    return this._renderedIndexRegistry.get(item);
-  }
-
-  getItem(index: number): Element | undefined {
-    return this._renderedItemsRegistry.get(index);
-  }
-
-  get scrollableContainer(): ScrollableContainer {
-    return this._scrollableContainer;
-  }
-
-  attach(store: IItemStore<IItem<T>>) {
+  attach(store: IItemStore<IItem>) {
     this._store = store;
   }
 
@@ -191,12 +96,8 @@ export default class AngularRenderer<T> implements IRangeRenderer<T> {
   }
 
   commit(renderedRefs: Map<number, Element>) {
-    const renderedIndeces = this._renderedIndexRegistry;
-    const renderedItems = this._renderedItemsRegistry;
-
     for (const [idx, element] of renderedRefs.entries()) {
-      renderedIndeces.set(element, idx);
-      renderedItems.set(idx, element);
+      this.registerElement(idx, element);
     }
 
     renderedRefs.clear();

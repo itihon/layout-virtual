@@ -5,7 +5,7 @@
  */
 
 import { flushSync } from 'react-dom';
-import { ScrollableContainer } from "layout-virtual";
+import { BaseRenderer } from 'layout-virtual';
 import type { IRangeRenderer, ScrollDirection, IItemStore, IItem, IReactItem, VirtualScrollStructure } from "layout-virtual/types";
 
 type ReactRendererOptions = {
@@ -18,57 +18,16 @@ interface IReactRenderer {
 
 type IndexedRef = React.RefObject<HTMLDivElement | null> & { idx: number };
 
-export default class ReactRenderer implements IRangeRenderer, IReactRenderer {
+export default class ReactRenderer extends BaseRenderer implements IRangeRenderer, IReactRenderer {
   private _store: IItemStore<IItem> | null = null;
-  private _scrollableContainer: ScrollableContainer;
-  private _renderedIndexRegistry = new Map<Element, number>();
-  private _renderedItemsRegistry = new Map<number, Element>();
   private _itemsSetter: React.Dispatch<React.SetStateAction<React.ReactNode[]>>;
   private _renderedRangeRefPool = new Map<number, IndexedRef>();
   private _listItems: React.ReactNode[] = [];
   private _flushItems = () => { this._itemsSetter(this._listItems); };
 
   constructor(opts: ReactRendererOptions) {
-    this._scrollableContainer = new ScrollableContainer({ ...opts });
+    super(opts);
     this._itemsSetter = opts.itemsSetter;
-  }
-
-  render(startIndex: number, endIndex: number, direction: ScrollDirection): number {
-    const firstRenderedIndex = this.getRenderedBoundaryIndex('first');
-    const lastRenderedIndex = this.getRenderedBoundaryIndex('last');
-
-    let renderStartIndex = startIndex;
-    let renderEndIndex = endIndex;
-    let removeStartIndex = firstRenderedIndex;
-    let removeEndIndex = lastRenderedIndex;
-    let removedHeight = 0;
-
-    if (direction === 'down') {
-      if (removeStartIndex !== undefined && lastRenderedIndex !== undefined) {
-        removeEndIndex = Math.min(renderStartIndex - 1, lastRenderedIndex);
-        renderStartIndex = Math.max(lastRenderedIndex + 1, renderStartIndex);
-       
-        if (removeStartIndex <= removeEndIndex) {
-          removedHeight = this.removeRange(removeStartIndex, removeEndIndex, direction);
-        }
-      }
-    }
-    else if (direction === 'up') {
-      if (removeEndIndex !== undefined && firstRenderedIndex !== undefined) {
-        removeStartIndex = Math.max(renderEndIndex + 1, firstRenderedIndex);
-        renderEndIndex = Math.min(firstRenderedIndex - 1, renderEndIndex);
-       
-        if (removeStartIndex <= removeEndIndex) {
-          removedHeight = this.removeRange(removeStartIndex, removeEndIndex, direction);
-        }
-      }
-    }
-
-    if (renderStartIndex < renderEndIndex) {
-      this.renderRange(renderStartIndex, renderEndIndex, direction);
-    }
-
-    return removedHeight;
   }
 
   renderRange(startIndex: number, endIndex: number, direction: ScrollDirection) {
@@ -100,30 +59,9 @@ export default class ReactRenderer implements IRangeRenderer, IReactRenderer {
         : this._listItems;
   }
 
-  removeRange(startIndex: number, endIndex: number, direction: ScrollDirection): number {
-    const renderedIndeces = this._renderedIndexRegistry;
-    const renderedItems = this._renderedItemsRegistry;
-    let removedItemsCount = 0;
-    let startRange = Infinity;
-    let endRange = 0;
-
-    for (let idx = startIndex; idx <= endIndex; idx++) {
-      const itemToRemove = renderedItems.get(idx); 
-
-      if (itemToRemove) {
-        const { offsetTop, offsetHeight } = itemToRemove as HTMLElement;
-        const itemStyle = getComputedStyle(itemToRemove);
-        const marginTop = parseFloat(itemStyle.marginTop);
-        const marginBottom = parseFloat(itemStyle.marginBottom);
-
-        startRange = Math.min(startRange, offsetTop - marginTop);
-        endRange = Math.max(endRange, offsetTop + offsetHeight + marginBottom);
-
-        renderedItems.delete(idx);
-        renderedIndeces.delete(itemToRemove);
-        removedItemsCount++;
-      }
-    }
+  removeRange(startIndex: number, endIndex: number, direction?: ScrollDirection) {
+    const removal = super.removeRange(startIndex, endIndex);
+    const removedItemsCount = removal.itemsToRemove.length;
 
     if (removedItemsCount) {
       this._listItems = direction === 'down'
@@ -133,38 +71,13 @@ export default class ReactRenderer implements IRangeRenderer, IReactRenderer {
           : this._listItems;
     }
 
-    return endRange > startRange ? endRange - startRange : 0;
+    return removal;
   }
 
   clear() {
-    this._renderedIndexRegistry.clear();
-    this._renderedItemsRegistry.clear();
+    super.clear();
     this._listItems = [];
     this._itemsSetter(this._listItems);
-  }
-
-  getRenderedBoundaryIndex(boundary: 'first' | 'last'): number | undefined {
-    const renderedItem = boundary === 'first'
-      ? this._scrollableContainer.getFirstItem()
-      : boundary === 'last'
-        ? this._scrollableContainer.getLastItem()
-        : null;
-
-    if (!renderedItem) return;
-
-    return this.getIndex(renderedItem);
-  }
-
-  getIndex(item: Element): number | undefined {
-    return this._renderedIndexRegistry.get(item);
-  }
-
-  getItem(index: number): Element | undefined {
-    return this._renderedItemsRegistry.get(index);
-  }
-
-  get scrollableContainer(): ScrollableContainer {
-    return this._scrollableContainer;
   }
 
   attach(store: IItemStore<IItem>) {
@@ -177,16 +90,13 @@ export default class ReactRenderer implements IRangeRenderer, IReactRenderer {
   }
 
   commit() {
-    const renderedIndeces = this._renderedIndexRegistry;
-    const renderedItems = this._renderedItemsRegistry;
     const renderedRefs = this._renderedRangeRefPool;
 
     for (const ref of renderedRefs.values()) {
       const { idx, current: element } = ref;
 
       if (element) {
-        renderedIndeces.set(element, idx);
-        renderedItems.set(idx, element);
+        this.registerElement(idx, element);
       }
     }
 
