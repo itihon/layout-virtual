@@ -78,7 +78,6 @@ export default class VueRenderer<T> implements IRangeRenderer<T> {
   }
 
   renderRange(startIndex: number, endIndex: number, direction: ScrollDirection) {
-    console.log('_renderRange', startIndex, endIndex, direction)
     const store = this._store;
     const listItems = this._listItems;
     const itemsToAdd: ListItemProps<T>[] = [];
@@ -134,8 +133,6 @@ export default class VueRenderer<T> implements IRangeRenderer<T> {
           : this._listItems;
     }
 
-    console.log('_removeItems startIndex:', startIndex, 'endIndex:', endIndex, 'removedHeight:', endRange > startRange ? endRange - startRange : 0, 'removedItemsCount:', removedItemsCount);
-
     return endRange > startRange ? endRange - startRange : 0;
   }
 
@@ -176,7 +173,6 @@ export default class VueRenderer<T> implements IRangeRenderer<T> {
   }
 
   flush() {
-    console.error('flush', this._listItems)
     this._itemsSetter(this._listItems);
     return nextTick();
   }

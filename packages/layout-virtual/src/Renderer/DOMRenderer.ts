@@ -30,8 +30,6 @@ export default class DOMRenderer implements IRangeRenderer {
     let removedHeight = 0;
 
     if (direction === 'down') {
-      console.log('SCROLLING DOWN')
-
       if (removeStartIndex !== undefined && lastRenderedIndex !== undefined) {
         removeEndIndex = Math.min(renderStartIndex - 1, lastRenderedIndex);
         renderStartIndex = Math.max(lastRenderedIndex + 1, renderStartIndex);
@@ -42,13 +40,10 @@ export default class DOMRenderer implements IRangeRenderer {
       }
     }
     else if (direction === 'up') {
-      console.log('SCROLLING UP')
-
       if (removeEndIndex !== undefined && firstRenderedIndex !== undefined) {
         removeStartIndex = Math.max(renderEndIndex + 1, firstRenderedIndex);
         renderEndIndex = Math.min(firstRenderedIndex - 1, renderEndIndex);
        
-        console.log('remove:', removeStartIndex, removeEndIndex)
         if (removeStartIndex < removeEndIndex) {
           removedHeight = this.removeRange(removeStartIndex, removeEndIndex);
         }
@@ -63,9 +58,6 @@ export default class DOMRenderer implements IRangeRenderer {
   }
 
   renderRange(startIndex: number, endIndex: number, direction: ScrollDirection) {
-    console.log('_renderRange', startIndex, endIndex, direction)
-    if (startIndex > endIndex) console.error('_renderRange', startIndex, endIndex, direction);
-
     const store = this._store;
     const scrollableContainer = this._scrollableContainer;
     const renderedIndeces = this._renderedIndexRegistry;
@@ -124,8 +116,6 @@ export default class DOMRenderer implements IRangeRenderer {
     for (let idx = 0; idx < itemsCount; idx++) {
       itemsToRemove[idx]!.remove();
     }
-
-    console.log('_removeItems startIndex:', startIndex, 'endIndex:', endIndex, 'removedHeight:', endRange > startRange ? endRange - startRange : 0);
 
     return endRange > startRange ? endRange - startRange : 0;
   }

@@ -203,7 +203,6 @@ export default class AngularRenderer<T> implements IRangeRenderer<T> {
   }
 
   commit(renderedRefs: Map<number, Element>) {
-    console.log('commit', renderedRefs);
     const renderedIndeces = this._renderedIndexRegistry;
     const renderedItems = this._renderedItemsRegistry;
 

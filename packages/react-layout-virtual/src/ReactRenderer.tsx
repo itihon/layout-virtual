@@ -44,8 +44,6 @@ export default class ReactRenderer implements IRangeRenderer, IReactRenderer {
     let removedHeight = 0;
 
     if (direction === 'down') {
-      console.log('SCROLLING DOWN')
-
       if (removeStartIndex !== undefined && lastRenderedIndex !== undefined) {
         removeEndIndex = Math.min(renderStartIndex - 1, lastRenderedIndex);
         renderStartIndex = Math.max(lastRenderedIndex + 1, renderStartIndex);
@@ -56,8 +54,6 @@ export default class ReactRenderer implements IRangeRenderer, IReactRenderer {
       }
     }
     else if (direction === 'up') {
-      console.log('SCROLLING UP')
-
       if (removeEndIndex !== undefined && firstRenderedIndex !== undefined) {
         removeStartIndex = Math.max(renderEndIndex + 1, firstRenderedIndex);
         renderEndIndex = Math.min(firstRenderedIndex - 1, renderEndIndex);
@@ -76,9 +72,6 @@ export default class ReactRenderer implements IRangeRenderer, IReactRenderer {
   }
 
   renderRange(startIndex: number, endIndex: number, direction: ScrollDirection) {
-    console.log('_renderRange', startIndex, endIndex, direction)
-    if (startIndex > endIndex) console.error('_renderRange', startIndex, endIndex, direction);
-
     const store = this._store;
     // const listItems = [];
     const listItems = this._listItems;
@@ -139,8 +132,6 @@ export default class ReactRenderer implements IRangeRenderer, IReactRenderer {
           ? this._listItems.slice(0, -removedItemsCount)
           : this._listItems;
     }
-
-    console.log('_removeItems startIndex:', startIndex, 'endIndex:', endIndex, 'removedHeight:', endRange > startRange ? endRange - startRange : 0, 'removedItemsCount:', removedItemsCount);
 
     return endRange > startRange ? endRange - startRange : 0;
   }
