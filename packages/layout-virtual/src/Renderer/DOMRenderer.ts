@@ -70,7 +70,7 @@ export default class DOMRenderer implements IRangeRenderer {
       const item = store.getByIndex(idx);
 
       if (item) {
-        const element = item.render(item.data);
+        const element = item.render({ data: item.data, index: idx });
 
         fragment.append(element);
         renderedIndeces.set(element, idx);
