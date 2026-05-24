@@ -4,9 +4,9 @@
  * @author Alexandr Kalabin
  */
 
-import { nextTick, type Ref, type VNodeChild } from 'vue';
+import { nextTick, type Ref } from 'vue';
 import { BaseRenderer } from 'layout-virtual';
-import type { IItem, IItemStore, IRangeRenderer, ScrollDirection, VirtualScrollStructure } from 'layout-virtual/types';
+import type { IItem, IItemStore, IRangeRenderer, ScrollDirection, VirtualScrollStructure, IVueItem } from 'layout-virtual/types';
 
 export interface ListItemProps<T = unknown> {
   data: T;
@@ -16,11 +16,6 @@ export interface ListItemProps<T = unknown> {
 type VueRendererOptions<T> = {
   itemsSetter: (items: ListItemProps<T>[]) => void;
 } & VirtualScrollStructure;
-
-export type VueListItem<T = unknown> = {
-  data: T;
-  render: (props: ListItemProps<T>) => VNodeChild;
-};
 
 export type IndexedRef = {
   value: Element | null;
@@ -45,7 +40,7 @@ export default class VueRenderer<T> extends BaseRenderer implements IRangeRender
     if (!store) return;
 
     for (let idx = startIndex; idx <= endIndex; idx++) {
-      const item = store.getByIndex(idx) as VueListItem<T> | undefined;
+      const item = store.getByIndex(idx) as IVueItem<T> | undefined;
 
       if (item) {
         itemsToAdd.push({ data: item.data, index: idx });

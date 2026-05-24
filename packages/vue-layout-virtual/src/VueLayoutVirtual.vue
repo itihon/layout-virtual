@@ -11,7 +11,7 @@ import { LayoutVirtual, DynamicListLayout, ArrayItemStore } from 'layout-virtual
 import VueRenderer, { type ListItemProps } from './VueRenderer';
 
 export interface VirtualizedListVueProps<T> {
-  scrollerRef?: Ref<HTMLDivElement>;
+  scrollerRef?: Ref<HTMLElement>;
   overscanHeight?: number; 
   data: T[];
 }
