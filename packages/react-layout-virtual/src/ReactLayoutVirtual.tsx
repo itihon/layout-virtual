@@ -16,7 +16,7 @@ export interface ListItemProps<T = unknown> {
 }
 
 export interface VirtualizedListReactProps<T> {
-  scrollerRef?: React.RefObject<HTMLDivElement>;
+  scrollerRef?: React.RefObject<HTMLElement>;
   overscanHeight?: number; 
   data: T[];
   renderItem: (props: ListItemProps<T>) => React.ReactNode;
@@ -24,8 +24,7 @@ export interface VirtualizedListReactProps<T> {
 
 export default function VirtualizedListReact<T>(props: VirtualizedListReactProps<T>) {
   const { overscanHeight = 200, data, renderItem, scrollerRef } = props;
-  const internalContainerRef = useRef<HTMLDivElement>(null);
-  const containerRef = scrollerRef ?? internalContainerRef;
+  const containerRef = useRef<HTMLDivElement>(null);
   const scrollHeightFillerRef = useRef<HTMLDivElement>(null);
   const viewportContainerRef = useRef<HTMLDivElement>(null);
   const scrollCanvasRef = useRef<HTMLDivElement>(null);
@@ -37,7 +36,7 @@ export default function VirtualizedListReact<T>(props: VirtualizedListReactProps
 
   useLayoutEffect(() => {
     renderer.current = new ReactRenderer({
-      container: containerRef.current!,
+      container: scrollerRef?.current || containerRef.current!,
       scrollHeightFiller: scrollHeightFillerRef.current!,
       viewportContainer: viewportContainerRef.current!,
       scrollCanvas: scrollCanvasRef.current!,
