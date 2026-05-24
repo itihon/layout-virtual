@@ -17,8 +17,8 @@ function extraLines(i: number) {
 
 <template>
   <VirtualizedListVue :data="data" :overscan-height="100">
-    <template #renderItem="{ data, index, elRef }">
-      <div :ref="elRef" class="list-item" :id="`item-${data.i}`" :data-index="index">
+    <template #renderItem="{ data, index, ref }">
+      <div :ref="ref" class="list-item" :id="`item-${data.i}`" :data-index="index">
         Item {{ data.i }}.
         <div v-for="(text, idx) in extraLines(data.i)" :key="idx">{{ text }}</div>
       </div>

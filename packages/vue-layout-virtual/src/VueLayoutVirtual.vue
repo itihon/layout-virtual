@@ -72,7 +72,7 @@ onUpdated(() => {
         <div ref="topSpacerRef"></div>
         <div ref="contentLayerRef">
           <template v-for="item in visibleItems" :key="item.index" >
-            <slot name="renderItem" :data="item.data" :index="item.index" :elRef="getRef(item.index)" />
+            <slot name="renderItem" :data="item.data" :index="item.index" :ref="getRef(item.index)" />
           </template>
         </div>
         <div ref="bottomSpacerRef"></div>
@@ -87,7 +87,7 @@ onUpdated(() => {
         <div ref="topSpacerRef"></div>
         <div ref="contentLayerRef">
           <template v-for="item in visibleItems" :key="item.index" >
-            <slot name="renderItem" :data="item.data" :index="item.index" :elRef="getRef(item.index)" />
+            <slot name="renderItem" :data="item.data" :index="item.index" :ref="getRef(item.index)" />
           </template>
         </div>
         <div ref="bottomSpacerRef"></div>
