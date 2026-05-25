@@ -4,7 +4,7 @@
  * @author Alexandr Kalabin
  */
 
-import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
+import { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { LayoutVirtual, DynamicListLayout } from 'layout-virtual';
 import ReactRenderer, { type ListItemProps, type ItemRenderer } from './ReactRenderer';
