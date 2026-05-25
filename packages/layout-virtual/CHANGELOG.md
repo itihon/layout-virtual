@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.1.2
+
+### Patch Changes
+
+- 5f612e4: Checking TS batch publishing issue.
+
 ## 0.1.1
 
 ### Patch Changes

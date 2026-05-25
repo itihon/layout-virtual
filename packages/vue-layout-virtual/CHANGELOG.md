@@ -1,5 +1,13 @@
 # vue-layout-virtual
 
+## 0.0.6
+
+### Patch Changes
+
+- 5f612e4: Checking TS batch publishing issue.
+- Updated dependencies [5f612e4]
+  - layout-virtual@0.1.2
+
 ## 0.0.5
 
 ### Patch Changes
