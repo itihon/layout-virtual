@@ -30,14 +30,12 @@ export default class ScrollRelay extends ElementMetricsCache {
 
     if (!eventBus || !eventType) return;
 
-    const scrollDelta = scrollTop - previousScrollTop;
-
     if (previousScrollTop < scrollTop) {
       const direction = 'down';
 
       // scrollHeight change protection
       if (this._ignoreNextDirectionChange || this._previousDirection === direction) {
-        eventBus.emit(eventType, scrollTop, direction, scrollDelta);
+        eventBus.emit(eventType, scrollTop, direction);
       }
 
       this._previousDirection = direction;
@@ -47,7 +45,7 @@ export default class ScrollRelay extends ElementMetricsCache {
 
       // scrollHeight change protection
       if (this._ignoreNextDirectionChange || this._previousDirection === direction) {
-        eventBus.emit(eventType, scrollTop, direction, scrollDelta);
+        eventBus.emit(eventType, scrollTop, direction);
       }
 
       this._previousDirection = direction;

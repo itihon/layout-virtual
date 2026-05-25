@@ -315,7 +315,7 @@ export default class DynamicListLayout {
     return position;
   }
 
-  private _scrollContent = async (scrollTop: number, direction: ScrollDirection, scrollDelta: number) => {
+  private _scrollContent = async (scrollTop: number, direction: ScrollDirection) => {
 
     const scrollableContainer = this._scrollableContainer;
 
