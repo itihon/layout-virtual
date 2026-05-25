@@ -5,7 +5,7 @@
  */
 
 import { nextTick, type Ref } from 'vue';
-import { BaseRenderer } from 'layout-virtual';
+import { BaseRenderer } from 'layout-virtual/core';
 import type { IRangeRenderer, ScrollDirection, VirtualScrollStructure } from 'layout-virtual/types';
 
 export interface ListItemProps<T = unknown> {

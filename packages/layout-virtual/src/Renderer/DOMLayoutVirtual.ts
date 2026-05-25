@@ -4,7 +4,7 @@
  * @author Alexandr Kalabin
  */
 
-import { LayoutVirtual, DynamicListLayout } from 'layout-virtual';
+import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import DOMRenderer, { type ItemRenderer} from './DOMRenderer';
 
 export interface ListItemProps<T = unknown> {

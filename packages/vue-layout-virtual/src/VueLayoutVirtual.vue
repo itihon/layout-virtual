@@ -7,7 +7,7 @@
 <script setup lang="ts" generic="T">
 import { type Ref } from 'vue';
 import { onMounted, onUpdated, ref } from 'vue';
-import { LayoutVirtual, DynamicListLayout } from 'layout-virtual';
+import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import VueRenderer, { type ListItemProps } from './VueRenderer';
 
 export interface VirtualizedListVueProps<T> {

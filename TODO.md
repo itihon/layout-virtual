@@ -1,4 +1,9 @@
-- [ ] make separate fixtures for manual and auto tests 
+- [ ] Tests and CI
+- [ ] Grid support
+- [ ] Groups support
+- [ ] Styling support
+- [ ] Examples
+- [ ] Bundle optimization, mangling config, renaming public methods, strip unused code
 
 # Refactor 
 
@@ -9,17 +14,6 @@
   - [ ] change some methods of ScrollableContainer to getters and setters.
   - [ ] ScrollableContainer: Since there is the method getItems(), having getFirstItem() and getLastItem() is probably pointless.
   - [ ] Add "pointer-events: none" to all items, content layer and scroll canvas on scroll start, and remove on scroll end for performance boost.
-  - [ ] Optimaze store for DynamicListLayout: 
-
-  ```ts
-    // Minimal interface sufficient for DynamicListLayout, basically it's just a Map
-    export interface IItemStore<ItemType extends StoredItem = unknown> {
-      insertAt: (index: number, item: ItemType) => void; 
-      deleteAt: (index: number) => void;
-      getByIndex: (index: number) => MeasuredItem<ItemType> | undefined;
-      readonly size: number;
-    }
-  ```
 
 # Bugs
 

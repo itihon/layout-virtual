@@ -1,15 +1,16 @@
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
-export function definePackageConfig({ packageDir, plugins = [], external = [] }) {
+export function definePackageConfig({ packageDir, plugins = [], external = [], entries = [] }) {
   return defineConfig({
     build: {
+      sourcemap: true,
       copyPublicDir: false,
       emptyOutDir: true,
       minify: "terser",
       lib: {
-        entry: resolve(packageDir, "src/index.ts"),
-        fileName: "index",
+        entry: [resolve(packageDir, "src/index.ts"), ...entries],
+        fileName: (_, entryName) => `${entryName}.js`,
         formats: ["es"],
       },
       rollupOptions: {

@@ -4,7 +4,7 @@
  * @author Alexandr Kalabin
  */
 
-import { BaseRenderer } from 'layout-virtual';
+import { BaseRenderer } from 'layout-virtual/core';
 import type {
   IRangeRenderer,
   ScrollDirection,

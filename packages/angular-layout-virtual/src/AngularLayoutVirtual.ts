@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import type { AfterViewInit, ElementRef } from '@angular/core';
 import type { IRangeRenderer } from 'layout-virtual/types';
-import { LayoutVirtual, DynamicListLayout } from 'layout-virtual';
+import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import AngularRenderer, { type ListItemProps } from './AngularRenderer';
 
 export type VirtualizedListItemContext<T> = ListItemProps<T> & {

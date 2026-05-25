@@ -6,7 +6,7 @@
 
 import { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { LayoutVirtual, DynamicListLayout } from 'layout-virtual';
+import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import ReactRenderer, { type ListItemProps, type ItemRenderer } from './ReactRenderer';
 
 export interface VirtualizedListReactProps<T> {

@@ -39,6 +39,10 @@
     "./types": {
       "types": "./dist/types/types.d.ts",
       "import": "./dist/types/types.js"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "import": "./dist/core.js"
     }
   },
   "scripts": {

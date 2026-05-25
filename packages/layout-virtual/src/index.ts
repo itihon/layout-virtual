@@ -1,11 +1,7 @@
 /**
- * @fileoverview Package entry point
+ * @fileoverview Virtualized list vanilla component entry point
  * @license MIT
  * @author Alexandr Kalabin
  */
 
-export { default as LayoutVirtual } from './LayoutVirtual';
-export { default as DynamicListLayout } from './Layout/DynamicListLayout';
-export { default as BaseRenderer } from './Renderer/BaseRenderer';
-export { default } from './Renderer/DOMLayoutVirtual';
-export { type ListItemProps } from './Renderer/DOMLayoutVirtual';
+export { default, type ListItemProps } from './Renderer/DOMLayoutVirtual';

@@ -3,6 +3,6 @@ import { definePackageConfig } from "../../vite.package.config.js";
 
 export default definePackageConfig({
   packageDir: import.meta.dirname,
-  external: ["layout-virtual", "vue"],
+  external: ["layout-virtual/core", "vue"],
   plugins: [vue()],
 });
