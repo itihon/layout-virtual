@@ -1,5 +1,13 @@
 # angular-layout-virtual
 
+## 0.0.6
+
+### Patch Changes
+
+- 73933ef: Optimize bundle size, separate library core entry point from the vanilla component.
+- Updated dependencies [73933ef]
+  - layout-virtual@0.1.1
+
 ## 0.0.5
 
 ### Patch Changes

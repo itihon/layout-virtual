@@ -1,5 +1,13 @@
 # vue-layout-virtual
 
+## 0.0.5
+
+### Patch Changes
+
+- 73933ef: Optimize bundle size, separate library core entry point from the vanilla component.
+- Updated dependencies [73933ef]
+  - layout-virtual@0.1.1
+
 ## 0.0.4
 
 ### Patch Changes
