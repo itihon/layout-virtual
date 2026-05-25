@@ -7,12 +7,12 @@
  * @author Alexandr Kalabin
  */
 
-import type { IEventEmitter, IEventMap, VirtualScrollStructure } from '../types/types';
+import type { IEventEmitter, IEventMap, IScrollableContainer, VirtualScrollStructure } from '../types/types';
 import DOMConstructor from '../Renderer/DOMConstructor';
 import ScrollRelay from './ScrollRelay';
 import classes from './NativeScrollContainer.module.css';
 
-export default class ScrollableContainer {
+export default class ScrollableContainer implements IScrollableContainer {
   private _container: HTMLElement;
   private _scrollHeightFiller: DOMConstructor;
   private _viewportContainer: DOMConstructor;
@@ -48,13 +48,13 @@ export default class ScrollableContainer {
 
   constructor(opts: VirtualScrollStructure) {
     this._container = opts.container;
-    this._container.classList.add(classes.scrollableContainer);
-    this._scrollHeightFiller = new DOMConstructor(this._container, [classes.scrollHeightFiller], opts.scrollHeightFiller);
-    this._viewportContainer = new DOMConstructor(this._container, [classes.viewportContainer], opts.viewportContainer);
-    this._scrollCanvas = new DOMConstructor(this._viewportContainer.DOMRoot, [classes.scrollCanvas], opts.scrollCanvas);
-    this._topSpacer = new DOMConstructor(this._scrollCanvas.DOMRoot, [classes.topSpacer], opts.topSpacer);
-    this._contentLayer = new DOMConstructor(this._scrollCanvas.DOMRoot, [classes.contentLayer], opts.contentLayer);
-    this._bottomSpacer = new DOMConstructor(this._scrollCanvas.DOMRoot, [classes.bottomSpacer], opts.bottomSpacer);
+    this._container.classList.add(classes.scrollableContainer!);
+    this._scrollHeightFiller = new DOMConstructor(this._container, [classes.scrollHeightFiller!], opts.scrollHeightFiller);
+    this._viewportContainer = new DOMConstructor(this._container, [classes.viewportContainer!], opts.viewportContainer);
+    this._scrollCanvas = new DOMConstructor(this._viewportContainer.DOMRoot, [classes.scrollCanvas!], opts.scrollCanvas);
+    this._topSpacer = new DOMConstructor(this._scrollCanvas.DOMRoot, [classes.topSpacer!], opts.topSpacer);
+    this._contentLayer = new DOMConstructor(this._scrollCanvas.DOMRoot, [classes.contentLayer!], opts.contentLayer);
+    this._bottomSpacer = new DOMConstructor(this._scrollCanvas.DOMRoot, [classes.bottomSpacer!], opts.bottomSpacer);
     this._containerScroller = new ScrollRelay(this._container);
     this._viewportScroller = new ScrollRelay(this._viewportContainer.DOMRoot);
 

@@ -5,4 +5,4 @@
  */
 
 export { default } from './ReactLayoutVirtual';
-export { type ListItemProps } from './ReactLayoutVirtual';
+export { type ListItemProps } from './ReactRenderer';

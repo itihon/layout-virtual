@@ -5,10 +5,13 @@
  */
 
 import BaseRenderer from "./BaseRenderer";
-import type { IRangeRenderer, ScrollDirection, IItemStore, IItem } from "../types/types";
+import type { IRangeRenderer, ScrollDirection } from "../types/types";
 
-export default class DOMRenderer extends BaseRenderer implements IRangeRenderer {
-  private _store: IItemStore<IItem> | null = null;
+export type ItemRenderer<T> = (props: { data: T, index: number }) => HTMLElement;
+
+export default class DOMRenderer<DataType = unknown> extends BaseRenderer implements IRangeRenderer<DataType, ItemRenderer<DataType>> {
+  private _store: DataType[] = [];
+  private _renderItem: ItemRenderer<DataType> | null = null;
 
   constructor(container: HTMLElement) {
     super({ container });
@@ -18,16 +21,16 @@ export default class DOMRenderer extends BaseRenderer implements IRangeRenderer 
     const store = this._store;
     const fragment = document.createDocumentFragment();
 
-    if (!store) return;
+    for (let index = startIndex; index <= endIndex; index++) {
+      const data = store[index];
 
-    for (let idx = startIndex; idx <= endIndex; idx++) {
-      const item = store.getByIndex(idx);
+      if (data) {
+        const element = this._renderItem?.({ data, index });
 
-      if (item) {
-        const element = item.render({ data: item.data, index: idx });
-
-        fragment.append(element);
-        this.registerElement(idx, element);
+        if (element) {
+          fragment.append(element);
+          this.registerElement(index, element);
+        }
       }
     }
 
@@ -56,11 +59,19 @@ export default class DOMRenderer extends BaseRenderer implements IRangeRenderer 
     this._scrollableContainer.clear();
   }
 
-  attach(store: IItemStore<IItem>) {
+  setData(store: DataType[]) {
     this._store = store;
+  }
+
+  setRenderItem(renderItem: ItemRenderer<DataType>) {
+    this._renderItem = renderItem;
   }
 
   flush() {
     return Promise.resolve();
+  }
+
+  get dataSize() {
+    return this._store.length;
   }
 }

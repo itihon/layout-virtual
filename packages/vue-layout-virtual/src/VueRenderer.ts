@@ -6,7 +6,7 @@
 
 import { nextTick, type Ref } from 'vue';
 import { BaseRenderer } from 'layout-virtual';
-import type { IItem, IItemStore, IRangeRenderer, ScrollDirection, VirtualScrollStructure, IVueItem } from 'layout-virtual/types';
+import type { IRangeRenderer, ScrollDirection, VirtualScrollStructure } from 'layout-virtual/types';
 
 export interface ListItemProps<T = unknown> {
   data: T;
@@ -22,12 +22,12 @@ export type IndexedRef = {
   idx: number;
 };
 
-export default class VueRenderer<T> extends BaseRenderer implements IRangeRenderer {
-  private _store: IItemStore<IItem> | null = null;
-  private _itemsSetter: (items: ListItemProps<T>[]) => void;
-  private _listItems: ListItemProps<T>[] = [];
+export default class VueRenderer<DataType = unknown> extends BaseRenderer implements IRangeRenderer<DataType> {
+  private _store: DataType[] = [];
+  private _itemsSetter: (items: ListItemProps<DataType>[]) => void;
+  private _listItems: ListItemProps<DataType>[] = [];
 
-  constructor(opts: VueRendererOptions<T>) {
+  constructor(opts: VueRendererOptions<DataType>) {
     super(opts);
     this._itemsSetter = opts.itemsSetter;
   }
@@ -35,15 +35,13 @@ export default class VueRenderer<T> extends BaseRenderer implements IRangeRender
   renderRange(startIndex: number, endIndex: number, direction: ScrollDirection) {
     const store = this._store;
     const listItems = this._listItems;
-    const itemsToAdd: ListItemProps<T>[] = [];
+    const itemsToAdd: ListItemProps<DataType>[] = [];
 
-    if (!store) return;
+    for (let index = startIndex; index <= endIndex; index++) {
+      const data = store[index];
 
-    for (let idx = startIndex; idx <= endIndex; idx++) {
-      const item = store.getByIndex(idx) as IVueItem<T> | undefined;
-
-      if (item) {
-        itemsToAdd.push({ data: item.data, index: idx });
+      if (data) {
+        itemsToAdd.push({ data, index });
       }
     }
 
@@ -76,8 +74,12 @@ export default class VueRenderer<T> extends BaseRenderer implements IRangeRender
     this._itemsSetter(this._listItems);
   }
 
-  attach(store: IItemStore<IItem>) {
+  setData(store: DataType[]) {
     this._store = store;
+  }
+
+  setRenderItem() {
+    /* not needed for Vue renderer */
   }
 
   flush() {
@@ -93,5 +95,9 @@ export default class VueRenderer<T> extends BaseRenderer implements IRangeRender
     }
 
     renderedRefs.clear();
+  }
+
+  get dataSize() {
+    return this._store.length;
   }
 }

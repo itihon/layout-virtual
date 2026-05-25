@@ -6,14 +6,8 @@
 
 import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { LayoutVirtual, DynamicListLayout, ArrayItemStore } from 'layout-virtual';
-import ReactRenderer from './ReactRenderer';
-
-export interface ListItemProps<T = unknown> {
-  data: T;
-  ref: React.Ref<HTMLDivElement> | undefined;
-  index: number;
-}
+import { LayoutVirtual, DynamicListLayout } from 'layout-virtual';
+import ReactRenderer, { type ListItemProps, type ItemRenderer } from './ReactRenderer';
 
 export interface VirtualizedListReactProps<T> {
   scrollerRef?: React.RefObject<HTMLElement>;
@@ -22,7 +16,7 @@ export interface VirtualizedListReactProps<T> {
   renderItem: (props: ListItemProps<T>) => React.ReactNode;
 }
 
-export default function VirtualizedListReact<T>(props: VirtualizedListReactProps<T>) {
+export default function VirtualizedListReact<ItemData = unknown>(props: VirtualizedListReactProps<ItemData>) {
   const { overscanHeight = 200, data, renderItem, scrollerRef } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollHeightFillerRef = useRef<HTMLDivElement>(null);
@@ -32,10 +26,10 @@ export default function VirtualizedListReact<T>(props: VirtualizedListReactProps
   const contentLayerRef = useRef<HTMLDivElement>(null);
   const bottomSpacerRef = useRef<HTMLDivElement>(null);
   const [visibleItems, setVisibleItems] = useState<React.ReactNode[]>([]);
-  const renderer = useRef<ReactRenderer | undefined>(undefined);
+  const renderer = useRef<ReactRenderer<ItemData> | undefined>(undefined);
 
   useLayoutEffect(() => {
-    renderer.current = new ReactRenderer({
+    renderer.current = new ReactRenderer<ItemData>({
       container: scrollerRef?.current || containerRef.current!,
       scrollHeightFiller: scrollHeightFillerRef.current!,
       viewportContainer: viewportContainerRef.current!,
@@ -46,13 +40,11 @@ export default function VirtualizedListReact<T>(props: VirtualizedListReactProps
       itemsSetter: setVisibleItems,
     });
 
-    const store = new ArrayItemStore();
-    const layout = new DynamicListLayout({ overscanHeight, renderer: renderer.current });
-    const list = new LayoutVirtual({ store, layout });
+    const layout = new DynamicListLayout<ItemData, ItemRenderer<ItemData>>({ overscanHeight, renderer: renderer.current });
+    const list = new LayoutVirtual<ItemData, ItemRenderer<ItemData>>({ layout });
 
-    for (let idx = 0; idx < data.length; idx++) {
-      list.insert({ data: data[idx], render: renderItem }, idx);
-    }
+    list.setData(data);
+    list.setRenderItem(renderItem);
   }, []);
 
   useEffect(() => {

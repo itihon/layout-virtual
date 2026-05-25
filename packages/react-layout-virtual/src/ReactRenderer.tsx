@@ -6,7 +6,15 @@
 
 import { flushSync } from 'react-dom';
 import { BaseRenderer } from 'layout-virtual';
-import type { IRangeRenderer, ScrollDirection, IItemStore, IItem, IReactItem, VirtualScrollStructure } from "layout-virtual/types";
+import type { IRangeRenderer, ScrollDirection, VirtualScrollStructure } from "layout-virtual/types";
+
+export interface ListItemProps<T = unknown> {
+  data: T;
+  ref: React.Ref<HTMLDivElement> | undefined;
+  index: number;
+}
+
+export type ItemRenderer<T> = React.FC<ListItemProps<T>>;
 
 type ReactRendererOptions = {
   itemsSetter: React.Dispatch<React.SetStateAction<React.ReactNode[]>>;
@@ -18,8 +26,9 @@ interface IReactRenderer {
 
 type IndexedRef = React.RefObject<HTMLDivElement | null> & { idx: number };
 
-export default class ReactRenderer extends BaseRenderer implements IRangeRenderer, IReactRenderer {
-  private _store: IItemStore<IItem> | null = null;
+export default class ReactRenderer<DataType = unknown> extends BaseRenderer implements IRangeRenderer<DataType, ItemRenderer<DataType>>, IReactRenderer {
+  private _store: DataType[] = [];
+  private _renderItem: ItemRenderer<DataType> | null = null;
   private _itemsSetter: React.Dispatch<React.SetStateAction<React.ReactNode[]>>;
   private _renderedRangeRefPool = new Map<number, IndexedRef>();
   private _listItems: React.ReactNode[] = [];
@@ -32,23 +41,22 @@ export default class ReactRenderer extends BaseRenderer implements IRangeRendere
 
   renderRange(startIndex: number, endIndex: number, direction: ScrollDirection) {
     const store = this._store;
-    // const listItems = [];
     const listItems = this._listItems;
     const itemsToAdd: React.ReactNode[] = [];
     const refPool = this._renderedRangeRefPool;
 
-    if (!store) return;
+    for (let index = startIndex; index <= endIndex; index++) {
+      const data = store[index];
 
-    for (let idx = startIndex; idx <= endIndex; idx++) {
-      const item = store.getByIndex(idx) as unknown as IReactItem | undefined;
+      if (data) {
+        const ListItem = this._renderItem;
 
-      if (item) {
-        const ListItem = item.render;
+        if (ListItem) {
+          const ref: IndexedRef = refPool.get(index) || { current: null, idx: index };
 
-        const ref: IndexedRef = refPool.get(idx) || { current: null, idx };
-
-        refPool.set(idx, ref);
-        itemsToAdd.push(<ListItem data={item.data} key={idx} ref={ref} index={idx} />);
+          refPool.set(index, ref);
+          itemsToAdd.push(<ListItem data={data} key={index} ref={ref} index={index} />);
+        }
       }
     }
 
@@ -80,8 +88,12 @@ export default class ReactRenderer extends BaseRenderer implements IRangeRendere
     this._itemsSetter(this._listItems);
   }
 
-  attach(store: IItemStore<IItem>) {
+  setData(store: DataType[]) {
     this._store = store;
+  }
+
+  setRenderItem(renderItem: ItemRenderer<DataType>) {
+    this._renderItem = renderItem;
   }
 
   flush() {
@@ -101,5 +113,9 @@ export default class ReactRenderer extends BaseRenderer implements IRangeRendere
     }
 
     renderedRefs.clear();
+  }
+
+  get dataSize() {
+    return this._store.length;
   }
 }

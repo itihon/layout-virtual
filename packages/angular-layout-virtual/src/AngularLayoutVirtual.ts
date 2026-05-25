@@ -15,8 +15,8 @@ import {
   inject,
 } from '@angular/core';
 import type { AfterViewInit, ElementRef } from '@angular/core';
-import type { IItem, IRangeRenderer } from 'layout-virtual/types';
-import { LayoutVirtual, DynamicListLayout, ArrayItemStore } from 'layout-virtual';
+import type { IRangeRenderer } from 'layout-virtual/types';
+import { LayoutVirtual, DynamicListLayout } from 'layout-virtual';
 import AngularRenderer, { type ListItemProps } from './AngularRenderer';
 
 export type VirtualizedListItemContext<T> = ListItemProps<T> & {
@@ -93,27 +93,16 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
       itemsFlusher: this.flushVisibleItems,
     });
 
-    const store = new ArrayItemStore();
     const layout = new DynamicListLayout({
       overscanHeight: this.overscanHeight,
       renderer: this.renderer as unknown as IRangeRenderer,
     });
+
     const list = new LayoutVirtual({
-      store,
       layout,
     } as unknown as ConstructorParameters<typeof LayoutVirtual>[0]);
-
-    for (let idx = 0; idx < this.data.length; idx++) {
-      list.insert(
-        {
-          data: this.data[idx]!,
-          render: this.renderItemTemplate as unknown as (
-            data: unknown,
-          ) => HTMLElement,
-        } as IItem,
-        idx,
-      );
-    }
+    
+    list.setData(this.data);
   }
 
   trackByIndex(_position: number, item: ListItemProps<T>) {

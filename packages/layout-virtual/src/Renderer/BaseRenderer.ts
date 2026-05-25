@@ -5,15 +5,13 @@
  */
 
 import type {
-  IItem,
-  IItemStore,
   IRangeRenderer,
   ScrollDirection,
   VirtualScrollStructure,
 } from "../types/types";
 import ScrollableContainer from "./NativeScrollContainer";
 
-export default abstract class BaseRenderer implements IRangeRenderer {
+export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Function> implements IRangeRenderer<ItemData, ItemRenderer> {
   protected _scrollableContainer: ScrollableContainer;
   protected _renderedIndexRegistry = new Map<Element, number>();
   protected _renderedItemsRegistry = new Map<number, Element>();
@@ -123,7 +121,9 @@ export default abstract class BaseRenderer implements IRangeRenderer {
     return this._scrollableContainer;
   }
 
-  abstract attach(store: IItemStore<IItem>): void;
+  abstract setData(store: ItemData[]): void;
+  abstract setRenderItem(renderItem: ItemRenderer): void;
+  abstract get dataSize(): number;
 
   protected registerElement(index: number, element: Element) {
     this._renderedIndexRegistry.set(element, index);

@@ -6,8 +6,8 @@
 
 <script setup lang="ts" generic="T">
 import { type Ref } from 'vue';
-import { onMounted, onUpdated, ref, useSlots } from 'vue';
-import { LayoutVirtual, DynamicListLayout, ArrayItemStore } from 'layout-virtual';
+import { onMounted, onUpdated, ref } from 'vue';
+import { LayoutVirtual, DynamicListLayout } from 'layout-virtual';
 import VueRenderer, { type ListItemProps } from './VueRenderer';
 
 export interface VirtualizedListVueProps<T> {
@@ -33,9 +33,6 @@ let renderer: VueRenderer<T> | undefined;
 const setVisibleItems = (items: ListItemProps<T>[]) => { console.log('setVisibleItems:', items); visibleItems.value = items; };
 const getRef = (index: number) => renderedRangeRefPool.get(index) || renderedRangeRefPool.set(index, ref()).get(index);
 
-// It is not necessary to keep render function per item, remove it later !!!
-const ListItem = useSlots().item;
-
 onMounted(() => {
   // renderer.value = new VueRenderer({
   renderer = new VueRenderer({
@@ -49,13 +46,10 @@ onMounted(() => {
     itemsSetter: setVisibleItems,
   });
 
-  const store = new ArrayItemStore();
   const layout = new DynamicListLayout({ overscanHeight, renderer });
-  const list = new LayoutVirtual({ store, layout });
+  const list = new LayoutVirtual({ layout });
 
-  for (let idx = 0; idx < data.length; idx++) {
-    list.insert({ data: data[idx], render: ListItem }, idx);
-  }
+  list.setData(data);
 });
 
 onUpdated(() => {

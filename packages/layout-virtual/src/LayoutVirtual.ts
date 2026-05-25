@@ -1,41 +1,32 @@
 /**
- * @fileoverview VirtualizedList class implementation. Accepts different Layout and ItemsStore types.
+ * @fileoverview VirtualizedList class implementation.
  * @license MIT
  * @author Alexandr Kalabin
  */
 
 import type { 
+  IDynamicListLayout,
   IEventMap, 
-  IFixedItem, 
-  IItem, 
-  IItemStore, 
-  IReactItem, 
   IVirtualizedDynamicListOptions, 
-  IVirtualizedFixedListOptions 
 } from "./types/types";
 import EventBus from "./EventBus/EventBus";
 
-export default class VirtualizedList {
-  private _store: IItemStore<IFixedItem<unknown>> & IItemStore<IItem<unknown>> & IItemStore<IReactItem<unknown>>;
+export default class VirtualizedList<ItemData = unknown, ItemRenderer = Function> {
   private _eventBus = new EventBus<IEventMap>();
+  private _layout: IDynamicListLayout<ItemData, ItemRenderer>;
 
-  constructor({ layout, store }: IVirtualizedFixedListOptions & IVirtualizedDynamicListOptions) {
-    this._store = store;
-    layout.attach(this._eventBus, this._store);
+  constructor({ layout }: IVirtualizedDynamicListOptions<ItemData, ItemRenderer>) {
+    this._layout = layout;
+    this._layout.attach(this._eventBus);
   }
 
-  insert(item: IItem | IReactItem, index: number) {
-    this._store.insertAt(index, item);
-    this._eventBus.emit('onInsert', index, item);
+  setData(data: ItemData[]) {
+    this._layout.renderer.setData(data);
+    this._eventBus.emit('onChange');
   }
 
-  delete(index: number) {
-    this._store.deleteAt(index);
-    this._eventBus.emit('onDelete', index, 1);
+  setRenderItem(renderItem: ItemRenderer) {
+    this._layout.renderer.setRenderItem(renderItem);
+    this._eventBus.emit('onChange');
   }
-
-  // setItems<T = unknown, R = HTMLElement>(data: T[], itemRenderer: (data: T, index: number) => R) {
-  //   this._store.setItems(items: IItem[]);
-  //   this._hooks.emit('onInsert', 0, item);
-  // }
 }

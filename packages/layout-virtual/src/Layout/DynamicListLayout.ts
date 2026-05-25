@@ -5,16 +5,18 @@
  */
 
 import type { 
-  IItem, 
-  IItemStore, 
   IEventEmitter,
   IEventMap,
   ScrollDirection,
   IRangeRenderer,
+  IDynamicListLayout,
+  IScrollableContainer,
 } from "../types/types";
-import type ScrollableContainer from "../Renderer/NativeScrollContainer";
 
-type DynamicListLayoutOptions = { overscanHeight: number, renderer: IRangeRenderer };
+type DynamicListLayoutOptions<ItemData = unknown, ItemRenderer = Function> = { 
+  overscanHeight: number; 
+  renderer: IRangeRenderer<ItemData, ItemRenderer>; 
+};
 
 type SchedulerFn = {
   (): void;
@@ -54,12 +56,11 @@ class RAFScheduler {
   };
 }
 
-export default class DynamicListLayout {
+export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Function> implements IDynamicListLayout<ItemData, ItemRenderer> {
   private _overscanHeight: number;
   private _eventBus: IEventEmitter<IEventMap> | null = null;
-  private _store: IItemStore<IItem> | null = null;
-  private _renderer: IRangeRenderer;
-  private _scrollableContainer: ScrollableContainer;
+  private _renderer: IRangeRenderer<ItemData, ItemRenderer>;
+  private _scrollableContainer: IScrollableContainer;
   private _minItemHeight = document.documentElement.clientHeight;
   private _maxItemHeight = 0;
   private _previousDirection: ScrollDirection | '' = '';
@@ -82,9 +83,7 @@ export default class DynamicListLayout {
   }
 
   private _getItemIndexByScrollTop(offset = 0) {
-    if (!this._store) return -1;
-
-    const lastIndex = this._store.size - 1;
+    const lastIndex = this._renderer.dataSize - 1;
 
     return Math.min(Math.round(this._getScrollRatio(offset) * lastIndex), lastIndex);
   }
@@ -138,7 +137,6 @@ export default class DynamicListLayout {
   private _renderItems = (scrollTop: number, direction: ScrollDirection) => {
     const scrollableContainer = this._scrollableContainer;
     const overscanHeight = this._overscanHeight;
-    const store = this._store!;
     const spareSpace = this._spareSpace;
 
     scrollableContainer.refresh();
@@ -160,6 +158,7 @@ export default class DynamicListLayout {
     const lastRenderedIndex = this._renderer.getRenderedBoundaryIndex('last');
     const renderStartIndex = Math.ceil(middleIndex - rangeToFill / this._minItemHeight);
     const renderEndIndex = Math.ceil(middleIndex + rangeToFill / this._minItemHeight);
+    const { dataSize } = this._renderer;
 
     for (const item of scrollableContainer.getItems()) {
       // update min and max item height
@@ -173,7 +172,7 @@ export default class DynamicListLayout {
       const isFastScroll = scrollableContainer.getBottomSpacerTop() < scrollTop;
       
       // cut extra space below
-      if (lastRenderedIndex === store.size - 1) {
+      if (lastRenderedIndex === dataSize - 1) {
         if (scrollableContainer.getBottomSpacerTop() < scrollableContainer.getViewportTop() + viewportHeight) {
           console.error('cut extra space below')
           scrollableContainer.setScrollCanvasHeight(scrollableContainer.getScrollCanvasHeight() - scrollableContainer.getBottomSpacerHeight());
@@ -192,7 +191,7 @@ export default class DynamicListLayout {
       }
 
       // add spare space below
-      if (renderEndIndex < store.size - 1) {
+      if (renderEndIndex < dataSize - 1) {
         if (scrollableContainer.getBottomSpacerHeight() < spareSpace) {
           scrollableContainer.setScrollCanvasHeight(scrollableContainer.getScrollCanvasHeight() + spareSpace);
           console.warn('Added spare space below');
@@ -256,10 +255,6 @@ export default class DynamicListLayout {
       ? viewportTop + viewportHeight
       : viewportTop;
 
-    const store = this._store;
-
-    if (!store) return;
-
     let fraction = (offsetAnchor - this._scrollAnchorItemOffsetTop) / this._scrollAnchorItemOffsetHeight;
 
     if (fraction > 1 || fraction < 0) {
@@ -267,7 +262,7 @@ export default class DynamicListLayout {
       fraction = 0;
     }
 
-    const indexRatio = (this._scrollAnchorItemIndex + fraction) / (store.size - 1);
+    const indexRatio = (this._scrollAnchorItemIndex + fraction) / (this._renderer.dataSize - 1);
     const scrollbarThumbPosition = indexRatio * (scrollHeight - clientHeight);
     
     scrollableContainer.setScrollTop(scrollbarThumbPosition);
@@ -278,7 +273,7 @@ export default class DynamicListLayout {
   private _getScrollAnchorItemPosition(): number | null {
     const scrollableContainer = this._scrollableContainer;
     const renderer = this._renderer;
-    const totalItems = this._store?.size || 0;
+    const totalItems = renderer.dataSize;
     
     // scrollableContainer.refresh();
 
@@ -368,7 +363,7 @@ export default class DynamicListLayout {
 
   private _updateScrollHeight = () => {
     const avgItemHeight = this._getAvgItemHeight();
-    const scrollHeight = avgItemHeight * (this._store?.size || 0);
+    const scrollHeight = avgItemHeight * (this._renderer.dataSize);
     this._scrollableContainer.setScrollHeight(scrollHeight);
     this._scrollableContainer.setScrollCanvasHeight(scrollHeight);
 
@@ -395,17 +390,19 @@ export default class DynamicListLayout {
 
   private _scheduleScrollHeightUpdate = new RAFScheduler().schedule(this._updateScrollHeight);
 
-  constructor({ overscanHeight = 100, renderer }: DynamicListLayoutOptions) {
+  constructor({ overscanHeight = 100, renderer }: DynamicListLayoutOptions<ItemData, ItemRenderer>) {
     this._renderer = renderer;
     this._scrollableContainer = renderer.scrollableContainer;
     this._overscanHeight = overscanHeight;
   }
 
-  attach(eventBus: IEventEmitter<IEventMap>, store: IItemStore<IItem>) {
+  get renderer() {
+    return this._renderer;
+  }
+
+  attach(eventBus: IEventEmitter<IEventMap>) {
     this._eventBus = eventBus;
-    this._store = store;
     this._scrollableContainer.attach(this._eventBus);
-    this._renderer.attach(store);
 
     const scheduleUpdate = this._scheduleVisibleItemsUpdate
       .done(this._scheduleItemHeightRangeUpdate)
@@ -415,8 +412,7 @@ export default class DynamicListLayout {
         )
       );
 
-    this._eventBus.on('onInsert', scheduleUpdate);
-    this._eventBus.on('onDelete', scheduleUpdate);
+    this._eventBus.on('onChange', scheduleUpdate);
     this._eventBus.on('onResize', scheduleUpdate);
 
     this._eventBus.on('onContentScroll', this._renderItems);

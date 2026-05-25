@@ -4,32 +4,30 @@
  * @author Alexandr Kalabin
  */
 
-import { LayoutVirtual, DynamicListLayout, ArrayItemStore } from 'layout-virtual';
-import DOMRenderer from './DOMRenderer';
+import { LayoutVirtual, DynamicListLayout } from 'layout-virtual';
+import DOMRenderer, { type ItemRenderer} from './DOMRenderer';
 
 export interface ListItemProps<T = unknown> {
   data: T;
   index: number;
 }
 
-export interface VirtualizedListDOMProps<T> {
+export interface VirtualizedListDOMProps<ItemData> {
   scrollerRef?: HTMLDivElement;
   overscanHeight?: number; 
-  data: T[];
-  renderItem: (props: ListItemProps<T>) => React.ReactNode;
+  data: ItemData[];
+  renderItem: (props: ListItemProps<ItemData>) => HTMLElement;
 }
 
-export default function VirtualizedListDOM<T>(props: VirtualizedListDOMProps<T>): HTMLElement {
+export default function VirtualizedListDOM<ItemData>(props: VirtualizedListDOMProps<ItemData>): HTMLElement {
   const { overscanHeight = 200, data, renderItem, scrollerRef } = props;
   const container = scrollerRef ?? document.createElement('div');
-  const store = new ArrayItemStore();
-  const renderer = new DOMRenderer(container);
-  const layout = new DynamicListLayout({ overscanHeight, renderer });
-  const list = new LayoutVirtual({ layout, store });
- 
-  for (let idx = 0; idx < data.length; idx++) {
-    list.insert({ data: data[idx], render: renderItem }, idx);
-  }
+  const renderer = new DOMRenderer<ItemData>(container);
+  const layout = new DynamicListLayout<ItemData, ItemRenderer<ItemData>>({ overscanHeight, renderer });
+  const list = new LayoutVirtual<ItemData, ItemRenderer<ItemData>>({ layout });
+
+  list.setData(data);
+  list.setRenderItem(renderItem);
 
   return container;
 }

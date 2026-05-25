@@ -6,8 +6,6 @@
 
 import { BaseRenderer } from 'layout-virtual';
 import type {
-  IItem,
-  IItemStore,
   IRangeRenderer,
   ScrollDirection,
   VirtualScrollStructure,
@@ -28,13 +26,13 @@ export type AngularListItem<T = unknown> = {
   render?: unknown;
 };
 
-export default class AngularRenderer<T> extends BaseRenderer implements IRangeRenderer {
-  private _store: IItemStore<IItem> | null = null;
-  private _itemsSetter: (items: ListItemProps<T>[]) => void;
+export default class AngularRenderer<DataType = unknown> extends BaseRenderer implements IRangeRenderer<DataType> {
+  private _store: DataType[] = [];
+  private _itemsSetter: (items: ListItemProps<DataType>[]) => void;
   private _itemsFlusher: () => void;
-  private _listItems: ListItemProps<T>[] = [];
+  private _listItems: ListItemProps<DataType>[] = [];
 
-  constructor(opts: AngularRendererOptions<T>) {
+  constructor(opts: AngularRendererOptions<DataType>) {
     super(opts);
     this._itemsSetter = opts.itemsSetter;
     this._itemsFlusher = opts.itemsFlusher;
@@ -43,15 +41,13 @@ export default class AngularRenderer<T> extends BaseRenderer implements IRangeRe
   renderRange(startIndex: number, endIndex: number, direction: ScrollDirection) {
     const store = this._store;
     const listItems = this._listItems;
-    const itemsToAdd: ListItemProps<T>[] = [];
+    const itemsToAdd: ListItemProps<DataType>[] = [];
 
-    if (!store) return;
+    for (let index = startIndex; index <= endIndex; index++) {
+      const data = store[index];
 
-    for (let idx = startIndex; idx <= endIndex; idx++) {
-      const item = store.getByIndex(idx) as AngularListItem<T> | undefined;
-
-      if (item) {
-        itemsToAdd.push({ data: item.data, index: idx });
+      if (data) {
+        itemsToAdd.push({ data, index });
       }
     }
 
@@ -85,8 +81,12 @@ export default class AngularRenderer<T> extends BaseRenderer implements IRangeRe
     this._itemsSetter(this._listItems);
   }
 
-  attach(store: IItemStore<IItem>) {
+  setData(store: DataType[]) {
     this._store = store;
+  }
+
+  setRenderItem() {
+    /* not needed for Angular renderer */
   }
 
   flush() {
@@ -101,5 +101,9 @@ export default class AngularRenderer<T> extends BaseRenderer implements IRangeRe
     }
 
     renderedRefs.clear();
+  }
+
+  get dataSize() {
+    return this._store.length;
   }
 }
