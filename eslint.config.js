@@ -5,7 +5,7 @@ import headers from "eslint-plugin-headers";
 import { defineConfig } from "eslint/config";
 
 const files = [
-  "src/**/*.{js,mjs,cjs,ts,mts,cts,tsx,vue}",
+  "packages/*/src/**/*.{js,mjs,cjs,ts,mts,cts,tsx,vue}",
   "test/**/*.{js,mjs,cjs,ts,mts,cts,tsx,vue}",
 ];
 
