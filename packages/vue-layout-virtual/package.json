@@ -39,7 +39,7 @@
     "test": "test",
     "build": "npm run build:bundle && npm run build:types",
     "build:bundle": "vite build",
-    "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "build:types": "vue-tsc -p tsconfig.build.json --emitDeclarationOnly",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
@@ -47,5 +47,8 @@
   },
   "peerDependencies": {
     "vue": "^3.5.34"
+  },
+  "devDependencies": {
+    "vue-tsc": "^3.3.2"
   }
 }
