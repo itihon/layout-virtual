@@ -5,3 +5,4 @@
  */
 
 export { default } from './VueLayoutVirtual.vue';
+export type { ListItemProps, VirtualizedListVueProps, VirtualizedListVueClasses } from './types';

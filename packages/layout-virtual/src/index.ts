@@ -4,4 +4,5 @@
  * @author Alexandr Kalabin
  */
 
-export { default, type ListItemProps } from './Renderer/DOMLayoutVirtual';
+export { default } from './Renderer/DOMLayoutVirtual';
+export type { ListItemProps, VirtualizedListDOMProps, VirtualizedListDOMClasses } from './Renderer/DOMLayoutVirtual';

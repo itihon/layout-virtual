@@ -6,27 +6,12 @@
 
 import { flushSync } from 'react-dom';
 import { BaseRenderer } from 'layout-virtual/core';
-import type { IRangeRenderer, ScrollDirection, VirtualScrollStructure } from "layout-virtual/types";
-
-export interface ListItemProps<T = unknown> {
-  data: T;
-  ref: React.Ref<HTMLDivElement> | undefined;
-  index: number;
-}
-
-export type ItemRenderer<T> = React.FC<ListItemProps<T>>;
-
-type ReactRendererOptions = {
-  itemsSetter: React.Dispatch<React.SetStateAction<React.ReactNode[]>>;
-} & VirtualScrollStructure;
-
-interface IReactRenderer {
-  commit: () => void;
-}
+import type { IRangeRenderer, ScrollDirection } from "layout-virtual/types";
+import type { ItemRenderer, ReactRendererOptions } from './types';
 
 type IndexedRef = React.RefObject<HTMLDivElement | null> & { idx: number };
 
-export default class ReactRenderer<DataType = unknown> extends BaseRenderer implements IRangeRenderer<DataType, ItemRenderer<DataType>>, IReactRenderer {
+export default class ReactRenderer<DataType = unknown> extends BaseRenderer implements IRangeRenderer<DataType, ItemRenderer<DataType>> {
   private _store: DataType[] = [];
   private _renderItem: ItemRenderer<DataType> | null = null;
   private _itemsSetter: React.Dispatch<React.SetStateAction<React.ReactNode[]>>;

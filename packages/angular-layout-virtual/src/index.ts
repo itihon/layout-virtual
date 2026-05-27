@@ -5,3 +5,4 @@
  */
 
 export { default } from './AngularLayoutVirtual';
+export type { ListItemProps, VirtualizedListAngularProps, VirtualizedListAngularClasses } from './types';

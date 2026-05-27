@@ -7,17 +7,12 @@
 import { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
-import ReactRenderer, { type ListItemProps, type ItemRenderer } from './ReactRenderer';
-
-export interface VirtualizedListReactProps<T> {
-  scrollerRef?: React.RefObject<HTMLElement>;
-  overscanHeight?: number; 
-  data: T[];
-  renderItem: (props: ListItemProps<T>) => React.ReactNode;
-}
+import ReactRenderer from './ReactRenderer';
+import type { ItemRenderer, VirtualizedListReactProps } from './types';
 
 export default function VirtualizedListReact<ItemData = unknown>(props: VirtualizedListReactProps<ItemData>) {
   const { overscanHeight = 200, data, renderItem, scrollerRef } = props;
+  const { scrollerClass, viewportClass, contentLayerClass } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollHeightFillerRef = useRef<HTMLDivElement>(null);
   const viewportContainerRef = useRef<HTMLDivElement>(null);
@@ -45,6 +40,12 @@ export default function VirtualizedListReact<ItemData = unknown>(props: Virtuali
 
     list.setData(data);
     list.setRenderItem(renderItem);
+
+    const scroller = scrollerRef?.current;
+
+    if (scroller) {
+      scroller.classList.add(scrollerClass || '');
+    }
   }, []);
 
   useEffect(() => {
@@ -53,10 +54,10 @@ export default function VirtualizedListReact<ItemData = unknown>(props: Virtuali
 
   const scrollerContent = <>
     <div ref={scrollHeightFillerRef}></div>
-    <div ref={viewportContainerRef}>
+    <div className={viewportClass} ref={viewportContainerRef}>
       <div ref={scrollCanvasRef}>
         <div ref={topSpacerRef}></div>
-        <div ref={contentLayerRef}>{ visibleItems }</div>
+        <div className={contentLayerClass} ref={contentLayerRef}>{ visibleItems }</div>
         <div ref={bottomSpacerRef}></div>
       </div>
     </div>
@@ -65,6 +66,6 @@ export default function VirtualizedListReact<ItemData = unknown>(props: Virtuali
   return (
     scrollerRef && scrollerRef.current 
       ? createPortal(scrollerContent, scrollerRef.current)
-      : <div ref={containerRef}>{ scrollerContent }</div>
+      : <div className={scrollerClass} ref={containerRef}>{ scrollerContent }</div>
   );
 };

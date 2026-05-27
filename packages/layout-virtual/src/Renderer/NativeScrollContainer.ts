@@ -58,6 +58,10 @@ export default class ScrollableContainer implements IScrollableContainer {
     this._containerScroller = new ScrollRelay(this._container);
     this._viewportScroller = new ScrollRelay(this._viewportContainer.DOMRoot);
 
+    this._container.setAttribute('data-lv-scroller', '');
+    this._viewportContainer.DOMRoot.setAttribute('data-lv-viewport', '');
+    this._contentLayer.DOMRoot.setAttribute('data-lv-content-layer', '');
+
     const resizeObserver = new ResizeObserver(this._handleResize);
     
     resizeObserver.observe(this._container);

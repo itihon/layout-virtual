@@ -1,6 +1,11 @@
-import VirtualizedList, { type ListItemProps } from 'layout-virtual';
+import VirtualizedList, { type ListItemProps, type VirtualizedListDOMClasses } from 'layout-virtual';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
+const styling: VirtualizedListDOMClasses = {
+  scrollerClass: 'lv-scroller',
+  viewportClass: 'lv-viewport',
+  contentLayerClass: 'lv-content-layer',
+};
 
 type Data = { i: number };
 
@@ -29,7 +34,7 @@ function ListItem({ data, index }: ListItemProps<Data>) {
 };
 
 const data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
-const container = VirtualizedList({ overscanHeight: 100, data, renderItem: ListItem });
+const container = VirtualizedList({ overscanHeight: 100, data, renderItem: ListItem, ...styling });
 
 const app = document.getElementById('app')!;
 app.appendChild(container);

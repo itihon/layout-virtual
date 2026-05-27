@@ -1,7 +1,12 @@
 import { createRoot } from 'react-dom/client';
-import VirtualizedListReact, { type ListItemProps } from 'react-layout-virtual';
+import VirtualizedListReact, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
+const styling: VirtualizedListReactClasses = {
+  scrollerClass: 'lv-scroller',
+  viewportClass: 'lv-viewport',
+  contentLayerClass: 'lv-content-layer',
+};
 
 type Data = { i: number };
 
@@ -26,7 +31,7 @@ function App() {
   const data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
 
   return (
-    <VirtualizedListReact<Data> overscanHeight={100} data={data} renderItem={ListItem} />
+    <VirtualizedListReact<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} />
   );
 }
 

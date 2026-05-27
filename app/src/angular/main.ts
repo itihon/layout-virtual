@@ -2,7 +2,7 @@ import '@angular/compiler';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import VirtualizedListAngular from 'angular-layout-virtual';
+import VirtualizedListAngular, { type VirtualizedListAngularClasses } from 'angular-layout-virtual';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
 
@@ -13,7 +13,7 @@ type Data = { i: number };
   standalone: true,
   imports: [CommonModule, VirtualizedListAngular],
   template: `
-    <angular-layout-virtual [data]="data" [overscanHeight]="100">
+    <angular-layout-virtual [data]="data" [overscanHeight]="100" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass">
       <ng-template #renderItem let-data="data" let-index="index">
         <div class="list-item" [id]="'item-' + data.i" [attr.data-index]="index">
           Item {{ data.i }}.
@@ -25,6 +25,12 @@ type Data = { i: number };
 })
 class AppComponent {
   data = Array.from({ length: itemsCount }, (_, i): Data => ({ i }));
+  
+  styling: VirtualizedListAngularClasses = {
+    scrollerClass: 'lv-scroller',
+    viewportClass: 'lv-viewport',
+    contentLayerClass: 'lv-content-layer',
+  };
 
   extraLines(i: number) {
     return i % 5 === 0

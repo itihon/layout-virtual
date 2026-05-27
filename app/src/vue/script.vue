@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import VirtualizedListVue from 'vue-layout-virtual';
+import VirtualizedListVue, { type VirtualizedListVueClasses } from 'vue-layout-virtual';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
+const styling: VirtualizedListVueClasses = {
+  scrollerClass: 'lv-scroller',
+  viewportClass: 'lv-viewport',
+  contentLayerClass: 'lv-content-layer',
+};
 
 type Data = { i: number };
 
@@ -16,7 +21,7 @@ function extraLines(i: number) {
 </script>
 
 <template>
-  <VirtualizedListVue :data="data" :overscan-height="100">
+  <VirtualizedListVue :data="data" :overscan-height="100" v-bind="styling">
     <template #renderItem="{ data, index, ref }">
       <div :ref="ref" class="list-item" :id="`item-${data.i}`" :data-index="index">
         Item {{ data.i }}.

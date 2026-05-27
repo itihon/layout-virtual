@@ -17,7 +17,8 @@ import {
 import type { AfterViewInit, ElementRef } from '@angular/core';
 import type { IRangeRenderer } from 'layout-virtual/types';
 import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
-import AngularRenderer, { type ListItemProps } from './AngularRenderer';
+import AngularRenderer from './AngularRenderer';
+import type { AngularClassAttribute, ListItemProps } from './types';
 
 export type VirtualizedListItemContext<T> = ListItemProps<T> & {
   $implicit: T;
@@ -27,16 +28,13 @@ export type VirtualizedListItemContext<T> = ListItemProps<T> & {
   selector: 'angular-layout-virtual',
   standalone: true,
   imports: [CommonModule],
-  host: {
-    style: 'display: contents;',
-  },
   template: `
-    <div #container>
+    <div #container [class]="scrollerClass">
       <div #scrollHeightFiller></div>
-      <div #viewportContainer>
+      <div #viewportContainer [class]="viewportClass">
         <div #scrollCanvas>
           <div #topSpacer></div>
-          <div #contentLayer>
+          <div #contentLayer [class]="contentLayerClass">
             <ng-container
               *ngFor="let item of visibleItems; trackBy: trackByIndex"
             >
@@ -57,6 +55,10 @@ export type VirtualizedListItemContext<T> = ListItemProps<T> & {
 export default class VirtualizedListAngular<T> implements AfterViewInit {
   @Input({ required: true }) data: T[] = [];
   @Input() overscanHeight = 200;
+  @Input() scrollerRef?: ElementRef<HTMLElement>;
+  @Input() scrollerClass?: AngularClassAttribute;
+  @Input() viewportClass?: AngularClassAttribute;
+  @Input() contentLayerClass?: AngularClassAttribute;
 
   @ContentChild('renderItem', { read: TemplateRef })
   renderItemTemplate!: TemplateRef<VirtualizedListItemContext<T>>;
@@ -82,7 +84,7 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
 
   ngAfterViewInit() {
     this.renderer = new AngularRenderer<T>({
-      container: this.containerRef.nativeElement,
+      container: this.scrollerRef?.nativeElement || this.containerRef.nativeElement,
       scrollHeightFiller: this.scrollHeightFillerRef.nativeElement,
       viewportContainer: this.viewportContainerRef.nativeElement,
       scrollCanvas: this.scrollCanvasRef.nativeElement,

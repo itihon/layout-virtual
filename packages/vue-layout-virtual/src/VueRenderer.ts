@@ -6,21 +6,8 @@
 
 import { nextTick, type Ref } from 'vue';
 import { BaseRenderer } from 'layout-virtual/core';
-import type { IRangeRenderer, ScrollDirection, VirtualScrollStructure } from 'layout-virtual/types';
-
-export interface ListItemProps<T = unknown> {
-  data: T;
-  index: number;
-}
-
-type VueRendererOptions<T> = {
-  itemsSetter: (items: ListItemProps<T>[]) => void;
-} & VirtualScrollStructure;
-
-export type IndexedRef = {
-  value: Element | null;
-  idx: number;
-};
+import type { IRangeRenderer, ScrollDirection } from 'layout-virtual/types';
+import type { ListItemProps, VueRendererOptions } from './types';
 
 export default class VueRenderer<DataType = unknown> extends BaseRenderer implements IRangeRenderer<DataType> {
   private _store: DataType[] = [];

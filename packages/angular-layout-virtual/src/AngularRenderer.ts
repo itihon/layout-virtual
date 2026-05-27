@@ -5,26 +5,8 @@
  */
 
 import { BaseRenderer } from 'layout-virtual/core';
-import type {
-  IRangeRenderer,
-  ScrollDirection,
-  VirtualScrollStructure,
-} from 'layout-virtual/types';
-
-export interface ListItemProps<T = unknown> {
-  data: T;
-  index: number;
-}
-
-type AngularRendererOptions<T> = {
-  itemsSetter: (items: ListItemProps<T>[]) => void;
-  itemsFlusher: () => void;
-} & VirtualScrollStructure;
-
-export type AngularListItem<T = unknown> = {
-  data: T;
-  render?: unknown;
-};
+import type { IRangeRenderer, ScrollDirection } from 'layout-virtual/types';
+import type { ListItemProps, AngularRendererOptions } from './types';
 
 export default class AngularRenderer<DataType = unknown> extends BaseRenderer implements IRangeRenderer<DataType> {
   private _store: DataType[] = [];
