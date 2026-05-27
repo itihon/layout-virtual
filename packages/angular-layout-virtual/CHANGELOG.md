@@ -1,5 +1,16 @@
 # angular-layout-virtual
 
+## 0.1.0
+
+### Minor Changes
+
+- 58e80a7: Add internal containers styling support by exposing class name props
+
+### Patch Changes
+
+- Updated dependencies [58e80a7]
+  - layout-virtual@0.2.0
+
 ## 0.0.7
 
 ### Patch Changes

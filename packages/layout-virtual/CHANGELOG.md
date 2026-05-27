@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.2.0
+
+### Minor Changes
+
+- 58e80a7: Add internal containers styling support by exposing class name props
+
 ## 0.1.2
 
 ### Patch Changes
