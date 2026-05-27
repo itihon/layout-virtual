@@ -27,6 +27,8 @@ export interface IScrollableContainer {
     getClientHeight(): number;
     getViewportWidth(): number;
     getViewportHeight(): number;
+    getRowGap(): number;
+    getColumnCount(): number;
     getFirstItem(): Element | null;
     getLastItem(): Element | null;
     getItems(): HTMLCollection;

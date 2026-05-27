@@ -64,6 +64,7 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
     const itemsToRemove: Element[] = [];
     const renderedIndeces = this._renderedIndexRegistry;
     const renderedItems = this._renderedItemsRegistry;
+    const rowGap = this._scrollableContainer.getRowGap();
     let startRange = Infinity;
     let endRange = 0;
 
@@ -72,9 +73,7 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
 
       if (itemToRemove) {
         const { offsetTop, offsetHeight } = itemToRemove as HTMLElement;
-        const contentLayerStyle = getComputedStyle(itemToRemove.parentElement!);
         const itemStyle = getComputedStyle(itemToRemove);
-        const rowGap = parseFloat(contentLayerStyle.rowGap) || 0; // 0 in case rowGap returns "normal" and therefore parseFloat returns NaN
         const marginTop = parseFloat(itemStyle.marginTop);
         const marginBottom = parseFloat(itemStyle.marginBottom);
 

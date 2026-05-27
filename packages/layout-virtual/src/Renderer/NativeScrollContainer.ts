@@ -23,6 +23,7 @@ export default class ScrollableContainer implements IScrollableContainer {
   private _eventBus: IEventEmitter<IEventMap> | null = null;
   private _containerScroller: ScrollRelay;
   private _viewportScroller: ScrollRelay;
+  private _contentLayerStyles: CSSStyleDeclaration;
 
   private _handleResize: ResizeObserverCallback = () => {
 
@@ -57,6 +58,7 @@ export default class ScrollableContainer implements IScrollableContainer {
     this._bottomSpacer = new DOMConstructor(this._scrollCanvas.DOMRoot, [classes.bottomSpacer!], opts.bottomSpacer);
     this._containerScroller = new ScrollRelay(this._container);
     this._viewportScroller = new ScrollRelay(this._viewportContainer.DOMRoot);
+    this._contentLayerStyles = getComputedStyle(this._contentLayer.DOMRoot);
 
     this._container.setAttribute('data-lv-scroller', '');
     this._viewportContainer.DOMRoot.setAttribute('data-lv-viewport', '');
@@ -172,6 +174,14 @@ export default class ScrollableContainer implements IScrollableContainer {
 
   getViewportHeight(): number {
     return this._viewportScroller.clientHeight;
+  }
+
+  getRowGap(): number {
+    return parseFloat(this._contentLayerStyles.rowGap) || 0; // 0 in case rowGap returns "normal" and therefore parseFloat returns NaN
+  }
+
+  getColumnCount(): number {
+    return this._contentLayerStyles.gridTemplateColumns.split(' ').length;
   }
 
   getFirstItem(): Element | null {
