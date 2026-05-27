@@ -72,12 +72,14 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
 
       if (itemToRemove) {
         const { offsetTop, offsetHeight } = itemToRemove as HTMLElement;
+        const contentLayerStyle = getComputedStyle(itemToRemove.parentElement!);
         const itemStyle = getComputedStyle(itemToRemove);
+        const rowGap = parseFloat(contentLayerStyle.rowGap) || 0; // 0 in case rowGap returns "normal" and therefore parseFloat returns NaN
         const marginTop = parseFloat(itemStyle.marginTop);
         const marginBottom = parseFloat(itemStyle.marginBottom);
 
         startRange = Math.min(startRange, offsetTop - marginTop);
-        endRange = Math.max(endRange, offsetTop + offsetHeight + marginBottom);
+        endRange = Math.max(endRange, offsetTop + offsetHeight + marginBottom + rowGap);
 
         itemsToRemove.push(itemToRemove);
         renderedItems.delete(idx);
