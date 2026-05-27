@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
+    "dev": "vite --force --host 0.0.0.0",
     "build": "npm run build:bundle && npm run build:types",
     "build:bundle": "vite build",
     "build:types": "vue-tsc -p tsconfig.build.json --emitDeclarationOnly",
