@@ -16,6 +16,10 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
   protected _renderedIndexRegistry = new Map<Element, number>();
   protected _renderedItemsRegistry = new Map<number, Element>();
 
+  private _isRangeDivisible(startIndex: number, endIndex: number, denominator: number): boolean {
+    return startIndex <= endIndex && ((endIndex - startIndex + 1) % denominator === 0);
+  }
+
   constructor(opts: VirtualScrollStructure) {
     this._scrollableContainer = new ScrollableContainer({ ...opts });
   }
@@ -23,6 +27,7 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
   render(startIndex: number, endIndex: number, direction: ScrollDirection): number {
     const firstRenderedIndex = this.getRenderedBoundaryIndex('first');
     const lastRenderedIndex = this.getRenderedBoundaryIndex('last');
+    const columnCount = this._scrollableContainer.getColumnCount();
 
     let renderStartIndex = startIndex;
     let renderEndIndex = endIndex;
@@ -35,7 +40,7 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
         removeEndIndex = Math.min(renderStartIndex - 1, lastRenderedIndex);
         renderStartIndex = Math.max(lastRenderedIndex + 1, renderStartIndex);
        
-        if (removeStartIndex <= removeEndIndex) {
+        if (this._isRangeDivisible(removeStartIndex, removeEndIndex, columnCount)) {
           removedHeight = this.removeRange(removeStartIndex, removeEndIndex, direction).removedHeight;
         }
       }
@@ -45,13 +50,13 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
         removeStartIndex = Math.max(renderEndIndex + 1, firstRenderedIndex);
         renderEndIndex = Math.min(firstRenderedIndex - 1, renderEndIndex);
        
-        if (removeStartIndex <= removeEndIndex) {
+        if (this._isRangeDivisible(removeStartIndex, removeEndIndex, columnCount)) {
           removedHeight = this.removeRange(removeStartIndex, removeEndIndex, direction).removedHeight;
         }
       }
     }
 
-    if (renderStartIndex < renderEndIndex) {
+    if (this._isRangeDivisible(renderStartIndex, renderEndIndex, columnCount)) {
       this.renderRange(renderStartIndex, renderEndIndex, direction);
     }
 

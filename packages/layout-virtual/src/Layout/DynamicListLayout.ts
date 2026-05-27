@@ -83,25 +83,21 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
   }
 
   private _getItemIndexByScrollTop(offset = 0) {
-    const lastIndex = this._renderer.dataSize - 1;
+    const columnCount = this._scrollableContainer.getColumnCount();
+    const lastIndex = (this._renderer.dataSize - 1) / columnCount;
 
-    return Math.min(Math.round(this._getScrollRatio(offset) * lastIndex), lastIndex);
+    return Math.min(Math.round(this._getScrollRatio(offset) * lastIndex), lastIndex) * columnCount;
   }
 
   private _updateVisibleItems = () => {
     console.log('_updateVisibleItems')
     const scrollableContainer = this._scrollableContainer;
-    const viewportHeight = scrollableContainer.getViewportHeight();
-    const overscanHeight = this._overscanHeight;
+    
+    scrollableContainer.setTopSpacerHeight(scrollableContainer.getTopSpacerHeight());
+    scrollableContainer.setBottomSpacerHeight(scrollableContainer.getBottomSpacerHeight());
 
-    const startIndex = this._getItemIndexByScrollTop();
-    const endIndex = startIndex + Math.ceil((viewportHeight + overscanHeight) / this._getAvgItemHeight());
-
-    // scrollableContainer.clear();
     this._renderer.clear();
-
-    this._renderer.render(startIndex, endIndex, 'down');
-    this._renderer.flush();
+    this._renderItems(scrollableContainer.getViewportTop(), 'down');
   };
 
   private _scheduleVisibleItemsUpdate = new RAFScheduler().schedule(this._updateVisibleItems);
@@ -149,19 +145,24 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     // }
 
     // calculate index range to be rendered
+    const columnCount = scrollableContainer.getColumnCount();
+    const rowGap = scrollableContainer.getRowGap();
     const viewportHeight = scrollableContainer.getViewportHeight();
     const halfViewportHeight = viewportHeight / 2;
-    const rangeToFill = halfViewportHeight + overscanHeight;
+    const halfRangeToFill = halfViewportHeight + overscanHeight;
+    const itemsPerHalfRange = Math.ceil(halfRangeToFill / this._minItemHeight) * columnCount;
     const middleIndex = this._getItemIndexByScrollTop();
     const firstRenderedIndex = this._renderer.getRenderedBoundaryIndex('first');
     const lastRenderedIndex = this._renderer.getRenderedBoundaryIndex('last');
-    const renderStartIndex = Math.ceil(middleIndex - rangeToFill / this._minItemHeight);
-    const renderEndIndex = Math.ceil(middleIndex + rangeToFill / this._minItemHeight);
+    const renderStartIndex = middleIndex - itemsPerHalfRange;
+    const renderEndIndex = middleIndex + itemsPerHalfRange - 1;
     const { dataSize } = this._renderer;
+
+    console.log('_renderItems middle range index:', middleIndex, 'items per half range:', itemsPerHalfRange, 'total items count to be rendered:', renderEndIndex - renderStartIndex + 1);
 
     for (const item of scrollableContainer.getItems()) {
       // update min and max item height
-      this._updateItemHeightBounds(item);
+      this._updateItemHeightBounds(item, rowGap);
     }
 
     const removedHeight = this._renderer.render(renderStartIndex, renderEndIndex, direction);
@@ -338,16 +339,20 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
   private _updateItemHeightRange = () => {
     const renderedItems = this._scrollableContainer.getItems(); 
+    const rowGap = this._scrollableContainer.getRowGap();
 
     for (const item of renderedItems) {
-      this._updateItemHeightBounds(item);
+      this._updateItemHeightBounds(item, rowGap);
     }
   };
   
   private _scheduleItemHeightRangeUpdate = new RAFScheduler().schedule(this._updateItemHeightRange);
 
-  private _updateItemHeightBounds(item: Element) {
-    const itemHeight = (item as HTMLElement).offsetHeight;
+  private _updateItemHeightBounds(item: Element, rowGap: number) {
+    const itemStyle = getComputedStyle(item);
+    const marginTop = parseFloat(itemStyle.marginTop);
+    const marginBottom = parseFloat(itemStyle.marginBottom);
+    const itemHeight = (item as HTMLElement).offsetHeight + marginTop + marginBottom + rowGap;
 
     // ignore 0 size items
     if (itemHeight < 1) return;
