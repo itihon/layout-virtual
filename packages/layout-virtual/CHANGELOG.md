@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.3.0
+
+### Minor Changes
+
+- 440f6d3: Add multicolumn responsive grid layout support.
+
 ## 0.2.0
 
 ### Minor Changes

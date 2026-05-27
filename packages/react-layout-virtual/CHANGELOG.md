@@ -1,5 +1,16 @@
 # react-layout-virtual
 
+## 0.2.0
+
+### Minor Changes
+
+- 440f6d3: Add multicolumn responsive grid layout support.
+
+### Patch Changes
+
+- Updated dependencies [440f6d3]
+  - layout-virtual@0.3.0
+
 ## 0.1.0
 
 ### Minor Changes
