@@ -1,7 +1,7 @@
 - [ ] Tests and CI
 - [ ] Grid support
 - [ ] Groups support
-- [ ] Styling support
+- [x] Styling support
 - [ ] Examples
 - [ ] Bundle optimization, mangling config, renaming public methods, strip unused code
 
