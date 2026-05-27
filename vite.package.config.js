@@ -23,6 +23,7 @@ export function definePackageConfig({ packageDir, plugins = [], external = [], e
             regex: /^_/,
           },
         },
+        nameCache: {},
       },
     },
     css: {
