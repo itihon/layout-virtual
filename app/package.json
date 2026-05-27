@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vite build",
+    "build": "npm run build:bundle && npm run build:types",
+    "build:bundle": "vite build",
+    "build:types": "vue-tsc -p tsconfig.build.json --emitDeclarationOnly",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.6",
-    "vite": "^7.3.2"
+    "vite": "^7.3.2",
+    "vue-tsc": "^3.3.2"
   }
 }
