@@ -294,10 +294,14 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
       console.error('Missing items for interpolation', index1, index2);
       return null;
     };
+    
+    const marginTop1 = parseFloat(getComputedStyle(renderedItem1).marginTop);
+    const marginBottom1 = parseFloat(getComputedStyle(renderedItem1).marginBottom);
+    const marginTop2 = parseFloat(getComputedStyle(renderedItem2).marginTop);
 
-    const itemTop1 = renderedItem1.offsetTop;
-    const itemTop2 = renderedItem2.offsetTop;
-    const itemHeight1 = renderedItem1.offsetHeight;
+    const itemTop1 = renderedItem1.offsetTop - marginTop1;
+    const itemTop2 = renderedItem2.offsetTop - marginTop2;
+    const itemHeight1 = renderedItem1.offsetHeight + marginTop1 + marginBottom1;
     const interpolatedHeight = indexFraction * (itemTop2 - itemTop1) || itemHeight1 * indexFraction;
     const interpolatedTop = itemTop1 + interpolatedHeight;
 
