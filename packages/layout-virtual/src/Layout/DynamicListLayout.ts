@@ -365,7 +365,8 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
   private _updateScrollHeight = () => {
     const avgItemHeight = this._getAvgItemHeight();
-    const scrollHeight = avgItemHeight * (this._renderer.dataSize);
+    const columnCount = this._scrollableContainer.getColumnCount();
+    const scrollHeight = avgItemHeight * (this._renderer.dataSize / columnCount);
     this._scrollableContainer.setScrollHeight(scrollHeight);
     this._scrollableContainer.setScrollCanvasHeight(scrollHeight);
 
