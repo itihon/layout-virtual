@@ -274,13 +274,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const scrollableContainer = this._scrollableContainer;
     const renderer = this._renderer;
     const totalItems = renderer.dataSize;
-    
-    // scrollableContainer.refresh();
-
-    // const scrollTop = scrollableContainer.getScrollTop();
-    // const scrollHeight = scrollableContainer.getScrollHeight();
     const clientHeight = scrollableContainer.getClientHeight();
-    // const scrollRatio = scrollTop / (scrollHeight - clientHeight) || 0;
     const scrollRatio = this._getScrollRatio();
     const lastIndex = totalItems - 1;
     const fractionalIndex = totalItems * scrollRatio;
