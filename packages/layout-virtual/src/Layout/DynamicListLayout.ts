@@ -274,15 +274,17 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const scrollableContainer = this._scrollableContainer;
     const renderer = this._renderer;
     const totalItems = renderer.dataSize;
+    const columnCount = scrollableContainer.getColumnCount();
+    const totalRows = totalItems / columnCount;
     const clientHeight = scrollableContainer.getClientHeight();
     const scrollRatio = this._getScrollRatio();
     const lastIndex = totalItems - 1;
-    const fractionalIndex = totalItems * scrollRatio;
-    const index1 = Math.min(Math.floor(fractionalIndex), lastIndex);
-    const index2 = Math.min(Math.ceil(fractionalIndex), lastIndex);
+    const fractionalRowIndex = totalRows * scrollRatio;
+    const index1 = Math.min(Math.floor(fractionalRowIndex) * columnCount, lastIndex);
+    const index2 = Math.min(index1 + columnCount, lastIndex);
     const renderedItem1 = renderer.getItem(index1) as HTMLElement | undefined;
     const renderedItem2 = renderer.getItem(index2) as HTMLElement | undefined || renderedItem1;
-    const indexFraction = fractionalIndex - index1;
+    const indexFraction = fractionalRowIndex % (totalRows - 1) % Math.max(Math.floor(fractionalRowIndex), 1);
 
     if (!renderedItem1 || !renderedItem2) {
       console.error('Missing items for interpolation', index1, index2);
@@ -303,7 +305,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
     const position = interpolatedTop - viewportAnchor;
 
-    console.log('_getScrollAnchorItemPosition', index1, index2)
+    console.log('_getScrollAnchorItemPosition:', index1, index2, fractionalRowIndex, indexFraction);
 
     return position;
   }
