@@ -275,7 +275,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const renderer = this._renderer;
     const totalItems = renderer.dataSize;
     const columnCount = scrollableContainer.getColumnCount();
-    const totalRows = totalItems / columnCount;
+    const totalRows = Math.ceil(totalItems / columnCount);
     const clientHeight = scrollableContainer.getClientHeight();
     const scrollRatio = this._getScrollRatio();
     const lastIndex = totalItems - 1;
