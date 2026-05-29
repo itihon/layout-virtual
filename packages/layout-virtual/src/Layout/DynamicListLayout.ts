@@ -18,44 +18,6 @@ type DynamicListLayoutOptions<ItemData = unknown, ItemRenderer = Function> = {
   renderer: IRangeRenderer<ItemData, ItemRenderer>; 
 };
 
-type SchedulerFn = {
-  (): void;
-  done(cb: () => void): SchedulerFn;
-};
-
-class RAFScheduler {
-  private _rAFid: number | null = null;
-  private _doneCBs: (() => void)[] = [];
-  private _fn = () => {};
-  private _call = (cb: () => void) => cb();
-
-  private _wrapper = () => {
-    this._fn();
-    this._doneCBs.forEach(this._call);
-    this._rAFid = null;
-  };
-
-  private _scheduler = (() => {
-    if (this._rAFid === null) {
-      this._rAFid = requestAnimationFrame(this._wrapper);
-    }
-  }) as SchedulerFn;
-
-  private _done = (cb: () => void) => {
-    this._doneCBs.push(cb);
-    return this._scheduler;
-  };
-
-  constructor() {
-    this._scheduler = Object.assign(this._scheduler, { done: this._done });
-  }
-
-  schedule = (fn: () => void) => {
-    this._fn = fn;
-    return this._scheduler;
-  };
-}
-
 export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Function> implements IDynamicListLayout<ItemData, ItemRenderer> {
   private _overscanHeight: number;
   private _eventBus: IEventEmitter<IEventMap> | null = null;
@@ -97,10 +59,22 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     scrollableContainer.setBottomSpacerHeight(scrollableContainer.getBottomSpacerHeight());
 
     this._renderer.clear();
-    this._renderItems(scrollableContainer.getViewportTop(), 'down');
-  };
+    this._renderItems(scrollableContainer.getViewportTop(), 'down')
+      .then(this._updateItemHeightRange)
+      .then(this._updateScrollHeight)
+      .then(() => {
+        const dataSize = this.renderer.dataSize;
+        const firstIndex = this._renderer.getRenderedBoundaryIndex('first');
+        const lastIndex = this._renderer.getRenderedBoundaryIndex('last');
 
-  private _scheduleVisibleItemsUpdate = new RAFScheduler().schedule(this._updateVisibleItems);
+        if (scrollableContainer.getContentLayerHeight() < scrollableContainer.getViewportHeight()) {
+          if (dataSize && !(firstIndex === 0 && lastIndex === dataSize - 1)) {
+            this._renderer.clear();
+            return this._renderItems(scrollableContainer.getViewportTop(), 'down');
+          }
+        }
+      });
+  };
 
   private _detectScrollAnchorItemOffset(item: Element, direction: ScrollDirection): boolean {
     const scrollableContainer = this._scrollableContainer;
@@ -346,8 +320,6 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     }
   };
   
-  private _scheduleItemHeightRangeUpdate = new RAFScheduler().schedule(this._updateItemHeightRange);
-
   private _updateItemHeightBounds(item: Element, rowGap: number) {
     const itemStyle = getComputedStyle(item);
     const marginTop = parseFloat(itemStyle.marginTop);
@@ -393,8 +365,6 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     }).observe(document.body);
   };
 
-  private _scheduleScrollHeightUpdate = new RAFScheduler().schedule(this._updateScrollHeight);
-
   constructor({ overscanHeight = 100, renderer }: DynamicListLayoutOptions<ItemData, ItemRenderer>) {
     this._renderer = renderer;
     this._scrollableContainer = renderer.scrollableContainer;
@@ -409,21 +379,10 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     this._eventBus = eventBus;
     this._scrollableContainer.attach(this._eventBus);
 
-    const scheduleUpdate = this._scheduleVisibleItemsUpdate
-      .done(this._scheduleItemHeightRangeUpdate)
-      .done(
-        this._scheduleScrollHeightUpdate.done(
-          () => this._scrollableContainer.refresh()
-        )
-      );
-
-    this._eventBus.on('onChange', scheduleUpdate);
-    this._eventBus.on('onResize', scheduleUpdate);
-
+    this._eventBus.on('onChange', this._updateVisibleItems);
+    this._eventBus.on('onResize', this._updateVisibleItems);
     this._eventBus.on('onContentScroll', this._renderItems);
-    // this._eventBus.on('onContentScroll', this._adjustScrollbarThumb);
     this._eventBus.on('onContentScroll', this._updateScrollbar);
-
     this._eventBus.on('onScroll', this._scrollContent);
 
     console.log('attached')
