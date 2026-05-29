@@ -11,14 +11,18 @@ import type {
 } from "../types/types";
 import ScrollableContainer from "./NativeScrollContainer";
 
+function prevDivisible(i: number, div: number): number {
+  return i - i % div;
+}
+
+function nextDivisible(i: number, div: number): number {
+  return i + (div - i % div) % div;
+}
+
 export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Function> implements IRangeRenderer<ItemData, ItemRenderer> {
   protected _scrollableContainer: ScrollableContainer;
   protected _renderedIndexRegistry = new Map<Element, number>();
   protected _renderedItemsRegistry = new Map<number, Element>();
-
-  private _isRangeDivisible(startIndex: number, endIndex: number, denominator: number): boolean {
-    return startIndex <= endIndex && ((endIndex - startIndex + 1) % denominator === 0);
-  }
 
   constructor(opts: VirtualScrollStructure) {
     this._scrollableContainer = new ScrollableContainer({ ...opts });
@@ -36,28 +40,42 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
     let removedHeight = 0;
 
     if (direction === 'down') {
-      if (removeStartIndex !== undefined && lastRenderedIndex !== undefined) {
+      if (removeStartIndex !== undefined && lastRenderedIndex !== undefined) { // there are rendered items
         removeEndIndex = Math.min(renderStartIndex - 1, lastRenderedIndex);
         renderStartIndex = Math.max(lastRenderedIndex + 1, renderStartIndex);
-       
-        if (this._isRangeDivisible(removeStartIndex, removeEndIndex, columnCount)) {
-          removedHeight = this.removeRange(removeStartIndex, removeEndIndex, direction).removedHeight;
+
+        if (removeEndIndex === lastRenderedIndex) { // not intersecting ranges
+          renderStartIndex = nextDivisible(renderStartIndex, columnCount);
         }
+        else {
+          removeEndIndex = prevDivisible(removeEndIndex, columnCount) - 1;
+        }
+      }
+      else { // there are no rendered items
+        renderStartIndex = nextDivisible(renderStartIndex, columnCount);
       }
     }
     else if (direction === 'up') {
-      if (removeEndIndex !== undefined && firstRenderedIndex !== undefined) {
+      if (removeEndIndex !== undefined && firstRenderedIndex !== undefined) { // there are rendered items
         removeStartIndex = Math.max(renderEndIndex + 1, firstRenderedIndex);
         renderEndIndex = Math.min(firstRenderedIndex - 1, renderEndIndex);
-       
-        if (this._isRangeDivisible(removeStartIndex, removeEndIndex, columnCount)) {
-          removedHeight = this.removeRange(removeStartIndex, removeEndIndex, direction).removedHeight;
-        }
+        renderStartIndex = nextDivisible(renderStartIndex, columnCount);
+      }
+      else { // there are no rendered items
+        renderStartIndex = nextDivisible(renderStartIndex, columnCount);
       }
     }
 
-    if (this._isRangeDivisible(renderStartIndex, renderEndIndex, columnCount)) {
+    if (removeStartIndex !== undefined && removeEndIndex !== undefined) {
+      if (removeStartIndex <= removeEndIndex) {
+        removedHeight = this.removeRange(removeStartIndex, removeEndIndex, direction).removedHeight;
+        console.log('items to be removed:', removeStartIndex, removeEndIndex);
+      }
+    }
+
+    if (renderStartIndex <= renderEndIndex) {
       this.renderRange(renderStartIndex, renderEndIndex, direction);
+      console.log('items to be added:', renderStartIndex, renderEndIndex);
     }
 
     return removedHeight;
@@ -98,6 +116,7 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
   }
 
   clear() {
+    console.warn('Clearing items.');
     this._renderedIndexRegistry.clear();
     this._renderedItemsRegistry.clear();
   }
