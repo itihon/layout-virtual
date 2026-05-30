@@ -4,6 +4,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const root = import.meta.dirname;
+const packagesDir = path.resolve(__dirname, '../packages');
 
 export default defineConfig(({ mode }) => {
   if (mode === "development") {
@@ -13,14 +14,47 @@ export default defineConfig(({ mode }) => {
         host: "0.0.0.0",
       },
       resolve: {
-        alias: {
-          // Map the package names directly to their raw source code
-          'layout-virtual': path.resolve(__dirname, '../packages/layout-virtual/src/index.ts'),
-          'layout-virtual/core': path.resolve(__dirname, '../packages/layout-virtual/src/core.ts'),
-          'react-layout-virtual': path.resolve(__dirname, '../packages/react-layout-virtual/src/index.ts'),
-          'vue-layout-virtual': path.resolve(__dirname, '../packages/vue-layout-virtual/src/index.ts'),
-          'angular-layout-virtual': path.resolve(__dirname, '../packages/angular-layout-virtual/src/index.ts'),
-        },
+        alias: [
+          // Core package routing
+          {
+            find: /^layout-virtual\/(.*)$/,
+            replacement: path.join(packagesDir, 'layout-virtual/src/$1'),
+          },
+          {
+            find: /^layout-virtual$/,
+            replacement: path.join(packagesDir, 'layout-virtual/src/index.ts'),
+          },
+
+          // React package routing
+          {
+            find: /^react-layout-virtual\/(.*)$/,
+            replacement: path.join(packagesDir, 'react-layout-virtual/src/$1'),
+          },
+          {
+            find: /^react-layout-virtual$/,
+            replacement: path.join(packagesDir, 'react-layout-virtual/src/index.ts'),
+          },
+
+          // Vue package routing
+          {
+            find: /^vue-layout-virtual\/(.*)$/,
+            replacement: path.join(packagesDir, 'vue-layout-virtual/src/$1'),
+          },
+          {
+            find: /^vue-layout-virtual$/,
+            replacement: path.join(packagesDir, 'vue-layout-virtual/src/index.ts'),
+          },
+          
+          // Angular package routing
+          {
+            find: /^angular-layout-virtual\/(.*)$/,
+            replacement: path.join(packagesDir, 'angular-layout-virtual/src/$1'),
+          },
+          {
+            find: /^angular-layout-virtual$/,
+            replacement: path.join(packagesDir, 'angular-layout-virtual/src/index.ts'),
+          },
+        ],
       },
       plugins: [vue()],
     };
