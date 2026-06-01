@@ -176,10 +176,6 @@ export default class ScrollableContainer implements IScrollableContainer {
     return this._viewportScroller.clientHeight;
   }
 
-  getContentLayerHeight(): number {
-    return this._contentLayer.offsetHeight;
-  }
-
   getRowGap(): number {
     return parseFloat(this._contentLayerStyles.rowGap) || 0; // 0 in case rowGap returns "normal" and therefore parseFloat returns NaN
   }
@@ -211,7 +207,6 @@ export default class ScrollableContainer implements IScrollableContainer {
   refresh() {
     this._containerScroller.refresh();
     this._viewportScroller.refresh();
-    // this._viewportContainer.refresh();
     this._topSpacer.refresh();
     this._bottomSpacer.refresh();
   }

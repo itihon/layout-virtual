@@ -27,7 +27,6 @@ export interface IScrollableContainer {
     getClientHeight(): number;
     getViewportWidth(): number;
     getViewportHeight(): number;
-    getContentLayerHeight(): number;
     getRowGap(): number;
     getColumnCount(): number;
     getFirstItem(): Element | null;
