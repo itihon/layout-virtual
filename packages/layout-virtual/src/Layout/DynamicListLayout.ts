@@ -26,9 +26,9 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
   private _minItemHeight = document.documentElement.clientHeight;
   private _maxItemHeight = 0;
   private _previousDirection: ScrollDirection | '' = '';
-  private _scrollAnchorItemOffsetTop = 0;
-  private _scrollAnchorItemOffsetHeight = 0;
-  private _scrollAnchorItemIndex = 0;
+  // private _scrollAnchorItemOffsetTop = 0;
+  // private _scrollAnchorItemOffsetHeight = 0;
+  // private _scrollAnchorItemIndex = 0;
   private _spareSpace = 5000;
 
   private _getScrollRatio(offset = 0): number {
@@ -218,32 +218,6 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     return this._renderer.flush();
   };
 
-  private _adjustScrollbarThumb = (viewportTop: number, direction: ScrollDirection) => {
-    const scrollableContainer = this._scrollableContainer;
-    // const viewportTop = scrollableContainer.getViewportTop();
-    const viewportHeight = scrollableContainer.getViewportHeight();
-    const scrollHeight = scrollableContainer.getScrollHeight();
-    const clientHeight = scrollableContainer.getClientHeight();
-    // const items = scrollableContainer.getItems();
-    const offsetAnchor = direction === 'down' 
-      ? viewportTop + viewportHeight
-      : viewportTop;
-
-    let fraction = (offsetAnchor - this._scrollAnchorItemOffsetTop) / this._scrollAnchorItemOffsetHeight;
-
-    if (fraction > 1 || fraction < 0) {
-      console.error('Index fraction must be between 0 and 1. fraction:', fraction, 'Corrected to 0');
-      fraction = 0;
-    }
-
-    const indexRatio = (this._scrollAnchorItemIndex + fraction) / (this._renderer.dataSize - 1);
-    const scrollbarThumbPosition = indexRatio * (scrollHeight - clientHeight);
-    
-    scrollableContainer.setScrollTop(scrollbarThumbPosition);
-
-    console.log('_adjustScrollbarThumb scroll anchor item index:', this._scrollAnchorItemIndex, 'fraction:', fraction, 'indexRatio:', indexRatio, 'position:', scrollbarThumbPosition);
-  };
-
   private _getScrollAnchorItemPosition(): number | null {
     const scrollableContainer = this._scrollableContainer;
     const renderer = this._renderer;
@@ -347,19 +321,103 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     console.log('_updateScrollHeight, minItemHeight:', this._minItemHeight, 'maxItemHeight:', this._maxItemHeight, 'avgHeight:', avgItemHeight, 'scrollHeight:', scrollHeight)
   };
 
-  private _updateScrollbar = (scrollTop: number, direction: ScrollDirection) => {
+  // private _detectScrollAnchorItemOffset(item: Element, direction: ScrollDirection): boolean {
+  //   const scrollableContainer = this._scrollableContainer;
+  //   const viewportTop = scrollableContainer.getViewportTop();
+  //   const viewportHeight = scrollableContainer.getViewportHeight();
+  //   const offsetAnchor = direction === 'down' 
+  //     ? viewportTop + viewportHeight
+  //     : viewportTop;
+
+  //   const { offsetTop, offsetHeight } = (item as HTMLElement);
+  //   const itemStyle = getComputedStyle(item);
+  //   const rowGap = scrollableContainer.getRowGap();
+  //   const marginTop = parseFloat(itemStyle.marginTop);
+  //   const marginBottom = parseFloat(itemStyle.marginBottom);
+  //   const itemIndex = this._renderer.getIndex(item);
+
+  //   if (itemIndex === undefined) return false;
+
+  //   if (offsetTop - marginTop <= offsetAnchor && offsetTop + offsetHeight + marginBottom + rowGap >= offsetAnchor) {
+  //     this._scrollAnchorItemOffsetTop = offsetTop - marginTop;
+  //     this._scrollAnchorItemOffsetHeight = marginTop + offsetHeight + marginBottom + rowGap;
+  //     this._scrollAnchorItemIndex = itemIndex;
+  //     return true;
+  //   }
+
+  //   return false;
+  // }
+
+  // private _adjustScrollbarThumb = (viewportTop: number, direction: ScrollDirection) => {
+  //   const scrollableContainer = this._scrollableContainer;
+  //   // const viewportTop = scrollableContainer.getViewportTop();
+  //   const viewportHeight = scrollableContainer.getViewportHeight();
+  //   const scrollHeight = scrollableContainer.getScrollHeight();
+  //   const clientHeight = scrollableContainer.getClientHeight();
+  //   // const items = scrollableContainer.getItems();
+  //   const offsetAnchor = direction === 'down' 
+  //     ? viewportTop + viewportHeight
+  //     : viewportTop;
+
+  //   let fraction = (offsetAnchor - this._scrollAnchorItemOffsetTop) / this._scrollAnchorItemOffsetHeight;
+
+  //   if (fraction > 1 || fraction < 0) {
+  //     console.error('Index fraction must be between 0 and 1. fraction:', fraction, 'Corrected to 0');
+  //     fraction = 0;
+  //   }
+
+  //   const indexRatio = (this._scrollAnchorItemIndex + fraction) / (this._renderer.dataSize - 1);
+  //   const scrollbarThumbPosition = indexRatio * (scrollHeight - clientHeight);
+  //   
+  //   scrollableContainer.setScrollTop(scrollbarThumbPosition);
+
+  //   console.log('_adjustScrollbarThumb scroll anchor item index:', this._scrollAnchorItemIndex, 'fraction:', fraction, 'indexRatio:', indexRatio, 'position:', scrollbarThumbPosition);
+  // };
+
+  private _updateScrollbar = (_scrollTop: number, direction: ScrollDirection, scrollDelta: number) => {
     new ResizeObserver((_, observer) => {
       console.warn('ResizeObserver')
-      const items = this._scrollableContainer.getItems();
-      const itemsCount = items.length;
+      // const items = this._scrollableContainer.getItems();
+      // const itemsCount = items.length;
+      const scrollableContainer = this._scrollableContainer;
 
-      this._scrollableContainer.refresh();
+      scrollableContainer.refresh();
 
-      for (let idx = 0; idx < itemsCount; idx++) {
-        if(this._detectScrollAnchorItemOffset(items[idx]!, direction)) break;
+      // for (let idx = 0; idx < itemsCount; idx++) {
+      //   if(this._detectScrollAnchorItemOffset(items[idx]!, direction)) break;
+      // }
+
+      // ------------------------------------------
+      const scrollAnchorItemIndex = this._getItemIndexByScrollTop();
+      const scrollAnchorItem = this._renderer.getItem(scrollAnchorItemIndex);
+
+      if (scrollAnchorItem) {
+        const scrollTop = scrollableContainer.getScrollTop();
+        const scrollHeight = scrollableContainer.getScrollHeight();
+        const viewportTop = scrollableContainer.getViewportTop();
+        const viewportHeight = scrollableContainer.getViewportHeight();
+        const scrollCanvasHeight = scrollableContainer.getScrollCanvasHeight();
+        const scrollRatio = this._getScrollRatio();
+        const { offsetTop, offsetHeight } = (scrollAnchorItem as HTMLElement);
+        const marginTop = parseFloat(getComputedStyle(scrollAnchorItem).marginTop);
+        const marginBottom = parseFloat(getComputedStyle(scrollAnchorItem).marginBottom);
+        const scrollAnchorItemOffset = offsetTop - marginTop + (offsetHeight + marginBottom + marginTop) * scrollRatio; // <--! Here probably should be index fraction instead of scrollRatio
+        const scrollAnchorOffset = viewportTop + viewportHeight * scrollRatio;
+        const viewportTopDelta = scrollAnchorOffset - scrollAnchorItemOffset;
+        const scrollHeightRatio = scrollHeight / scrollCanvasHeight;
+        const scrollTopDelta = viewportTopDelta * scrollHeightRatio;
+        const scrollCanvasDelta = scrollDelta * scrollHeightRatio;
+        const normalizedScrollDelta = direction === 'down' ? Math.max(scrollTopDelta, 1, scrollCanvasDelta)  : Math.min(scrollTopDelta, -1, scrollCanvasDelta);
+        const scrollbarThumbPosition = scrollTop + normalizedScrollDelta;
+
+        scrollableContainer.setScrollTop(scrollbarThumbPosition);
+
+        console.log('_updateScrollbar scrollbarThumbPosition:', scrollbarThumbPosition, 'normalizedScrollDelta:', normalizedScrollDelta, 'scrollAnchorItemIndex:', scrollAnchorItemIndex);
       }
+
+      // ------------------------------------------
       
-      this._adjustScrollbarThumb(scrollTop, direction);
+      // this._adjustScrollbarThumb(scrollTop, direction);
 
       observer.disconnect();
     }).observe(document.body);

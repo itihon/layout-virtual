@@ -70,8 +70,8 @@ export type VirtualScrollStructure = {
 
 export interface IScrollableContainerEvents {
   onResize: (width: number, height: number) => void;
-  onScroll: (position: number, direction: ScrollDirection) => void;
-  onContentScroll: (position: number, direction: ScrollDirection) => void;
+  onScroll: (position: number, direction: ScrollDirection, scrollDelta: number) => void;
+  onContentScroll: (position: number, direction: ScrollDirection, scrollDelta: number) => void;
   onItemsOutOfView: (items: HTMLElement[]) => void;
 }
 
