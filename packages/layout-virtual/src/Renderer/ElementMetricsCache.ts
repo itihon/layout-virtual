@@ -4,6 +4,8 @@
  * @author Alexandr Kalabin
  */
 
+type CachedMetricName = 'scrollTop' | 'scrollHeight' | 'clientWidth' | 'clientHeight' | 'offsetTop' | 'offsetHeight'; 
+
 export default class ElementMetricsCache {
   protected _element: HTMLElement;
   private _offsetTop: number = 0;
@@ -41,21 +43,26 @@ export default class ElementMetricsCache {
     return this._offsetHeight;
   }
 
-  refresh() {
-    const {
-      scrollTop,
-      scrollHeight,
-      clientWidth,
-      clientHeight,
-      offsetTop,
-      offsetHeight
-    } = this._element;
+  refresh(metricName?: CachedMetricName) {
+    if (metricName) {
+      this[`_${metricName}`] = this._element[metricName];
+    }
+    else {
+      const {
+        scrollTop,
+        scrollHeight,
+        clientWidth,
+        clientHeight,
+        offsetTop,
+        offsetHeight
+      } = this._element;
 
-    this._offsetTop = offsetTop;
-    this._offsetHeight = offsetHeight;
-    this._scrollTop = scrollTop;
-    this._scrollHeight = scrollHeight;
-    this._clientWidth = clientWidth;
-    this._clientHeight = clientHeight;
+      this._offsetTop = offsetTop;
+      this._offsetHeight = offsetHeight;
+      this._scrollTop = scrollTop;
+      this._scrollHeight = scrollHeight;
+      this._clientWidth = clientWidth;
+      this._clientHeight = clientHeight;
+    }
   }
 }

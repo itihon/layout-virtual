@@ -25,7 +25,6 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
   private _scrollableContainer: IScrollableContainer;
   private _minItemHeight = document.documentElement.clientHeight;
   private _maxItemHeight = 0;
-  private _previousDirection: ScrollDirection | '' = '';
   // private _scrollAnchorItemOffsetTop = 0;
   // private _scrollAnchorItemOffsetHeight = 0;
   // private _scrollAnchorItemIndex = 0;
@@ -189,13 +188,6 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
       // Add spare space above.
       if (renderStartIndex > 0) {
-        
-        // prevents layout shift in WebKit and in Firefox
-        if (this._previousDirection !== direction) {
-          scrollableContainer.refresh();
-          console.error('Direction changed. Refresh.');
-        }
-
         if (scrollableContainer.getTopSpacerHeight() < spareSpace) {
           scrollableContainer.setScrollCanvasHeight(scrollableContainer.getScrollCanvasHeight() + spareSpace);
           scrollableContainer.setViewportTop(scrollableContainer.getViewportTop() + spareSpace);
@@ -203,8 +195,6 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
         }
       }
     }
-
-    this._previousDirection = direction;
 
     return this._renderer.flush();
   };

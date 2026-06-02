@@ -9,11 +9,9 @@ import ElementMetricsCache from '../Renderer/ElementMetricsCache';
 
 export default class ScrollRelay extends ElementMetricsCache {
   private _container: HTMLElement;
-  private _previousDirection: 'down' | 'up' = 'down'; // Keeping track of previous scroll direction prevents incorrect direction detection when scrollHeight changes during scrolling.
   private _eventBus: IEventEmitter<IEventMap> | null = null;
   private _eventType: 'onScroll' | 'onContentScroll' | null = null;
   private _ignoreNextScroll = false;
-  private _ignoreNextDirectionChange = false;
 
   handleEvent() {
     if (this._ignoreNextScroll) {
@@ -33,27 +31,11 @@ export default class ScrollRelay extends ElementMetricsCache {
     const scrollDelta = scrollTop - previousScrollTop;
 
     if (previousScrollTop < scrollTop) {
-      const direction = 'down';
-
-      // scrollHeight change protection
-      if (this._ignoreNextDirectionChange || this._previousDirection === direction) {
-        eventBus.emit(eventType, scrollTop, direction, scrollDelta);
-      }
-
-      this._previousDirection = direction;
+      eventBus.emit(eventType, scrollTop, 'down', scrollDelta);
     }
     else if (previousScrollTop > scrollTop) {
-      const direction = 'up';
-
-      // scrollHeight change protection
-      if (this._ignoreNextDirectionChange || this._previousDirection === direction) {
-        eventBus.emit(eventType, scrollTop, direction, scrollDelta);
-      }
-
-      this._previousDirection = direction;
+      eventBus.emit(eventType, scrollTop, 'up', scrollDelta);
     }
-
-    this._ignoreNextDirectionChange = false;
   };
 
   constructor(container: HTMLElement) {
@@ -72,10 +54,7 @@ export default class ScrollRelay extends ElementMetricsCache {
 
     this._ignoreNextScroll = true;
     this._container.scrollTop = scrollTop;
-  }
-
-  ignoreNextDirectionChangeProtection() {
-    this._ignoreNextDirectionChange = true;
+    this.refresh('scrollTop');
   }
 
   attach(eventBus: IEventEmitter<IEventMap>, eventType: 'onScroll' | 'onContentScroll') {
