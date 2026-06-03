@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import VirtualizedListAngular, { type VirtualizedListAngularClasses } from 'angular-layout-virtual';
+import '../../tests/e2e/loadFrameValidation';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
 

@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import VirtualizedListReact, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
+import '../../tests/e2e/loadFrameValidation';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
 const styling: VirtualizedListReactClasses = {
