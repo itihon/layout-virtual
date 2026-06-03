@@ -60,6 +60,10 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
         removeStartIndex = Math.max(renderEndIndex + 1, firstRenderedIndex);
         renderEndIndex = Math.min(firstRenderedIndex - 1, renderEndIndex);
         renderStartIndex = nextDivisible(renderStartIndex, columnCount);
+        
+        if (removeStartIndex !== firstRenderedIndex) { // intersecting ranges
+          removeStartIndex = nextDivisible(removeStartIndex, columnCount);
+        }
       }
       else { // there are no rendered items
         renderStartIndex = nextDivisible(renderStartIndex, columnCount);
