@@ -47,24 +47,27 @@ export const frameValidation = () => {
         if (previousStats) {
           const previousPosition = previousStats.position;
           const previousDelta = previousStats.delta;
-          const currenDelta = currentPosition - previousPosition;
+          const currentDelta = currentPosition - previousPosition;
           const itemIndex = (entry.target as HTMLElement).dataset.index;
-          const direction = currenDelta > 0 ? 'up' : 'down';
           const errorMsg = `
-            Item ${itemIndex} jumped while scrolling ${direction}.
+            Item ${itemIndex} jumped while scrolling ${scrollDirection}.
             previousPosition: ${previousPosition};
             currentPosition: ${currentPosition};
+            previousDelta: ${previousDelta};
+            currentDelta: ${currentDelta};
+            
+            Expected currentDelta * previousDelta to be > 0
           `;
 
           if ((entry.target as HTMLElement).offsetParent) {
             if (previousDelta !== undefined) {
-              if (currenDelta * previousDelta <= 0) {
+              if (currentDelta * previousDelta <= 0) {
                 throw new Error(errorMsg);
               }
             }
           }
 
-          renderedItemsPositions.set(entry.target, { position: currentPosition, delta: currenDelta });
+          renderedItemsPositions.set(entry.target, { position: currentPosition, delta: currentDelta });
         }
         else {
           renderedItemsPositions.set(entry.target, { position: currentPosition });
