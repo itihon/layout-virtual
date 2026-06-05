@@ -22,12 +22,10 @@ jobs:
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v6
-      - name: Build packages
-      - run: npm run build:packages
       - name: Install, build, and upload your site
         uses: withastro/action@v6
         with:
-          build-cmd: npm run build:homepage
+          build-cmd: npm run build:packages && npm run build:homepage
           out-dir: homepage/dist
           # path: homepage
           # package-manager: npm@latest
