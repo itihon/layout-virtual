@@ -32,6 +32,10 @@ export function definePackageConfig({ packageDir, plugins = [], external = [], e
             regex: /^_/,
           },
         },
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+        },
         nameCache,
       },
     },
