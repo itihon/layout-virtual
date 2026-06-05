@@ -23,7 +23,9 @@ jobs:
       - name: Checkout your repository using git
         uses: actions/checkout@v6
       - name: Prepare name cache JSON file for Terser
-        run: echo "{}" > ./dist/name-cache.json
+        run: |
+          mkdir -p ./dist
+          echo '{}' > ./dist/name-cache.json
       - name: Install, build, and upload your site
         uses: withastro/action@v6
         with:
