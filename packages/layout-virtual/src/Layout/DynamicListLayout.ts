@@ -74,7 +74,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
     this._renderer.clear();
 
-    this._scrollContent(scrollPosition, 'down')
+    this._scrollContent(scrollPosition, 'down', 0)
       .then(this._updateItemHeightRange)
       .then(this._updateScrollHeight)
       .then(() => {
@@ -124,28 +124,81 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const columnCount = scrollableContainer.getColumnCount();
     const rowGap = scrollableContainer.getRowGap();
     const viewportHeight = scrollableContainer.getViewportHeight();
-    const halfViewportHeight = viewportHeight / 2;
-    const halfRangeToFill = halfViewportHeight + overscanHeight;
-    const itemsPerHalfRange = Math.ceil(halfRangeToFill / this._minItemHeight) * columnCount;
-    const middleIndex = this._getItemIndexByScrollTop();
-    const firstRenderedIndex = this._renderer.getRenderedBoundaryIndex('first');
-    const lastRenderedIndex = this._renderer.getRenderedBoundaryIndex('last');
-    const renderStartIndex = middleIndex - itemsPerHalfRange;
-    const renderEndIndex = middleIndex + itemsPerHalfRange - 1;
+    const viewportTop = scrollableContainer.getViewportTop();
+    const scrollRatio = this._getScrollRatio();
     const { dataSize } = this._renderer;
 
-    console.log('_renderItems middle range index:', middleIndex, 'items per half range:', itemsPerHalfRange, 'total items count to be rendered:', renderEndIndex - renderStartIndex + 1);
+    let rangeToFillBefore = 0;
+    let rangeToFillAfter = 0;
+    let minVisibleIndex;
+    let maxVisibleIndex;
+
+    const overscanAbove = direction === 'up' ? overscanHeight : 0;
+    const overscanBelow = direction === 'down' ? overscanHeight : 0;
 
     for (const item of scrollableContainer.getItems()) {
+      const { offsetTop, offsetHeight } = item as HTMLElement;
+
+      // find the first visible index taking into account overscan height
+      if (minVisibleIndex === undefined && offsetTop + offsetHeight >= viewportTop - overscanAbove) {
+        minVisibleIndex = this._renderer.getIndex(item);
+      }
+
+      // find the last visible index taking into account overscan height
+      if (maxVisibleIndex === undefined && offsetTop >= viewportTop + viewportHeight + overscanBelow) {
+        maxVisibleIndex = this._renderer.getIndex(item);
+      }
+
       // update min and max item height
       this._updateItemHeightBounds(item, rowGap);
     }
+
+    if (direction === 'down') {
+      rangeToFillBefore = viewportHeight * scrollRatio;
+      rangeToFillAfter = viewportHeight * (1 - scrollRatio) + overscanHeight;
+    }
+    else if (direction === 'up') {
+      rangeToFillBefore = viewportHeight * scrollRatio + overscanHeight;
+      rangeToFillAfter = viewportHeight * (1 - scrollRatio);
+    }
+
+    const rowsPerRangeBefore = Math.ceil(rangeToFillBefore / this._minItemHeight);
+    const rowsPerRangeAfter = Math.ceil(rangeToFillAfter / this._minItemHeight);
+
+    const rangeToFill = viewportHeight + overscanHeight * 2;
+    const rowsPerRange = Math.ceil(rangeToFill / this._minItemHeight);
+    const middleIndex = this._getItemIndexByScrollTop();
+    const firstRenderedIndex = this._renderer.getRenderedBoundaryIndex('first');
+    const lastRenderedIndex = this._renderer.getRenderedBoundaryIndex('last');
+    let renderStartIndex = middleIndex - rowsPerRangeBefore * columnCount;
+    let renderEndIndex = middleIndex + (rowsPerRangeAfter + 1) * columnCount;
+
+    const isFastScroll = (direction === 'down' && scrollableContainer.getBottomSpacerTop() < scrollTop)
+      || (direction === 'up' && scrollableContainer.getTopSpacerBottom() > scrollTop + viewportHeight);
+
+    if (minVisibleIndex !== undefined && maxVisibleIndex !== undefined) {
+      if (direction === 'down' && renderEndIndex < dataSize - 1) {
+        renderStartIndex = Math.max(renderStartIndex, Math.min(minVisibleIndex, middleIndex));
+
+        if (!isFastScroll) {
+          renderEndIndex = maxVisibleIndex === lastRenderedIndex ? renderEndIndex : Math.max(maxVisibleIndex, middleIndex);
+        }
+      }
+      else if (direction === 'up' && renderStartIndex > 0) {
+        if (!isFastScroll) {
+          renderStartIndex = minVisibleIndex === firstRenderedIndex ? renderStartIndex : Math.min(minVisibleIndex, middleIndex);
+        }
+
+        renderEndIndex = Math.min(renderEndIndex, Math.max(maxVisibleIndex, middleIndex));
+      }
+    }
+
+    console.log('_renderItems renderStartIndex:', renderStartIndex, 'middleIndex:', middleIndex, 'renderEndIndex:', renderEndIndex, 'items per range:', rowsPerRange, 'total items count to be rendered:', renderEndIndex - renderStartIndex + 1, 'minVisibleIndex:', minVisibleIndex, 'maxVisibleIndex:', maxVisibleIndex);
 
     const removedHeight = this._renderer.render(renderStartIndex, renderEndIndex, direction);
     
     if (direction === 'down') {
       console.log('SCROLLING DOWN')
-      const isFastScroll = scrollableContainer.getBottomSpacerTop() < scrollTop;
       
       // cut extra space below
       if (lastRenderedIndex === dataSize - 1) {
@@ -176,7 +229,6 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     }
     else if (direction === 'up') {
       console.log('SCROLLING UP')
-      const isFastScroll = scrollableContainer.getTopSpacerBottom() > scrollTop + viewportHeight;
 
       // cut extra space above
       if (firstRenderedIndex === 0) {
@@ -276,7 +328,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
       scrollableContainer.setViewportTop(viewportTop);
     }
 
-    console.warn('_scrollContent scrollTop:', scrollTop, 'viewportTop:', viewportTop, 'scrollHeight:', scrollHeight, 'scrollCanvasHeight:', scrollCanvasHeight, 'scrollRangeRatio:', scrollRangeRatio, 'scrollDelta:', scrollDelta)
+    console.warn('_scrollContent scrollTop:', scrollTop, 'viewportTop:', viewportTop, 'scrollAnchorTop:', scrollAnchorTop, 'scrollHeight:', scrollHeight, 'scrollCanvasHeight:', scrollCanvasHeight, 'scrollRangeRatio:', scrollRangeRatio, 'scrollDelta:', scrollDelta)
   };
 
   private _updateItemHeightRange = () => {
