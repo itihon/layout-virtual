@@ -43,11 +43,23 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     return scrollRatio;
   }
 
-  private _getItemIndexByScrollTop(offset = 0) {
-    const columnCount = this._scrollableContainer.getColumnCount();
-    const lastIndex = (this._renderer.dataSize - 1) / columnCount;
+  // private _getItemIndexByScrollTop2(offset = 0) {
+  //   const columnCount = this._scrollableContainer.getColumnCount();
+  //   const lastIndex = (this._renderer.dataSize - 1) / columnCount;
 
-    return Math.min(Math.round(this._getScrollRatio(offset) * lastIndex), lastIndex) * columnCount;
+  //   return Math.min(Math.round(this._getScrollRatio(offset) * lastIndex), lastIndex) * columnCount;
+  // }
+
+  private _getItemIndexByScrollTop() {
+    const totalItems = this._renderer.dataSize;
+    const columnCount = this._scrollableContainer.getColumnCount();
+    const totalRows = Math.ceil(totalItems / columnCount);
+    const scrollRatio = this._getScrollRatio();
+    const lastIndex = totalItems - 1;
+    const fractionalRowIndex = totalRows * scrollRatio;
+    const index = Math.min(Math.floor(fractionalRowIndex) * columnCount, lastIndex);
+
+    return index;
   }
 
   private _updateVisibleItems = () => {
