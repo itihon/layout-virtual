@@ -1,5 +1,5 @@
 - [ ] Tests and CI
-- [ ] Grid support
+- [x] Grid support
 - [ ] Groups support
 - [x] Styling support
 - [ ] Examples
