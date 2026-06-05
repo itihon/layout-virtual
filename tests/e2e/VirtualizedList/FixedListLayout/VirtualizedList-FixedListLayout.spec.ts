@@ -5,9 +5,10 @@ import { test, expect } from '@playwright/test';
    *  + first rendered item never appears lower than the heigher viewport boundary 
    *  + last rendered item never appears heigher than the lower viewport boundary 
    *  + indeces of the rendered items are consecutive
+   *  + vertical positions of the rendered items consistently increase/decrease while scrolling up/down i.e. content doesn't jump back and forth
    *  + total rendered items' height never exceeds viewport height plus two overscan heights
    *  + (optional) content layer is not empty
-   *  + rendered items correspond to scrollTop
+   *  + rendered items range corresponds to scrollTop
    *
    *  Additional conditions to be checked in specific test cases: 
    * 
