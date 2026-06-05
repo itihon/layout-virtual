@@ -239,18 +239,19 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     return position;
   }
 
-  private _scrollContent = async (scrollTop: number, direction: ScrollDirection) => {
+  private _scrollContent = async (scrollTop: number, direction: ScrollDirection, scrollDelta: number) => {
 
     const scrollableContainer = this._scrollableContainer;
 
     // scrollableContainer.refresh();
 
+    const clientHeight = scrollableContainer.getClientHeight();
     const scrollHeight = scrollableContainer.getScrollHeight();
     const viewportHeight = scrollableContainer.getViewportHeight();
     const scrollCanvasHeight = scrollableContainer.getScrollCanvasHeight();
-    const scrollRatio = this._getScrollRatio();
-    const viewportTop = scrollRatio * (scrollCanvasHeight - viewportHeight);
-
+    const scrollRangeRatio = (scrollCanvasHeight - viewportHeight) / (scrollHeight - clientHeight);
+    const viewportTop = scrollableContainer.getViewportTop() + scrollDelta * scrollRangeRatio;
+    
     await this._renderItems(viewportTop, direction);
 
     const scrollAnchorTop = this._getScrollAnchorItemPosition();
@@ -263,7 +264,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
       scrollableContainer.setViewportTop(viewportTop);
     }
 
-    console.warn('_scrollContent scrollTop:', scrollTop, 'viewportTop:', viewportTop, 'scrollHeight:', scrollHeight, 'scrollCanvasHeight:', scrollCanvasHeight)
+    console.warn('_scrollContent scrollTop:', scrollTop, 'viewportTop:', viewportTop, 'scrollHeight:', scrollHeight, 'scrollCanvasHeight:', scrollCanvasHeight, 'scrollRangeRatio:', scrollRangeRatio, 'scrollDelta:', scrollDelta)
   };
 
   private _updateItemHeightRange = () => {
