@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.3.1
+
+### Patch Changes
+
+- de45700: Add render limits by min and max visible index, improve scroll anchor item position calculations.
+
 ## 0.3.0
 
 ### Minor Changes

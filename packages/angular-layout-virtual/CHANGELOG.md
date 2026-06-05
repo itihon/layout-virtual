@@ -1,5 +1,13 @@
 # angular-layout-virtual
 
+## 0.2.1
+
+### Patch Changes
+
+- de45700: Add render limits by min and max visible index, improve scroll anchor item position calculations.
+- Updated dependencies [de45700]
+  - layout-virtual@0.3.1
+
 ## 0.2.0
 
 ### Minor Changes
