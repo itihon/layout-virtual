@@ -61,7 +61,8 @@ export const frameValidation = () => {
 
           if ((entry.target as HTMLElement).offsetParent) {
             if (previousDelta !== undefined) {
-              if (currentDelta * previousDelta <= 0) {
+              if (currentDelta * previousDelta < 0) {
+                renderedItemsPositions.delete(entry.target);
                 throw new Error(errorMsg);
               }
             }
