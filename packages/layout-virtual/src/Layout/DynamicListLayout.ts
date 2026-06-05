@@ -58,8 +58,9 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const lastIndex = totalItems - 1;
     const fractionalRowIndex = totalRows * scrollRatio;
     const index = Math.min(Math.floor(fractionalRowIndex) * columnCount, lastIndex);
+    const fraction = fractionalRowIndex % (totalRows - 1) % Math.max(Math.floor(fractionalRowIndex), 1);
 
-    return index;
+    return { index, fraction };
   }
 
   private _updateVisibleItems = () => {
@@ -167,7 +168,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
     const rangeToFill = viewportHeight + overscanHeight * 2;
     const rowsPerRange = Math.ceil(rangeToFill / this._minItemHeight);
-    const middleIndex = this._getItemIndexByScrollTop();
+    const middleIndex = this._getItemIndexByScrollTop().index;
     const firstRenderedIndex = this._renderer.getRenderedBoundaryIndex('first');
     const lastRenderedIndex = this._renderer.getRenderedBoundaryIndex('last');
     let renderStartIndex = middleIndex - rowsPerRangeBefore * columnCount;
@@ -434,7 +435,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
       // }
 
       // ------------------------------------------
-      const scrollAnchorItemIndex = this._getItemIndexByScrollTop();
+      const { index: scrollAnchorItemIndex, fraction: indexFraction } = this._getItemIndexByScrollTop();
       const scrollAnchorItem = this._renderer.getItem(scrollAnchorItemIndex);
 
       if (scrollAnchorItem) {
@@ -447,7 +448,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
         const { offsetTop, offsetHeight } = (scrollAnchorItem as HTMLElement);
         const marginTop = parseFloat(getComputedStyle(scrollAnchorItem).marginTop);
         const marginBottom = parseFloat(getComputedStyle(scrollAnchorItem).marginBottom);
-        const scrollAnchorItemOffset = offsetTop - marginTop + (offsetHeight + marginBottom + marginTop) * scrollRatio; // <--! Here probably should be index fraction instead of scrollRatio
+        const scrollAnchorItemOffset = offsetTop - marginTop + (offsetHeight + marginBottom + marginTop) * indexFraction;
         const scrollAnchorOffset = viewportTop + viewportHeight * scrollRatio;
         const viewportTopDelta = scrollAnchorOffset - scrollAnchorItemOffset;
         const scrollHeightRatio = scrollHeight / scrollCanvasHeight;
