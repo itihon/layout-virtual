@@ -9,7 +9,7 @@
     "build:homepage": "npm run build -w homepage",
     "preview:homepage": "npm run preview -w homepage",
     "build:ws": "npm run build --workspaces",
-    "build:packages": "npm run build --workspace=layout-virtual && npm run build --workspace=react-layout-virtual && npm run build --workspace=vue-layout-virtual && npm run build --workspace=angular-layout-virtual",
+    "build:packages": "npm run build --workspace=layout-virtual --workspace=react-layout-virtual --workspace=vue-layout-virtual --workspace=angular-layout-virtual",
     "build:types": "npm run build:types --workspaces --if-present",
     "changeset": "changeset",
     "version-packages": "changeset version",
