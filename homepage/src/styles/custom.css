@@ -1,3 +1,7 @@
+:root[data-theme="light"] {
+  --sl-color-bg: hsl(205.09deg 22.8% 94%);
+}
+
 .hidden-on-wide-screens {
   display: none;
 }
