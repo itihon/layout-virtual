@@ -5,6 +5,7 @@ import baseUrlModifierRemarkPlugin from './base-url-remark-plugin';
 import { BASE_URL, PROD_HOST } from './config.mjs';
 import svgr from 'vite-plugin-svgr';
 import react from '@astrojs/react';
+import starlightThemeNord from 'starlight-theme-nord';
 
 // https://astro.build/config
 export default defineConfig({
@@ -44,5 +45,6 @@ export default defineConfig({
         Header: './src/components/Header.astro',
       },
       customCss: [ '/src/styles/custom.css' ],
+      plugins: [starlightThemeNord()],
 		}), react()],
 });
