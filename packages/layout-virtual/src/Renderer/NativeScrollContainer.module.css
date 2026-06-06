@@ -1,8 +1,11 @@
 .scrollableContainer {
   position: relative; /* position is required because .scrollHeightFiller is positioned absolutely */
   overflow-y: auto;
+}
+
+:where(.scrollableContainer) {
   width: 200px; /* default width */
-  height: 300px; /* default width */
+  height: 300px; /* default height */
 }
 
 .scrollHeightFiller {
