@@ -108,7 +108,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
       });
   };
 
-  private _renderItems = (scrollTop: number, direction: ScrollDirection) => {
+  private _renderItems = (_: number, direction: ScrollDirection) => {
     const scrollableContainer = this._scrollableContainer;
     const overscanHeight = this._overscanHeight;
     const spareSpace = this._spareSpace;
@@ -176,23 +176,35 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     let renderStartIndex = middleIndex - rowsPerRangeBefore * columnCount;
     let renderEndIndex = middleIndex + (rowsPerRangeAfter + 1) * columnCount;
 
-    const isFastScroll = (direction === 'down' && scrollableContainer.getBottomSpacerTop() < scrollTop)
-      || (direction === 'up' && scrollableContainer.getTopSpacerBottom() > scrollTop + viewportHeight);
+    // const isFastScroll = (direction === 'down' && scrollableContainer.getBottomSpacerTop() < scrollTop)
+    //   || (direction === 'up' && scrollableContainer.getTopSpacerBottom() > scrollTop + viewportHeight);
+
+    if (minVisibleIndex === undefined) { // all rendered items are above the viewport
+      minVisibleIndex = firstRenderedIndex;
+    }
+
+    if (maxVisibleIndex === undefined) { // all rendered items are above the viewport
+      maxVisibleIndex = lastRenderedIndex;
+    }
 
     if (minVisibleIndex !== undefined && maxVisibleIndex !== undefined) {
       if (direction === 'down' && renderEndIndex < dataSize - 1) {
+        // renderStartIndex = minVisibleIndex === firstRenderedIndex ? minVisibleIndex : Math.max(renderStartIndex, Math.min(minVisibleIndex, middleIndex));
         renderStartIndex = Math.max(renderStartIndex, Math.min(minVisibleIndex, middleIndex));
+        // renderStartIndex = Math.min(minVisibleIndex, middleIndex);
 
-        if (!isFastScroll) {
+        // if (!isFastScroll) {
           renderEndIndex = maxVisibleIndex === lastRenderedIndex ? renderEndIndex : Math.max(maxVisibleIndex, middleIndex);
-        }
+        // }
       }
       else if (direction === 'up' && renderStartIndex > 0) {
-        if (!isFastScroll) {
+        // if (!isFastScroll) {
           renderStartIndex = minVisibleIndex === firstRenderedIndex ? renderStartIndex : Math.min(minVisibleIndex, middleIndex);
-        }
+        // }
 
+        // renderEndIndex = maxVisibleIndex === lastRenderedIndex ? maxVisibleIndex : Math.min(renderEndIndex, Math.max(maxVisibleIndex, middleIndex));
         renderEndIndex = Math.min(renderEndIndex, Math.max(maxVisibleIndex, middleIndex));
+        // renderEndIndex = Math.max(maxVisibleIndex, middleIndex);
       }
     }
 
@@ -212,15 +224,15 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
         }
       }
 
-      if (isFastScroll) {
-        console.warn('Fast scroll down.');
-        scrollableContainer.setTopSpacerHeight(scrollTop - overscanHeight);
-        scrollableContainer.setBottomSpacerHeight('auto');
-      }
-      else {
+      // if (isFastScroll) {
+      //   console.warn('Fast scroll down.');
+      //   scrollableContainer.setTopSpacerHeight(scrollTop - overscanHeight);
+      //   scrollableContainer.setBottomSpacerHeight('auto');
+      // }
+      // else {
         scrollableContainer.setTopSpacerHeight(scrollableContainer.getTopSpacerHeight() + removedHeight);
         scrollableContainer.setBottomSpacerHeight('auto');
-      }
+      // }
 
       // add spare space below
       if (renderEndIndex < dataSize - 1) {
@@ -243,15 +255,15 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
         }
       }
 
-      if (isFastScroll) {
-        console.warn('Fast scroll up.');
-        scrollableContainer.setTopSpacerHeight('auto');
-        scrollableContainer.setBottomSpacerHeight(scrollableContainer.getScrollCanvasHeight() - (scrollTop + viewportHeight + overscanHeight));
-      }
-      else {
+      // if (isFastScroll) {
+      //   console.warn('Fast scroll up.');
+      //   scrollableContainer.setTopSpacerHeight('auto');
+      //   scrollableContainer.setBottomSpacerHeight(scrollableContainer.getScrollCanvasHeight() - (scrollTop + viewportHeight + overscanHeight));
+      // }
+      // else {
         scrollableContainer.setTopSpacerHeight('auto');
         scrollableContainer.setBottomSpacerHeight(scrollableContainer.getBottomSpacerHeight() + removedHeight);
-      }
+      // }
 
       // Add spare space above.
       if (renderStartIndex > 0) {
