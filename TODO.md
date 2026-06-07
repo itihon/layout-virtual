@@ -17,10 +17,11 @@
 
 # Bugs
 
-- [x] Firefox sometimes doesn't render on page load
-- [ ] DynamicListLayout infinite loop on resize
-- [x] DynamicListLayout 26th element gap
-- [ ] Layout shift when wheel and scrollbar scroll changes perioadically.
+- [ ] Layout shift in Firefox when clicking on scrollbar in arbitrary place. 
+
+# Limitations
+
+- Do not use vertical gaps and vertical margins specified in percents. The height of the content layer container constantly changes as following items are loaded and the previous are unloaded which will cause layout shift.
 
 # Problems
 
