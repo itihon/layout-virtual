@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.3.2
+
+### Patch Changes
+
+- 5e9b1f1: Improve rendering algorithm, fix bugs.
+
 ## 0.3.1
 
 ### Patch Changes

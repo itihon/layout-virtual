@@ -1,5 +1,13 @@
 # angular-layout-virtual
 
+## 0.2.2
+
+### Patch Changes
+
+- 5e9b1f1: Improve rendering algorithm, fix bugs.
+- Updated dependencies [5e9b1f1]
+  - layout-virtual@0.3.2
+
 ## 0.2.1
 
 ### Patch Changes
