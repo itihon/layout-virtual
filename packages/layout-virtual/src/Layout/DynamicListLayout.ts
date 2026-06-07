@@ -423,7 +423,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
   //   console.log('_adjustScrollbarThumb scroll anchor item index:', this._scrollAnchorItemIndex, 'fraction:', fraction, 'indexRatio:', indexRatio, 'position:', scrollbarThumbPosition);
   // };
 
-  private _updateScrollbar = (_scrollTop: number, direction: ScrollDirection, scrollDelta: number) => {
+  private _updateScrollbar = (_: number, direction: ScrollDirection) => {
     new ResizeObserver((_, observer) => {
       console.warn('ResizeObserver')
       // const items = this._scrollableContainer.getItems();
@@ -455,13 +455,26 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
         const viewportTopDelta = scrollAnchorOffset - scrollAnchorItemOffset;
         const scrollHeightRatio = scrollHeight / scrollCanvasHeight;
         const scrollTopDelta = viewportTopDelta * scrollHeightRatio;
-        const scrollCanvasDelta = scrollDelta * scrollHeightRatio;
-        const normalizedScrollDelta = direction === 'down' ? Math.max(scrollTopDelta, 1, scrollCanvasDelta)  : Math.min(scrollTopDelta, -1, scrollCanvasDelta);
+        // const scrollCanvasDelta = scrollDelta * scrollHeightRatio;
+        // let normalizedScrollDelta = direction === 'down' ? Math.max(scrollTopDelta, 1, scrollCanvasDelta)  : Math.min(scrollTopDelta, -1, scrollCanvasDelta); // scrollCanvasDelta is used for fast scrolling,
+        let normalizedScrollDelta = 0;
+
+        if (direction === 'down') {
+          normalizedScrollDelta = Math.max(scrollTopDelta, 1);
+        }
+        else if (direction === 'up') {
+          normalizedScrollDelta = Math.min(scrollTopDelta, -1);
+        }
+
+        // if (Math.abs(scrollDelta) > viewportHeight) {
+        //   normalizedScrollDelta = scrollCanvasDelta;
+        // }
+
         const scrollbarThumbPosition = scrollTop + normalizedScrollDelta;
 
         scrollableContainer.setScrollTop(scrollbarThumbPosition);
 
-        console.log('_updateScrollbar scrollbarThumbPosition:', scrollbarThumbPosition, 'normalizedScrollDelta:', normalizedScrollDelta, 'scrollAnchorItemIndex:', scrollAnchorItemIndex);
+        console.log('_updateScrollbar scrollbarThumbPosition:', scrollbarThumbPosition, 'normalizedScrollDelta:', normalizedScrollDelta, 'scrollAnchorItemIndex:', scrollAnchorItemIndex, 'scrollTopDelta:', scrollTopDelta);
       }
 
       // ------------------------------------------
