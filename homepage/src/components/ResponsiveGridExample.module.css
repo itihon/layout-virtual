@@ -21,8 +21,8 @@
 }
 
 .lv-content-layer {
-  --min-col-size: 120px;
-  gap: 1vw;
+  --min-col-size: max(18vw, 120px);
+  gap: .5vw;
   grid-template-columns: repeat(
     auto-fit,
     minmax(min(var(--min-col-size), 100%), 1fr)
@@ -32,15 +32,33 @@
 .list-item {
   outline: 1px solid var(--sl-color-gray-5);
   border-radius: 4px;
-  padding: 4px;
-  margin: 1vw;
+  padding: min(1vw, 8px) 10%;
+  margin: .5vw;
   background-color: var(--sl-color-bg-nav);
   color: inherit;
-
 }
 
-.list-item .icon {
-  font-size: 48px;
+.li-icon {
+  margin-right: 8px;
+  font-size: min(8vw, 48px);
+  float: left;
+}
+
+.li-index {
+  float: right;
+  font-size: 12px;
+}
+
+.li-header {
+  line-height: normal;
+  font-size: min(4vw, 18px);
+  font-weight: 500;
+}
+
+.li-description {
+  font-size: min(3.5vw, 16px);
+  clear: both;
+  padding: 8px;
 }
 
 .resizer {
