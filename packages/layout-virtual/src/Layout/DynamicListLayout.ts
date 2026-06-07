@@ -442,7 +442,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
       // const itemsCount = items.length;
       const scrollableContainer = this._scrollableContainer;
 
-      // scrollableContainer.refresh();
+      scrollableContainer.refresh();
 
       // for (let idx = 0; idx < itemsCount; idx++) {
       //   if(this._detectScrollAnchorItemOffset(items[idx]!, direction)) break;
