@@ -67,7 +67,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     console.log('_updateVisibleItems')
     const scrollableContainer = this._scrollableContainer;
 
-    scrollableContainer.refresh();
+    // scrollableContainer.refresh();
 
     const scrollPosition = scrollableContainer.getScrollTop();
     const scrollHeight = scrollableContainer.getScrollHeight();
@@ -84,14 +84,16 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
         scrollableContainer.refresh();
 
-        const topSpacerBottom = scrollableContainer.getTopSpacerBottom();
-        const viewportTop = scrollableContainer.getViewportTop();
+        // const topSpacerBottom = scrollableContainer.getTopSpacerBottom();
+        // const viewportTop = scrollableContainer.getViewportTop();
         const newScrollHeight = scrollableContainer.getScrollHeight();
         const newClientHeight = scrollableContainer.getClientHeight();
         const scrollHeightRatio = (newScrollHeight - newClientHeight) / (scrollHeight - clientHeight);
 
-        scrollableContainer.setViewportTop(Math.max(viewportTop, topSpacerBottom));
+        // scrollableContainer.setViewportTop(Math.max(viewportTop, topSpacerBottom));
         scrollableContainer.setScrollTop(scrollPosition * scrollHeightRatio);
+        this._renderer.clear();
+        this._scrollContent(scrollPosition * scrollHeightRatio, 'down', 0);
 
         // this._renderer.clear();
         // return this._scrollContent(position * scrollHeightRatio, 'down');
