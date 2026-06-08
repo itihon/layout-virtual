@@ -17,7 +17,6 @@
 
 # Bugs
 
-- [ ] Layout shift in Firefox when clicking on scrollbar in arbitrary place. 
 
 # Limitations
 
