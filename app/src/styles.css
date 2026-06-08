@@ -58,6 +58,11 @@ a:hover {
   overflow-y: auto;
 }
 
+.lv-viewport {
+  top: 10%;
+  height: 80%;
+}
+
 .lv-content-layer {
   --min-col-size: 120px;
   gap: 1rem;
