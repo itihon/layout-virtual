@@ -1,5 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 import ResizeIcon from '../assets/resize.svg?react';
+import classes from './Resizer.module.css';
 
 interface Props {
   children: React.ReactNode;
@@ -76,27 +77,19 @@ const Resizer: React.FC<Props> = ({
     >
       {children}
       <button
+        className={classes.resizeButton}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         style={{
-          position: 'absolute',
           bottom: buttonBottom,
           right: buttonRight,
           width: buttonSize,
           height: buttonSize,
-          padding: 0,
-          // border: 'none',
-          // background: 'transparent',
-          cursor: 'nwse-resize',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          touchAction: 'none',
-          userSelect: 'none',
         }}
         aria-label="Resize"
+        title="Drag to resize"
       >
         <ResizeIcon />
       </button>

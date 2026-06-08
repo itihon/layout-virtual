@@ -1,0 +1,52 @@
+.resizeButton {
+  position: absolute;
+  padding: 0;
+  border-radius: 50%;
+  cursor: nwse-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  user-select: none;
+}
+
+.resizeButton::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  top: -25%;
+  left: 25%;
+  position: relative;
+  border-radius: 50%;
+  background: #fff;
+  animation: wave 4s ease-in infinite;
+}
+
+.resizeButton:hover::before {
+  animation: none;
+}
+
+@keyframes wave {
+ 0%,
+ 20% {
+  box-shadow: none;
+ }
+ 25% {  box-shadow:
+    0 0 0 0px rgba(255, 255,255, 1),
+    0 0 0 4px rgba(255, 255,255, 0.2),
+    0 0 0 8px rgba(255, 255,255, 0.6),
+    0 0 0 16px rgba(255, 255,255, 0.4),
+    0 0 0 32px rgba(255, 255,255, 0.2)
+  }
+  35% {  box-shadow:
+    0 0 0 32px rgba(255, 255,255, 0),
+    0 0 0 16px rgba(255, 255,255, 0.2),
+    0 0 0 8px rgba(255, 255,255, 0.4),
+    0 0 0 4px rgba(255, 255,255, 0.6),
+    0 0 0 0px rgba(255, 255,255, 1)
+  }
+  60%,
+  100% {
+    box-shadow: none;
+  }
+}
