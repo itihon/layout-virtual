@@ -108,7 +108,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
       });
   };
 
-  private _renderItems = (_: number, direction: ScrollDirection) => {
+  private _renderItems = (viewportTop: number, direction: ScrollDirection) => {
     const scrollableContainer = this._scrollableContainer;
     const overscanHeight = this._overscanHeight;
     const spareSpace = this._spareSpace;
@@ -127,7 +127,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const columnCount = scrollableContainer.getColumnCount();
     const rowGap = scrollableContainer.getRowGap();
     const viewportHeight = scrollableContainer.getViewportHeight();
-    const viewportTop = scrollableContainer.getViewportTop();
+    // const viewportTop = scrollableContainer.getViewportTop();
     const scrollRatio = this._getScrollRatio();
     const { dataSize } = this._renderer;
 
