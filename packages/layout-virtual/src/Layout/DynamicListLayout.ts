@@ -268,6 +268,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
       // Add spare space above.
       if (renderStartIndex > 0) {
         if (scrollableContainer.getTopSpacerHeight() < spareSpace) {
+          scrollableContainer.refresh(); // <-- prevents layout shift in Firefox
           scrollableContainer.setScrollCanvasHeight(scrollableContainer.getScrollCanvasHeight() + spareSpace);
           scrollableContainer.setViewportTop(scrollableContainer.getViewportTop() + spareSpace);
           console.warn('Added spare space above.');
