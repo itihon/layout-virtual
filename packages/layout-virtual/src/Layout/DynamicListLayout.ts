@@ -167,9 +167,6 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
     const rowsPerRangeBefore = Math.ceil(rangeToFillBefore / this._minItemHeight);
     const rowsPerRangeAfter = Math.ceil(rangeToFillAfter / this._minItemHeight);
-
-    const rangeToFill = viewportHeight + overscanHeight * 2;
-    const rowsPerRange = Math.ceil(rangeToFill / this._minItemHeight);
     const middleIndex = this._getItemIndexByScrollTop().index;
     const firstRenderedIndex = this._renderer.getRenderedBoundaryIndex('first');
     const lastRenderedIndex = this._renderer.getRenderedBoundaryIndex('last');
@@ -208,7 +205,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
       }
     }
 
-    console.log('_renderItems renderStartIndex:', renderStartIndex, 'middleIndex:', middleIndex, 'renderEndIndex:', renderEndIndex, 'items per range:', rowsPerRange, 'total items count to be rendered:', renderEndIndex - renderStartIndex + 1, 'minVisibleIndex:', minVisibleIndex, 'maxVisibleIndex:', maxVisibleIndex);
+    console.log('_renderItems renderStartIndex:', renderStartIndex, 'middleIndex:', middleIndex, 'renderEndIndex:', renderEndIndex, 'total items count to be rendered:', renderEndIndex - renderStartIndex + 1, 'minVisibleIndex:', minVisibleIndex, 'maxVisibleIndex:', maxVisibleIndex);
 
     const removedHeight = this._renderer.render(renderStartIndex, renderEndIndex, direction);
     
