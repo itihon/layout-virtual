@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.3.3
+
+### Patch Changes
+
+- dead44d: Fix bugs
+
 ## 0.3.2
 
 ### Patch Changes

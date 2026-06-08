@@ -1,5 +1,13 @@
 # vue-layout-virtual
 
+## 0.2.3
+
+### Patch Changes
+
+- dead44d: Fix bugs
+- Updated dependencies [dead44d]
+  - layout-virtual@0.3.3
+
 ## 0.2.2
 
 ### Patch Changes
