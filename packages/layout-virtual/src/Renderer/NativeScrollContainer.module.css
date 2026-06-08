@@ -3,6 +3,7 @@
   overflow-y: auto;
 }
 
+/* default values that can be overridden*/
 :where(.scrollableContainer) {
   width: 200px; /* default width */
   height: 300px; /* default height */
@@ -21,13 +22,17 @@
 .viewportContainer {
   display: block;
   position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100%;
   overflow-y: auto;
   scrollbar-width: none; /* Hides scrollbar in Firefox */
   overscroll-behavior-y: contain;
   contain: layout paint;
+}
+
+/* default values that can be overridden*/
+:where(.viewportContainer) {
+  top: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* Hides scrollbar in Chrome, Safari, and Opera (WebKit) */
