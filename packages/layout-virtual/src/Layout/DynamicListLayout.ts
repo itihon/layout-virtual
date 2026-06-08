@@ -282,7 +282,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const totalItems = renderer.dataSize;
     const columnCount = scrollableContainer.getColumnCount();
     const totalRows = Math.ceil(totalItems / columnCount);
-    const clientHeight = scrollableContainer.getClientHeight();
+    const viewportHeight = scrollableContainer.getViewportHeight();
     const scrollRatio = this._getScrollRatio();
     const lastIndex = totalItems - 1;
     const fractionalRowIndex = totalRows * scrollRatio;
@@ -307,7 +307,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const interpolatedHeight = indexFraction * (itemTop2 - itemTop1) || itemHeight1 * indexFraction;
     const interpolatedTop = itemTop1 + interpolatedHeight;
 
-    const viewportAnchor = clientHeight * scrollRatio;
+    const viewportAnchor = viewportHeight * scrollRatio;
 
     const position = interpolatedTop - viewportAnchor;
 
