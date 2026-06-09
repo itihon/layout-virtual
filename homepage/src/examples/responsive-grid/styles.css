@@ -1,0 +1,71 @@
+body {
+  --darker-bg-color: rgb(71, 81, 91);
+  --lighter-bg-color: lightslategray;
+  background-color: var(--lighter-bg-color);
+}
+
+.lv-scroller * {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  color: white;
+}
+
+.lv-scroller {
+  width: 300px;
+  height: 400px;
+  padding: 16px 16px 40px 16px;
+  background-color: var(--darker-bg-color);
+  resize: both;
+}
+
+.lv-viewport {
+  container-type: size;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--lighter-bg-color);
+  border-radius: 8px;
+  background-color: var(--lighter-bg-color);
+  box-shadow: inset 0px 0px 18px 2px var(--darker-bg-color);
+}
+
+.lv-content-layer {
+  --min-col-size: clamp(120px, 18vw, 280px);
+  gap: 1cqh .5vw;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(var(--min-col-size), 100%), 1fr)
+  );
+}
+
+.list-item {
+  border-radius: 4px;
+  padding: min(1vw, 8px) 10%;
+  margin: 1cqh;
+  background-color: var(--darker-bg-color);
+  color: inherit;
+}
+
+.li-icon {
+  margin-right: 8px;
+  font-size: clamp(20px, 8cqh, 48px);
+  float: left;
+}
+
+.li-index {
+  float: right;
+  font-size: 10px;
+  padding: 2px;
+}
+
+.li-header {
+  line-height: normal;
+  font-size: clamp(14px, 3cqh, 32px);
+  font-weight: 500;
+}
+
+.li-description {
+  font-size: clamp(12px, 2.5cqh, 24px);
+  clear: both;
+  padding: 8px;
+}
