@@ -1,6 +1,8 @@
 import Resizer from './Resizer';
 import VirtualizedGrid, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
+import type { ILayoutVirtual } from 'layout-virtual/types';
 import classes from './ResponsiveGridExample.module.css';
+import { useEffect, useRef, useState } from 'react';
 
 const styling: VirtualizedListReactClasses = {
   scrollerClass: classes['lv-scroller'],
@@ -38,12 +40,24 @@ function ListItem({ data, ref, index }: ListItemProps<Data>) {
 
 const ResponsiveGridExample = () => {
   const data = Array.from({ length: 1000 }, (_, i) => ({ i }));
+  const layoutVirtualRef = useRef<ILayoutVirtual>(undefined);
+  const [renderedIndeces, setRenderedIndeces] = useState({ startIndex: 0, endIndex: 0 });
+  const { startIndex, endIndex } = renderedIndeces;
+  const total = endIndex - startIndex + 1;
+
+  useEffect(() => {
+    if (layoutVirtualRef.current) {
+      layoutVirtualRef.current.on('onAfterItemsRendered', (startIndex, endIndex) => {
+        setRenderedIndeces({ startIndex, endIndex });
+      });
+    }
+  }, []);
 
   return (
     <>
-      <div>Rendered indeces: n - n of n.</div>
+      <div>Rendered indeces {startIndex} - {endIndex}, total {total} of {data.length}.</div>
       <Resizer className={classes.resizer} buttonRight={18} buttonBottom={4} initialWidth={'100%'} initialHeight={'70vh'} widthFactor={2}>
-        <VirtualizedGrid<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} />
+        <VirtualizedGrid<Data> ref={layoutVirtualRef} overscanHeight={100} data={data} renderItem={ListItem} {...styling} />
       </Resizer>
     </>
   );
