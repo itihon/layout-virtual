@@ -273,7 +273,16 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
       }
     }
 
-    return this._renderer.flush();
+    return this._renderer.flush().then(this._onAfterItemsRendered);
+  };
+
+  private _onAfterItemsRendered = () => {
+    this._eventBus?.emit(
+      'onAfterItemsRendered', 
+      this._renderer.getRenderedBoundaryIndex('first') ?? -1,
+      this._renderer.getRenderedBoundaryIndex('last') ?? -1,
+      this._scrollableContainer.getItems(),
+    );
   };
 
   private _getScrollAnchorItemPosition(): number | null {

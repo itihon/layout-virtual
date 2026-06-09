@@ -71,10 +71,15 @@ export interface IScrollableContainerEvents {
   onResize: (width: number, height: number) => void;
   onScroll: (position: number, direction: ScrollDirection, scrollDelta: number) => void;
   onContentScroll: (position: number, direction: ScrollDirection, scrollDelta: number) => void;
-  onItemsOutOfView: (items: HTMLElement[]) => void;
 }
 
-export type IEventMap = IVirtualizedListEvents & IScrollableContainerEvents;
+export interface ILayoutVirtualEvents {
+  onBeforeItemsLoaded: (startIndex: number, endIndex: number) => void;
+  onBeforeItemsUnloaded: (startIndex: number, endIndex: number) => void;
+  onAfterItemsRendered: (startIndex: number, endIndex: number, items: HTMLCollection) => void;
+}
+
+export type IEventMap = IVirtualizedListEvents & IScrollableContainerEvents & ILayoutVirtualEvents;
 
 export interface IEventEmitter<T extends { [K in keyof T]: (...args: any[]) => void }> {
   on<K extends keyof T>(event: K, cb: T[K]): void;
@@ -90,4 +95,9 @@ export interface IDynamicListLayout<ItemData = unknown, ItemRenderer = Function>
 
 export interface IVirtualizedDynamicListOptions<ItemData = unknown, ItemRenderer = Function> {
   layout: IDynamicListLayout<ItemData, ItemRenderer>;
+}
+
+export interface ILayoutVirtual<T = IEventMap> {
+  on<K extends keyof T>(event: K, cb: T[K]): void;
+  scrollToIndex(): void;
 }
