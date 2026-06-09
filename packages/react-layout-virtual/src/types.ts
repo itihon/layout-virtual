@@ -4,7 +4,7 @@
  * @author Alexandr Kalabin
  */
 
-import type { VirtualScrollStructure } from "layout-virtual/types";
+import type { VirtualScrollStructure, ILayoutVirtual } from "layout-virtual/types";
 
 export interface ListItemProps<T = unknown> {
   data: T;
@@ -25,6 +25,7 @@ export interface VirtualizedListReactClasses {
 }
 
 export interface VirtualizedListReactProps<T> extends VirtualizedListReactClasses {
+  ref?: React.RefObject<ILayoutVirtual | undefined>;
   scrollerRef?: React.RefObject<HTMLElement>;
   overscanHeight?: number; 
   data: T[];

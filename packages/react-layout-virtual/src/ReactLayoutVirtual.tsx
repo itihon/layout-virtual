@@ -11,7 +11,7 @@ import ReactRenderer from './ReactRenderer';
 import type { ItemRenderer, VirtualizedListReactProps } from './types';
 
 export default function VirtualizedListReact<ItemData = unknown>(props: VirtualizedListReactProps<ItemData>) {
-  const { overscanHeight = 200, data, renderItem, scrollerRef } = props;
+  const { overscanHeight = 200, data, renderItem, scrollerRef, ref } = props;
   const { scrollerClass, viewportClass, contentLayerClass } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollHeightFillerRef = useRef<HTMLDivElement>(null);
@@ -45,6 +45,10 @@ export default function VirtualizedListReact<ItemData = unknown>(props: Virtuali
 
     if (scroller) {
       scroller.classList.add(scrollerClass || '');
+    }
+
+    if (ref) {
+      ref.current = list;
     }
   }, []);
 
