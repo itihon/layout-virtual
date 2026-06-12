@@ -5,7 +5,7 @@
  */
 
 import type { ElementRef } from '@angular/core';
-import type { VirtualScrollStructure } from 'layout-virtual/types';
+import type { ILayoutVirtual, VirtualScrollStructure } from 'layout-virtual/types';
 
 export interface ListItemProps<T = unknown> {
   data: T;
@@ -29,5 +29,5 @@ export interface VirtualizedListAngularProps<T> extends VirtualizedListAngularCl
   scrollerRef?: ElementRef<HTMLElement>;
   overscanHeight?: number; 
   data: T[];
+  getApi?: (api: ILayoutVirtual) => void;
 }
-

@@ -12,7 +12,7 @@ import VueRenderer from './VueRenderer';
 import type { VirtualizedListVueProps, ListItemProps } from './types';
 
 const props = defineProps<VirtualizedListVueProps<T>>();
-const { overscanHeight = 200, data, scrollerRef } = props;
+const { overscanHeight = 200, data, scrollerRef, getApi } = props;
 const { scrollerClass, viewportClass, contentLayerClass } = props;
 const containerRef = ref<HTMLDivElement>();
 const scrollHeightFillerRef = ref<HTMLDivElement>();
@@ -53,6 +53,8 @@ onMounted(() => {
   const list = new LayoutVirtual({ layout });
 
   list.setData(data);
+
+  getApi?.(list);
 });
 
 onUpdated(() => {

@@ -15,7 +15,7 @@ import {
   inject,
 } from '@angular/core';
 import type { AfterViewInit, ElementRef } from '@angular/core';
-import type { IRangeRenderer } from 'layout-virtual/types';
+import type { ILayoutVirtual, IRangeRenderer } from 'layout-virtual/types';
 import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import AngularRenderer from './AngularRenderer';
 import type { AngularClassAttribute, ListItemProps } from './types';
@@ -59,6 +59,7 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
   @Input() scrollerClass?: AngularClassAttribute;
   @Input() viewportClass?: AngularClassAttribute;
   @Input() contentLayerClass?: AngularClassAttribute;
+  @Input() getApi?: (api: ILayoutVirtual) => void;
 
   @ContentChild('renderItem', { read: TemplateRef })
   renderItemTemplate!: TemplateRef<VirtualizedListItemContext<T>>;
@@ -105,6 +106,8 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
     } as unknown as ConstructorParameters<typeof LayoutVirtual>[0]);
     
     list.setData(this.data);
+
+    this.getApi?.(list);
   }
 
   trackByIndex(_position: number, item: ListItemProps<T>) {

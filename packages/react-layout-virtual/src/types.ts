@@ -25,9 +25,9 @@ export interface VirtualizedListReactClasses {
 }
 
 export interface VirtualizedListReactProps<T> extends VirtualizedListReactClasses {
-  ref?: React.RefObject<ILayoutVirtual | undefined>;
   scrollerRef?: React.RefObject<HTMLElement>;
   overscanHeight?: number; 
   data: T[];
   renderItem: (props: ListItemProps<T>) => React.ReactNode;
+  getApi?: (api: ILayoutVirtual) => void;
 }

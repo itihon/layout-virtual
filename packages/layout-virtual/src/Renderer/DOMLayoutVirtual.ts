@@ -6,6 +6,7 @@
 
 import { LayoutVirtual, DynamicListLayout } from '../core';
 import DOMRenderer, { type ItemRenderer} from './DOMRenderer';
+import type { ILayoutVirtual } from '../types/types';
 
 export interface ListItemProps<T = unknown> {
   data: T;
@@ -23,10 +24,11 @@ export interface VirtualizedListDOMProps<ItemData> extends VirtualizedListDOMCla
   overscanHeight?: number; 
   data: ItemData[];
   renderItem: (props: ListItemProps<ItemData>) => HTMLElement;
+  getApi?: (api: ILayoutVirtual) => void;
 }
 
 export default function VirtualizedListDOM<ItemData>(props: VirtualizedListDOMProps<ItemData>): HTMLElement {
-  const { overscanHeight = 200, data, renderItem, scrollerRef } = props;
+  const { overscanHeight = 200, data, renderItem, scrollerRef, getApi } = props;
   const { scrollerClass, viewportClass, contentLayerClass } = props;
   const container = scrollerRef ?? document.createElement('div');
   const renderer = new DOMRenderer<ItemData>(container);
@@ -41,6 +43,8 @@ export default function VirtualizedListDOM<ItemData>(props: VirtualizedListDOMPr
 
   list.setData(data);
   list.setRenderItem(renderItem);
+
+  getApi?.(list);
 
   return container;
 }
