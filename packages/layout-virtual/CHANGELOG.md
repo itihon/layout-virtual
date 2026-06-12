@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.4.0
+
+### Minor Changes
+
+- 650e23d: Added getApi method for accessing imperative API.
+
 ## 0.3.3
 
 ### Patch Changes

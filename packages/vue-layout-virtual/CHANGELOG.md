@@ -1,5 +1,16 @@
 # vue-layout-virtual
 
+## 0.3.0
+
+### Minor Changes
+
+- 650e23d: Added getApi method for accessing imperative API.
+
+### Patch Changes
+
+- Updated dependencies [650e23d]
+  - layout-virtual@0.4.0
+
 ## 0.2.3
 
 ### Patch Changes
