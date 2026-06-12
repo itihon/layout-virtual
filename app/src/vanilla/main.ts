@@ -1,5 +1,6 @@
 import VirtualizedList, { type ListItemProps, type VirtualizedListDOMClasses } from 'layout-virtual';
 import '../../tests/e2e/loadFrameValidation';
+import type { ILayoutVirtual } from 'layout-virtual/types';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
 const styling: VirtualizedListDOMClasses = {
@@ -34,8 +35,16 @@ function ListItem({ data, index }: ListItemProps<Data>) {
   return listItem;
 };
 
+function getApi(api: ILayoutVirtual) {
+  api.on('onAfterItemsRendered', (startIndex, endIndex) => {
+    const total = endIndex - startIndex + 1;
+    stats.textContent = `Rendered indeces ${startIndex} - ${endIndex}, total ${total} of ${data.length}.`;
+  });
+}
+
 const data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
-const container = VirtualizedList({ overscanHeight: 100, data, renderItem: ListItem, ...styling });
+const container = VirtualizedList({ overscanHeight: 100, data, renderItem: ListItem, ...styling, getApi });
+const stats = document.createElement('div');
 
 const app = document.getElementById('app')!;
-app.appendChild(container);
+app.append(stats, container);

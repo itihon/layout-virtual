@@ -1,6 +1,8 @@
 import { createRoot } from 'react-dom/client';
+import { useCallback, useState } from 'react';
 import VirtualizedListReact, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
 import '../../tests/e2e/loadFrameValidation';
+import type { ILayoutVirtual } from 'layout-virtual/types';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
 const styling: VirtualizedListReactClasses = {
@@ -30,9 +32,21 @@ function ListItem({ data, ref, index }: ListItemProps<Data>) {
 
 function App() {
   const data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
+  const [renderedIndeces, setRenderedIndeces] = useState({ startIndex: 0, endIndex: 0 });
+  const { startIndex, endIndex } = renderedIndeces;
+  const total = endIndex - startIndex + 1;
+
+  const getApi = useCallback((api: ILayoutVirtual) => {
+    api.on('onAfterItemsRendered', (startIndex, endIndex) => {
+      setRenderedIndeces({ startIndex, endIndex });
+    });
+  }, []);
 
   return (
-    <VirtualizedListReact<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} />
+    <>
+      <div>Rendered indeces {startIndex} - {endIndex}, total {total} of {data.length}.</div>
+      <VirtualizedListReact<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} getApi={getApi} />
+    </>
   );
 }
 
