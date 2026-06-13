@@ -328,9 +328,6 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
   private _scrollContent = async (scrollTop: number, direction: ScrollDirection, scrollDelta: number) => {
 
     const scrollableContainer = this._scrollableContainer;
-
-    // scrollableContainer.refresh();
-
     const clientHeight = scrollableContainer.getClientHeight();
     const scrollHeight = scrollableContainer.getScrollHeight();
     const viewportHeight = scrollableContainer.getViewportHeight();
@@ -342,12 +339,24 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
     const scrollAnchorTop = this._getScrollAnchorItemPosition();
 
+    scrollableContainer.refresh();
+
+    const topSpacerBottom = scrollableContainer.getTopSpacerBottom();
+    const bottomSpacerTop = scrollableContainer.getBottomSpacerTop();
+
     if (scrollAnchorTop !== null) {
-      scrollableContainer.setViewportTop(scrollAnchorTop);
+      // prevents scroll canvas from viewport partial overlapping which entails gaps either at the top or at the bottom
+      const upperDelta = scrollAnchorTop - topSpacerBottom;
+      const lowerDelta = bottomSpacerTop - (scrollAnchorTop + viewportHeight);
+      const newViewportTop = Math.min(Math.max(scrollAnchorTop, scrollAnchorTop - upperDelta), scrollAnchorTop + lowerDelta);
+
+      scrollableContainer.setViewportTop(newViewportTop);
     }
     else {
       // less precise position in case scroll anchor item was not found for some reason (highly unlikely)
-      scrollableContainer.setViewportTop(viewportTop);
+      const scrollRatio = this._getScrollRatio();
+      const contentLayerHeight = bottomSpacerTop - topSpacerBottom;
+      scrollableContainer.setViewportTop(topSpacerBottom + contentLayerHeight * scrollRatio - viewportHeight * scrollRatio);
     }
 
     console.warn('_scrollContent scrollTop:', scrollTop, 'viewportTop:', viewportTop, 'scrollAnchorTop:', scrollAnchorTop, 'scrollHeight:', scrollHeight, 'scrollCanvasHeight:', scrollCanvasHeight, 'scrollRangeRatio:', scrollRangeRatio, 'scrollDelta:', scrollDelta)
