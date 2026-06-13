@@ -7,27 +7,23 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import Playground from '../../../components/Playground';
 import responsiveGridStyles from '../../../examples/responsive-grid/styles.css?raw'
+import responsiveGridVanilla from '../../../examples/responsive-grid/vanilla/responsive-grid?raw';
 import responsiveGridReact from '../../../examples/responsive-grid/react/responsive-grid?raw';
-
+import responsiveGridVue from '../../../examples/responsive-grid/vue/responsive-grid.vue?raw';
+import responsiveGridAngular from '../../../examples/responsive-grid/angular/responsive-grid?raw';
+import importsAngular from '../../../examples/responsive-grid/angular/imports';
 
 <Tabs syncKey='frameworks'>
   <TabItem label="JS / TS" icon='third-party:ts'>
-    <Playground client:visible />
+    <Playground client:visible params={{ ts: responsiveGridVanilla, css: responsiveGridStyles, html: '<div id="app"></div>' }} />
   </TabItem>
   <TabItem label="React" icon='third-party:react'>
     <Playground client:visible params={{ tsx: responsiveGridReact, css: responsiveGridStyles }} />
   </TabItem>
   <TabItem label="Vue" icon='third-party:vue'>
-    <Playground client:visible />
+    <Playground client:visible params={{ vue: responsiveGridVue, css: responsiveGridStyles }} />
   </TabItem>
   <TabItem label="Angular" icon='third-party:angular'>
-    <Playground client:visible />
+    <Playground client:visible params={{ ts: responsiveGridAngular,  css: responsiveGridStyles, html: '<div id="app"></div>', imports: importsAngular }} />
   </TabItem>
 </Tabs>
-
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
-
-## Further reading
-
-- Read [about reference](https://diataxis.fr/reference/) in the Diátaxis framework

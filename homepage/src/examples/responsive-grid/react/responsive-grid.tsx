@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import VirtualizedGrid, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
+import { useCallback, useState } from 'react';
+import LayoutVirtual, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
 import type { ILayoutVirtual } from 'layout-virtual/types';
 
 const styling: VirtualizedListReactClasses = {
@@ -38,24 +38,21 @@ function ListItem({ data, ref, index }: ListItemProps<Data>) {
 
 const ResponsiveGridExample = () => {
   const data = Array.from({ length: 1000 }, (_, i) => ({ i }));
-  const layoutVirtualRef = useRef<ILayoutVirtual>(undefined);
   const [renderedIndeces, setRenderedIndeces] = useState({ startIndex: 0, endIndex: 0 });
   const { startIndex, endIndex } = renderedIndeces;
   const total = endIndex - startIndex + 1;
 
-  useEffect(() => {
-    if (layoutVirtualRef.current) {
-      layoutVirtualRef.current.on('onAfterItemsRendered', (startIndex, endIndex) => {
-        setRenderedIndeces({ startIndex, endIndex });
-      });
-    }
+  const getApi = useCallback((api: ILayoutVirtual) => {
+    api.on('onAfterItemsRendered', (startIndex, endIndex) => {
+      setRenderedIndeces({ startIndex, endIndex });
+    });
   }, []);
 
   return (
     <>
       <h4>Try to resize the container and scroll.</h4>
       <div>Rendered indeces {startIndex} - {endIndex}, total {total} of {data.length}.</div>
-      <VirtualizedGrid<Data> ref={layoutVirtualRef} overscanHeight={100} data={data} renderItem={ListItem} {...styling} />
+      <LayoutVirtual<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} getApi={getApi} />
     </>
   );
 };
