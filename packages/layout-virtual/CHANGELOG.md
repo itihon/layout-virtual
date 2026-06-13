@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.4.1
+
+### Patch Changes
+
+- ea3cd9f: Add limits to setting viewport position to prevent partial overlapping with content layer (gaps).
+
 ## 0.4.0
 
 ### Minor Changes

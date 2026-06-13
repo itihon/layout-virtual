@@ -1,5 +1,13 @@
 # angular-layout-virtual
 
+## 0.3.2
+
+### Patch Changes
+
+- ea3cd9f: Add limits to setting viewport position to prevent partial overlapping with content layer (gaps).
+- Updated dependencies [ea3cd9f]
+  - layout-virtual@0.4.1
+
 ## 0.3.1
 
 ### Patch Changes
