@@ -1,5 +1,11 @@
 # angular-layout-virtual
 
+## 0.3.1
+
+### Patch Changes
+
+- e6966da: Changed component selector.
+
 ## 0.3.0
 
 ### Minor Changes
