@@ -24,7 +24,7 @@ const descriptions = [
   template: `
     <h4>Try to resize the container and scroll.</h4>
     <div>Rendered indeces {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
-    <angular-layout-virtual [overscanHeight]="100" [data]="data" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" [getApi]="getApi">
+    <layout-virtual [overscanHeight]="100" [data]="data" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" [getApi]="getApi">
       <ng-template #renderItem let-data="data" let-index="index">
         <div class="list-item" [id]="'item-' + data.i" [attr.data-index]="index">
           <div class="li-icon">📁</div>
@@ -33,7 +33,7 @@ const descriptions = [
           <div class="li-description">{{ data.i % 2 ? descriptions[0] : descriptions[1] }}</div>
         </div>
       </ng-template>
-    </angular-layout-virtual>
+    </layout-virtual>
   `,
 })
 class AppComponent {

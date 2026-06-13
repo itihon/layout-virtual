@@ -16,14 +16,14 @@ type Data = { i: number };
   imports: [CommonModule, VirtualizedListAngular],
   template: `
     <div>Rendered indeces {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
-    <angular-layout-virtual [data]="data" [overscanHeight]="100" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" [getApi]="getApi">
+    <layout-virtual [data]="data" [overscanHeight]="100" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" [getApi]="getApi">
       <ng-template #renderItem let-data="data" let-index="index">
         <div class="list-item" [id]="'item-' + data.i" [attr.data-index]="index">
           Item {{ data.i }}.
           <div *ngFor="let text of extraLines(data.i)">{{ text }}</div>
         </div>
       </ng-template>
-    </angular-layout-virtual>
+    </layout-virtual>
   `,
 })
 

@@ -25,7 +25,7 @@ export type VirtualizedListItemContext<T> = ListItemProps<T> & {
 };
 
 @Component({
-  selector: 'angular-layout-virtual',
+  selector: 'layout-virtual',
   standalone: true,
   imports: [CommonModule],
   template: `
