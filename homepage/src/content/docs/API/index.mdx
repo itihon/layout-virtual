@@ -17,7 +17,7 @@ The `layout-virtual` package contains the core layout classes, DOM renderer, scr
 | `layout-virtual` | Core engine, public core types, and the vanilla DOM component. |
 | `react-layout-virtual` | React component wrapper. |
 | `vue-layout-virtual` | Vue component wrapper. |
-| `angular-layout-virtual` | Standalone Angular component wrapper. |
+| `angular-layout-virtual` | Angular component wrapper. |
 
 ## Component API
 
@@ -74,12 +74,7 @@ function renderItem({ data, index }: ListItemProps<Item>) {
   return element;
 }
 
-const list = LayoutVirtual({
-  data,
-  overscanHeight: 200,
-  renderItem,
-  scrollerClass: 'lv-scroller',
-});
+const list = LayoutVirtual({ data, overscanHeight: 200, renderItem, scrollerClass: 'lv-scroller' });
 
 document.getElementById('app')!.append(list);
 ```
@@ -100,12 +95,7 @@ function Article({ data, index, ref }: ListItemProps<Item>) {
   );
 }
 
-<LayoutVirtual<Item>
-  data={data}
-  overscanHeight={200}
-  renderItem={Article}
-  scrollerClass="lv-scroller"
-/>;
+<LayoutVirtual<Item> data={data} overscanHeight={200} renderItem={Article} scrollerClass="lv-scroller" />;
 ```
 
   </TabItem>
@@ -119,13 +109,13 @@ type Item = { title: string };
 </script>
 
 <template>
-  <LayoutVirtual :data="data" :overscan-height="200" scroller-class="lv-scroller">
+  <layout-virtual :data="data" :overscan-height="200" scroller-class="lv-scroller">
     <template #renderItem="{ data: item, index, ref }">
       <article :ref="ref" :data-index="index">
         {{ item.title }}
       </article>
     </template>
-  </LayoutVirtual>
+  </layout-virtual>
 </template>
 ```
 
@@ -135,15 +125,13 @@ type Item = { title: string };
 ```ts
 import LayoutVirtual from 'angular-layout-virtual';
 
+type Item = { title: string };
+
 @Component({
   standalone: true,
   imports: [LayoutVirtual],
   template: `
-    <layout-virtual
-      [data]="data"
-      [overscanHeight]="200"
-      scrollerClass="lv-scroller"
-    >
+    <layout-virtual [data]="data" [overscanHeight]="200" scrollerClass="lv-scroller" >
       <ng-template #renderItem let-data="data" let-index="index">
         <article [attr.data-index]="index">
           {{ data.title }}
@@ -152,7 +140,6 @@ import LayoutVirtual from 'angular-layout-virtual';
     </layout-virtual>
   `,
 })
-export class AppComponent {}
 ```
 
   </TabItem>
