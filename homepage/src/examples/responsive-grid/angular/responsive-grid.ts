@@ -31,7 +31,7 @@ const excerpts = [
   imports: [CommonModule, LayoutVirtual],
   template: `
     <h4>Try to resize the container and scroll.</h4>
-    <div>Rendered indeces {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
+    <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
     <layout-virtual [overscanHeight]="200" [data]="data" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" [getApi]="getApi">
       <ng-template #renderItem let-data="data" let-index="index">
         <div class="article-card" [attr.data-index]="index">

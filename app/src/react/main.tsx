@@ -44,7 +44,7 @@ function App() {
 
   return (
     <>
-      <div>Rendered indeces {startIndex} - {endIndex}, total {total} of {data.length}.</div>
+      <div>Rendered indices {startIndex} - {endIndex}, total {total} of {data.length}.</div>
       <VirtualizedListReact<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} getApi={getApi} />
     </>
   );

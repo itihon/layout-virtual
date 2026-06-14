@@ -78,7 +78,7 @@ const data = Array.from({ length: 1000 }, (_, i): Data => ({
 function getApi(api: ILayoutVirtual) {
   api.on('onAfterItemsRendered', (startIndex, endIndex) => {
     const total = endIndex - startIndex + 1;
-    stats.textContent = `Rendered indeces ${startIndex} - ${endIndex}, total ${total} of ${data.length}.`;
+    stats.textContent = `Rendered indices ${startIndex} - ${endIndex}, total ${total} of ${data.length}.`;
   });
 }
 

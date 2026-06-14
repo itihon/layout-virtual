@@ -33,7 +33,7 @@ const getApi = (api: ILayoutVirtual) => {
 </script>
 
 <template>
-  <div>Rendered indeces {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
+  <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
   <VirtualizedListVue :data="data" :overscan-height="100" v-bind="styling" :get-api="getApi">
     <template #renderItem="{ data, index, ref }">
       <div :ref="ref" class="list-item" :id="`item-${data.i}`" :data-index="index">

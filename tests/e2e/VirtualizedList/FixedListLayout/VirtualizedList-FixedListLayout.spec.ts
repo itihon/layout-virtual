@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
    *  Conditions to be checked in each test case:
    *  + first rendered item never appears lower than the heigher viewport boundary 
    *  + last rendered item never appears heigher than the lower viewport boundary 
-   *  + indeces of the rendered items are consecutive
+   *  + indices of the rendered items are consecutive
    *  + vertical positions of the rendered items consistently increase/decrease while scrolling up/down i.e. content doesn't jump back and forth
    *  + total rendered items' height never exceeds viewport height plus two overscan heights
    *  + (optional) content layer is not empty

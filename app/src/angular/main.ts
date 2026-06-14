@@ -15,7 +15,7 @@ type Data = { i: number };
   standalone: true,
   imports: [CommonModule, VirtualizedListAngular],
   template: `
-    <div>Rendered indeces {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
+    <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
     <layout-virtual [data]="data" [overscanHeight]="100" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" [getApi]="getApi">
       <ng-template #renderItem let-data="data" let-index="index">
         <div class="list-item" [id]="'item-' + data.i" [attr.data-index]="index">

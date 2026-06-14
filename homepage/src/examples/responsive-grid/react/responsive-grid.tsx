@@ -64,7 +64,7 @@ const ResponsiveGridExample = () => {
   return (
     <>
       <h4>Try to resize the container and scroll.</h4>
-      <div>Rendered indeces {startIndex} - {endIndex}, total {total} of {data.length}.</div>
+      <div>Rendered indices {startIndex} - {endIndex}, total {total} of {data.length}.</div>
       <LayoutVirtual<Data> overscanHeight={200} data={data} renderItem={ArticleCard} {...styling} getApi={getApi} />
     </>
   );
