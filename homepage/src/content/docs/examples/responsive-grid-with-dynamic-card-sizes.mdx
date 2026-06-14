@@ -13,6 +13,12 @@ import responsiveGridVue from '../../../examples/responsive-grid/vue/responsive-
 import responsiveGridAngular from '../../../examples/responsive-grid/angular/responsive-grid?raw';
 import importsAngular from '../../../examples/responsive-grid/angular/imports';
 
+Try resizing the scroller: the same items adapt to the available width, collapsing into a single-column list when the container becomes too narrow and expanding back into a grid when there's room again.
+
+As the column width changes, text wraps across different numbers of lines, so each card's height is dynamic and depends on its actual content. No separate list/grid component, no item wrapper, manual measurement step, or estimated item sizes are required. Only data, a render function/template, and ordinary CSS classes need to be provided.
+
+The items are laid out and styled as if they were inside a regular container. The library tracks the precise scroll position regardless of item sizes, gaps, margins, and layout changes.
+
 <Tabs syncKey='frameworks'>
   <TabItem label="JS / TS" icon='third-party:ts'>
     <Playground client:visible params={{ ts: responsiveGridVanilla, css: responsiveGridStyles, html: '<div id="app"></div>' }} />
