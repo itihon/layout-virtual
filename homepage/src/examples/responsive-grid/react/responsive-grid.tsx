@@ -8,36 +8,49 @@ const styling: VirtualizedListReactClasses = {
   contentLayerClass: 'lv-content-layer',
 };
 
-type Data = { i: number };
+type Data = { i: number; image?: string; title: string; excerpt: string };
 
-const headers = [
-  'One line header.', 
-  'Longer header, wraps to the next lines.',
+const titles = [
+  'Windowing 101',
+  'Recycling DOM nodes without losing scroll position',
+  'Dynamic item heights',
+  'Why measure when the browser already knows? What is measuring and how and why it works?',
+  'Smooth scrolling through ten thousand rows',
+  'Overscan: rendering a little more than you see',
+  'From fixed-size lists to fully dynamic grids',
 ];
 
-const descriptions = [
-  'A very short description.',
-  'A much longer description text that wraps to the next lines at different card sizes.',
+const excerpts = [
+  'Render only what fits.',
+  'Recycling pools reuse existing nodes instead of mounting and unmounting on every scroll event.',
+  'Dynamic heights mean no upfront measurement pass and no layout thrashing as items resize.',
+  'A short primer on how virtualization keeps memory and paint cost flat regardless of list length.',
+  'Scrolling through a long feed should feel the same whether it has a hundred items or a hundred thousand, and that consistency comes from windowing the visible range and letting everything else stay unmounted until it is needed, then recycling the freed nodes for whatever scrolls into view next.',
 ];
 
-function ListItem({ data, ref, index }: ListItemProps<Data>) {
-  const i = data.i;
-
-  const header = i % 2 ? headers[0] : headers[1];
-  const description = i % 2 ? descriptions[0] : descriptions[1];
+function ArticleCard({ data, ref, index }: ListItemProps<Data>) {
+  const { image, title, excerpt } = data;
 
   return (
-    <div ref={ref} className={'list-item'} id={`item-${i}`} data-index={index}>
-      <div className={'li-icon'}>📁</div>
-      <div className={'li-index'}>{`#${i}`}</div>
-      <div className={'li-header'}>{ header }</div>
-      <div className={'li-description'}>{ description }</div>
+    <div ref={ref} className={'article-card'} data-index={index}>
+      <div className={'ac-index'}>{`#${data.i}`}</div>
+      {image && <img className={'ac-image'} src={image} alt={''} loading={'lazy'} />}
+      <div className={'ac-body'}>
+        <h3 className={'ac-title'}>{title}</h3>
+        <p className={'ac-excerpt'}>{excerpt}</p>
+        <button className={'ac-button'}>Learn more</button>
+      </div>
     </div>
   );
-};
+}
 
 const ResponsiveGridExample = () => {
-  const data = Array.from({ length: 1000 }, (_, i) => ({ i }));
+  const data = Array.from({ length: 1000 }, (_, i) => ({
+    i,
+    image: i % 3 ? undefined : `https://picsum.photos/seed/${i}/400/240`,
+    title: titles[i % titles.length],
+    excerpt: excerpts[i % excerpts.length],
+  }));
   const [renderedIndeces, setRenderedIndeces] = useState({ startIndex: 0, endIndex: 0 });
   const { startIndex, endIndex } = renderedIndeces;
   const total = endIndex - startIndex + 1;
@@ -52,7 +65,7 @@ const ResponsiveGridExample = () => {
     <>
       <h4>Try to resize the container and scroll.</h4>
       <div>Rendered indeces {startIndex} - {endIndex}, total {total} of {data.length}.</div>
-      <LayoutVirtual<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} getApi={getApi} />
+      <LayoutVirtual<Data> overscanHeight={200} data={data} renderItem={ArticleCard} {...styling} getApi={getApi} />
     </>
   );
 };

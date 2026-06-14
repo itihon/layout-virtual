@@ -5,16 +5,24 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import LayoutVirtual, { type VirtualizedListAngularClasses } from 'angular-layout-virtual';
 import type { ILayoutVirtual } from 'layout-virtual/types';
 
-type Data = { i: number };
+type Data = { i: number; image?: string; title: string; excerpt: string };
 
-const headers = [
-  'One line header.',
-  'Longer header, wraps to the next lines.',
+const titles = [
+  'Windowing 101',
+  'Recycling DOM nodes without losing scroll position',
+  'Dynamic item heights',
+  'Why measure when the browser already knows? What is measuring and how and why it works?',
+  'Smooth scrolling through ten thousand rows',
+  'Overscan: rendering a little more than you see',
+  'From fixed-size lists to fully dynamic grids',
 ];
 
-const descriptions = [
-  'A very short description.',
-  'A much longer description text that wraps to the next lines at different card sizes.',
+const excerpts = [
+  'Render only what fits.',
+  'Recycling pools reuse existing nodes instead of mounting and unmounting on every scroll event.',
+  'Dynamic heights mean no upfront measurement pass and no layout thrashing as items resize.',
+  'A short primer on how virtualization keeps memory and paint cost flat regardless of list length.',
+  'Scrolling through a long feed should feel the same whether it has a hundred items or a hundred thousand, and that consistency comes from windowing the visible range and letting everything else stay unmounted until it is needed, then recycling the freed nodes for whatever scrolls into view next.',
 ];
 
 @Component({
@@ -24,13 +32,16 @@ const descriptions = [
   template: `
     <h4>Try to resize the container and scroll.</h4>
     <div>Rendered indeces {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
-    <layout-virtual [overscanHeight]="100" [data]="data" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" [getApi]="getApi">
+    <layout-virtual [overscanHeight]="200" [data]="data" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" [getApi]="getApi">
       <ng-template #renderItem let-data="data" let-index="index">
-        <div class="list-item" [id]="'item-' + data.i" [attr.data-index]="index">
-          <div class="li-icon">📁</div>
-          <div class="li-index">#{{ data.i }}</div>
-          <div class="li-header">{{ data.i % 2 ? headers[0] : headers[1] }}</div>
-          <div class="li-description">{{ data.i % 2 ? descriptions[0] : descriptions[1] }}</div>
+        <div class="article-card" [attr.data-index]="index">
+          <div class="ac-index">#{{ data.i }}</div>
+          <img *ngIf="data.image" class="ac-image" [src]="data.image" alt="" loading="lazy">
+          <div class="ac-body">
+            <h3 class="ac-title">{{ data.title }}</h3>
+            <p class="ac-excerpt">{{ data.excerpt }}</p>
+            <button class="ac-button">Learn more</button>
+          </div>
         </div>
       </ng-template>
     </layout-virtual>
@@ -39,9 +50,12 @@ const descriptions = [
 class AppComponent {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-  data = Array.from({ length: 1000 }, (_, i): Data => ({ i }));
-  headers = headers;
-  descriptions = descriptions;
+  data = Array.from({ length: 1000 }, (_, i): Data => ({
+    i,
+    image: i % 3 ? undefined : `https://picsum.photos/seed/${i}/400/240`,
+    title: titles[i % titles.length],
+    excerpt: excerpts[i % excerpts.length],
+  }));
   startIndex = 0;
   endIndex = 0;
 

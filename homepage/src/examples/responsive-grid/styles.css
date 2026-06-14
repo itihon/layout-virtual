@@ -12,8 +12,8 @@ body {
 }
 
 .lv-scroller {
-  width: 300px;
-  height: 400px;
+  width: 340px;
+  height: 460px;
   padding: 16px 16px 40px 16px;
   background-color: var(--darker-bg-color);
   resize: both;
@@ -30,42 +30,76 @@ body {
 }
 
 .lv-content-layer {
-  --min-col-size: clamp(120px, 18vw, 280px);
-  gap: 1cqh .5vw;
+  --min-col-size: 220px;
+  gap: 1cqh 1cqw;
+  justify-content: center;
   grid-template-columns: repeat(
     auto-fit,
     minmax(min(var(--min-col-size), 100%), 1fr)
   );
 }
 
-.list-item {
-  border-radius: 4px;
-  padding: min(1vw, 8px) 10%;
-  margin: 1cqh;
+.article-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 8px;
   background-color: var(--darker-bg-color);
-  color: inherit;
 }
 
-.li-icon {
-  margin-right: 8px;
-  font-size: clamp(20px, 8cqh, 48px);
-  float: left;
-}
-
-.li-index {
-  float: right;
+.ac-index {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   font-size: 10px;
-  padding: 2px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
 }
 
-.li-header {
-  line-height: normal;
-  font-size: clamp(14px, 3cqh, 32px);
-  font-weight: 500;
+.ac-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 5 / 3;
+  object-fit: cover;
 }
 
-.li-description {
-  font-size: clamp(12px, 2.5cqh, 24px);
-  clear: both;
-  padding: 8px;
+.ac-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+}
+
+.ac-title {
+  font-size: clamp(14px, 2.6cqw, 20px);
+  font-weight: 600;
+  line-height: 1.3;
+  max-width: 85%;
+}
+
+.ac-excerpt {
+  font-size: clamp(12px, 2cqw, 15px);
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.ac-button {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 6px 14px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.ac-button:hover {
+  background-color: var(--lighter-bg-color);
 }
