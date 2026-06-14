@@ -1,4 +1,4 @@
-.lv-scroller * {
+.resizer * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
@@ -6,7 +6,7 @@
 
 .lv-scroller {
   width: 100%;
-  height: 100%;
+  flex-grow: 1;
   padding: 16px 16px 40px 16px;
   background-color: var(--sl-color-bg-nav);
 }
@@ -31,6 +31,94 @@
   );
 }
 
+.status-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  height: fit-content;
+  margin-bottom: 12px;
+  padding: 12px;
+
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 8px;
+
+  background: var(--sl-color-bg-nav);
+  font-size: 14px;
+}
+
+.status-left, .status-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-right {
+  color: var(--sl-color-gray-2);
+  font-size: 13px;
+}
+
+.status-title {
+  font-weight: 500;
+}
+
+.status-separator {
+  opacity: .5;
+}
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 2px 8px;
+
+  border-radius: 999px;
+
+  background: rgba(34, 197, 94, .12);
+  color: rgb(34, 197, 94);
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.resize-hint {
+  position: absolute;
+  bottom: 6px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 2px 8px;
+
+  border-radius: 999px;
+
+  background: rgba(59, 156, 246, 0.12);
+  color: rgb(59, 168, 246);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  user-select: none;
+}
+
+.resize-arrow {
+  font-size: 16px;
+  line-height: 1;
+}
+
 .list-item {
   outline: 1px solid var(--sl-color-gray-5);
   border-radius: 4px;
@@ -43,8 +131,10 @@
 
 .li-icon {
   margin-right: 8px;
-  font-size: min(8vw, 48px);
-  font-size: clamp(20px, 8cqh, 48px);
+  width: min(8vw, 100px);
+  height: min(8vw, 100px);
+  width: clamp(20px, 15cqh, 100px);
+  height: clamp(20px, 15cqh, 100px);
   float: left;
 }
 
@@ -58,7 +148,7 @@
   line-height: normal;
   font-size: min(4vw, 18px);
   font-size: clamp(14px, 3cqh, 32px);
-  font-weight: 500;
+  font-weight: 550;
 }
 
 .li-description {
@@ -69,5 +159,5 @@
 }
 
 .resizer {
-  margin: 0 auto;
+  margin: 16px auto;
 }

@@ -3,6 +3,7 @@ import Resizer from './Resizer';
 import VirtualizedGrid, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
 import type { ILayoutVirtual } from 'layout-virtual/types';
 import classes from './ResponsiveGridExample.module.css';
+import ItemIcon from '../assets/list-item.svg?react';
 
 const styling: VirtualizedListReactClasses = {
   scrollerClass: classes['lv-scroller'],
@@ -30,7 +31,7 @@ function ListItem({ data, ref, index }: ListItemProps<Data>) {
 
   return (
     <div ref={ref} className={classes['list-item']} id={`item-${i}`} data-index={index}>
-      <div className={classes['li-icon']}>📁</div>
+      <ItemIcon className={classes['li-icon']} />
       <div className={classes['li-index']}>{`#${i}`}</div>
       <div className={classes['li-header']}>{ header }</div>
       <div className={classes['li-description']}>{ description }</div>
@@ -52,9 +53,33 @@ const ResponsiveGridExample = () => {
 
   return (
     <>
-      <div>Rendered indeces {startIndex} - {endIndex}, total {total} of {data.length}.</div>
       <Resizer className={classes.resizer} buttonRight={18} buttonBottom={4} initialWidth={'100%'} initialHeight={'70vh'} widthFactor={2}>
+        <div className={classes['status-bar']}>
+          <div className={classes['status-left']}>
+            <span className={classes['live-badge']}>
+              <span className={classes['live-dot']} />
+              Live
+            </span>
+
+            <span className={classes['status-title']}>
+              Virtualization active
+            </span>
+          </div>
+
+          <div className={classes['status-right']}>
+            Showing <strong style={{ minWidth: '2ch', textAlign: 'center' }}>{total}</strong> of <strong>{data.length}</strong> items
+            <span className={classes['status-separator']}>•</span>
+            <span style={{ minWidth: '9ch', textAlign: 'center' }}>{startIndex} – {endIndex}</span>
+          </div>
+        </div>
+
         <VirtualizedGrid<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} getApi={getApi} />
+
+        <div className={classes['resize-hint']}>
+          <span className={classes['live-dot']} />
+          Resize
+          <span className={classes['resize-arrow']}>⟶</span>
+        </div>
       </Resizer>
     </>
   );

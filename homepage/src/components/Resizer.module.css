@@ -12,41 +12,64 @@
 
 .resizeButton::before {
   content: '';
-  width: 8px;
-  height: 8px;
-  top: -25%;
-  left: 25%;
-  position: relative;
+
+  position: absolute;
+  inset: 50% auto auto 50%;
+
+  width: 80px;
+  aspect-ratio: 1;
+
   border-radius: 50%;
+  pointer-events: none;
+
+  transform: translate(-70%, -70%);
+
   background: #fff;
-  animation: wave 4s ease-in infinite;
+  opacity: 0;
+  animation: ripple 3s ease-in infinite;
+}
+
+@keyframes ripple {
+  0% {
+    transform: translate(-70%, -70%) scale(.1);
+    opacity: 1;
+  }
+
+  10% {
+    transform: translate(-70%, -70%) scale(1.5);
+    opacity: 0;
+  }
+
+  11% {
+    transform: translate(-70%, -70%);
+    opacity: 0;
+  }
 }
 
 .resizeButton:hover::before {
   animation: none;
+  background: none;
 }
 
 @keyframes wave {
- 0%,
- 20% {
-  box-shadow: none;
- }
- 25% {  box-shadow:
-    0 0 0 0px rgba(255, 255,255, 1),
-    0 0 0 4px rgba(255, 255,255, 0.2),
-    0 0 0 8px rgba(255, 255,255, 0.6),
-    0 0 0 16px rgba(255, 255,255, 0.4),
-    0 0 0 32px rgba(255, 255,255, 0.2)
+  0%, 20%, 60%, 100% {
+    opacity: 0;
   }
-  35% {  box-shadow:
-    0 0 0 32px rgba(255, 255,255, 0),
-    0 0 0 16px rgba(255, 255,255, 0.2),
-    0 0 0 8px rgba(255, 255,255, 0.4),
-    0 0 0 4px rgba(255, 255,255, 0.6),
-    0 0 0 0px rgba(255, 255,255, 1)
+
+  25% {
+    opacity: 1;
+    background:
+      radial-gradient(circle,
+        rgba(255,255,255,1) 0 2px,
+        transparent 2px 100%);
   }
-  60%,
-  100% {
-    box-shadow: none;
+
+  35% {
+    opacity: 1;
+    background:
+      radial-gradient(circle,
+        transparent 0 28px,
+        rgba(255,255,255, 1) 28px 30px,
+        transparent 30px 100%);
   }
 }

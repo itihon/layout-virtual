@@ -68,6 +68,8 @@ const Resizer: React.FC<Props> = ({
     <div
       ref={containerRef}
       style={{
+        display: 'flex',
+        flexDirection: 'column',
         position: 'relative',
         width: initialWidth,
         height: initialHeight,
