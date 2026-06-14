@@ -3,7 +3,13 @@
 }
 
 :root[data-theme="light"] {
-  --sl-color-bg: hsl(205.09deg 22.8% 94%);
+/*   --sl-color-bg: #d2dce8;
+  --sl-color-bg-nav: #c4d2e4;
+  --sl-color-bg-sidebar: #c4d2e4; */
+  --sl-color-black: aliceblue;
+  --sl-color-gray-5: slategray;
+  --sl-color-gray-6: whitesmoke;
+  --sl-color-gray-7: rgb(242, 247, 251);
 }
 
 .hidden-on-wide-screens {
