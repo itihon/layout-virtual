@@ -163,12 +163,12 @@ export class AppComponent {}
 The component creates this structure:
 
 ```html
-<div class="scrollerClass">
+<div class="scrollerClass" data-lv-scroller>
   <div></div>
-  <div class="viewportClass">
+  <div class="viewportClass" data-lv-viewport>
     <div>
       <div></div>
-      <div class="contentLayerClass">
+      <div class="contentLayerClass" data-lv-content-layer>
         <!-- rendered items -->
       </div>
       <div></div>
@@ -178,6 +178,24 @@ The component creates this structure:
 ```
 
 Use these classes to define the scroller size, overflow behavior, and item layout. For responsive grids, put grid or flex layout styles on `contentLayerClass` and item styles on the rendered item root.
+
+## Data Attributes
+
+Layout Virtual also adds stable data attributes to its main DOM layers:
+
+| Attribute | Element | Use |
+| --- | --- | --- |
+| `data-lv-scroller` | Scroll container | Select the outer scroll element. |
+| `data-lv-viewport` | Viewport container | Select the inner virtual viewport. |
+| `data-lv-content-layer` | Content layer | Select the element that contains rendered items. |
+
+These attributes are intended as stable selectors. They can be used for styling, although class props are preferable for normal CSS customization because they keep styling names under application control. They are also useful when you need a direct DOM reference:
+
+```ts
+const scroller = document.querySelector('[data-lv-scroller]');
+const viewport = document.querySelector('[data-lv-viewport]');
+const contentLayer = document.querySelector('[data-lv-content-layer]');
+```
 
 ## `getApi`
 
@@ -222,4 +240,3 @@ The concrete class also has `setData(data)` and `setRenderItem(renderItem)` meth
 | React | `React.RefObject<HTMLElement>` | `string` | `renderItem(props) => React.ReactNode` |
 | Vue | `Ref<HTMLElement>` | Vue `ClassValue` | `#renderItem` slot |
 | Angular | `ElementRef<HTMLElement>` | `string \| string[] \| Set<string> \| Record<string, boolean>` | `#renderItem` template |
-
