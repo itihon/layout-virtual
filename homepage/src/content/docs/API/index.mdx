@@ -1,15 +1,225 @@
 ---
 title: API
-description: A reference page in my new Starlight docs site.
-template: splash
+description: Component props, item renderer contracts, and imperative events for Layout Virtual.
 slug: API
-sidebar: 
-  hidden: true
 ---
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-## Further reading
+Layout Virtual is split into a framework-agnostic engine and thin framework adapters.
 
-- Read [about reference](https://diataxis.fr/reference/) in the Diátaxis framework
+The `layout-virtual` package contains the core layout classes, DOM renderer, scroll container, event bus, and the vanilla JS/TS component. The React, Vue, and Angular packages wrap the same core layout and renderer contract with framework-specific rendering primitives. That means the virtualization behavior, sizing model, overscan option, CSS class hooks, and `getApi` callback are intentionally the same across frameworks.
+
+## Packages
+
+| Package | Use |
+| --- | --- |
+| `layout-virtual` | Core engine, public core types, and the vanilla DOM component. |
+| `react-layout-virtual` | React component wrapper. |
+| `vue-layout-virtual` | Vue component wrapper. |
+| `angular-layout-virtual` | Standalone Angular component wrapper. |
+
+## Component API
+
+All components render a scrollable container with a viewport and content layer. Items are created from `data` only for the visible range plus overscan. Item dimensions are measured from real DOM elements, so rows, grids, margins, gaps, and dynamic heights can be handled with normal CSS.
+
+### Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | `T[]` | required | Items to virtualize. Each rendered item receives its original data object and index. |
+| `renderItem` | framework-specific | required in JS/TS and React | Function that renders one item. Vue and Angular use slots/templates instead. |
+| `overscanHeight` | `number` | `200` | Extra vertical space, in pixels, rendered outside the visible viewport in the current scroll direction. Higher values reduce blanking during fast scrolling but render more items. |
+| `scrollerRef` | framework-specific element ref | optional | Existing scroll element to render into. If omitted, the component creates its own scroller element. |
+| `scrollerClass` | framework-specific class value | optional | Class applied to the scroll container. |
+| `viewportClass` | framework-specific class value | optional | Class applied to the viewport element inside the scroller. |
+| `contentLayerClass` | framework-specific class value | optional | Class applied to the element that contains rendered items. |
+| `getApi` | `(api: ILayoutVirtual) => void` | optional | Called once after the virtual list is created. Use it to subscribe to layout events. |
+
+The current wrappers initialize the virtual list when the component mounts or when the vanilla function is called. Treat `data`, `renderItem`, and `overscanHeight` as initialization inputs in the current API.
+
+## Item Rendering
+
+Each framework receives the same item payload:
+
+```ts
+type ListItemProps<T> = {
+  data: T;
+  index: number;
+};
+```
+
+React also passes a `ref` that must be attached to the root element returned by `renderItem`:
+
+```ts
+type ReactListItemProps<T> = {
+  data: T;
+  index: number;
+  ref: React.Ref<HTMLDivElement> | undefined;
+};
+```
+
+<Tabs syncKey="frameworks">
+  <TabItem label="JS / TS" icon="third-party:ts">
+
+```ts
+import LayoutVirtual, { type ListItemProps } from 'layout-virtual';
+
+type Item = { title: string };
+
+function renderItem({ data, index }: ListItemProps<Item>) {
+  const element = document.createElement('article');
+  element.dataset.index = String(index);
+  element.textContent = data.title;
+  return element;
+}
+
+const list = LayoutVirtual({
+  data,
+  overscanHeight: 200,
+  renderItem,
+  scrollerClass: 'lv-scroller',
+});
+
+document.getElementById('app')!.append(list);
+```
+
+  </TabItem>
+  <TabItem label="React" icon="third-party:react">
+
+```tsx
+import LayoutVirtual, { type ListItemProps } from 'react-layout-virtual';
+
+type Item = { title: string };
+
+function Article({ data, index, ref }: ListItemProps<Item>) {
+  return (
+    <article ref={ref} data-index={index}>
+      {data.title}
+    </article>
+  );
+}
+
+<LayoutVirtual<Item>
+  data={data}
+  overscanHeight={200}
+  renderItem={Article}
+  scrollerClass="lv-scroller"
+/>;
+```
+
+  </TabItem>
+  <TabItem label="Vue" icon="third-party:vue">
+
+```vue
+<script setup lang="ts">
+import LayoutVirtual from 'vue-layout-virtual';
+
+type Item = { title: string };
+</script>
+
+<template>
+  <LayoutVirtual :data="data" :overscan-height="200" scroller-class="lv-scroller">
+    <template #renderItem="{ data: item, index, ref }">
+      <article :ref="ref" :data-index="index">
+        {{ item.title }}
+      </article>
+    </template>
+  </LayoutVirtual>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="Angular" icon="third-party:angular">
+
+```ts
+import LayoutVirtual from 'angular-layout-virtual';
+
+@Component({
+  standalone: true,
+  imports: [LayoutVirtual],
+  template: `
+    <layout-virtual
+      [data]="data"
+      [overscanHeight]="200"
+      scrollerClass="lv-scroller"
+    >
+      <ng-template #renderItem let-data="data" let-index="index">
+        <article [attr.data-index]="index">
+          {{ data.title }}
+        </article>
+      </ng-template>
+    </layout-virtual>
+  `,
+})
+export class AppComponent {}
+```
+
+  </TabItem>
+</Tabs>
+
+## Class Hooks
+
+The component creates this structure:
+
+```html
+<div class="scrollerClass">
+  <div></div>
+  <div class="viewportClass">
+    <div>
+      <div></div>
+      <div class="contentLayerClass">
+        <!-- rendered items -->
+      </div>
+      <div></div>
+    </div>
+  </div>
+</div>
+```
+
+Use these classes to define the scroller size, overflow behavior, and item layout. For responsive grids, put grid or flex layout styles on `contentLayerClass` and item styles on the rendered item root.
+
+## `getApi`
+
+`getApi` receives the underlying virtual list instance after initialization:
+
+```ts
+import type { ILayoutVirtual } from 'layout-virtual/types';
+
+function getApi(api: ILayoutVirtual) {
+  api.on('onAfterItemsRendered', (startIndex, endIndex, items) => {
+    console.log(startIndex, endIndex, items.length);
+  });
+}
+```
+
+### Methods
+
+| Method | Description |
+| --- | --- |
+| `api.on(event, callback)` | Subscribes to a virtual list event. There is currently no public `off` method on `ILayoutVirtual`, so register stable callbacks and clean up at the component boundary if needed. |
+| `api.scrollToIndex()` | Reserved in the public type, but not implemented yet. |
+
+The concrete class also has `setData(data)` and `setRenderItem(renderItem)` methods used internally by the adapters. They are not part of the typed `ILayoutVirtual` API exposed by `getApi`.
+
+### Events
+
+| Event | Callback | Description |
+| --- | --- | --- |
+| `onAfterItemsRendered` | `(startIndex: number, endIndex: number, items: HTMLCollection) => void` | Fires after the current visible range has been flushed to the DOM. This is the main event for counters, diagnostics, and observing the rendered range. |
+| `onChange` | `() => void` | Internal event emitted when core data or renderer setup changes. |
+| `onResize` | `(width: number, height: number) => void` | Low-level scroll container resize event. |
+| `onScroll` | `(position: number, direction: 'down' \| 'up', scrollDelta: number) => void` | Low-level native scroller event. |
+| `onContentScroll` | `(position: number, direction: 'down' \| 'up', scrollDelta: number) => void` | Low-level virtual content scroll event. |
+
+`onBeforeItemsLoaded` and `onBeforeItemsUnloaded` are present in the event type map, but the current layout does not emit them yet.
+
+## Framework Type Notes
+
+| Framework | `scrollerRef` type | Class prop type | Item renderer |
+| --- | --- | --- | --- |
+| JS / TS | `HTMLDivElement` | `string` | `renderItem(props) => HTMLElement` |
+| React | `React.RefObject<HTMLElement>` | `string` | `renderItem(props) => React.ReactNode` |
+| Vue | `Ref<HTMLElement>` | Vue `ClassValue` | `#renderItem` slot |
+| Angular | `ElementRef<HTMLElement>` | `string \| string[] \| Set<string> \| Record<string, boolean>` | `#renderItem` template |
+
