@@ -51,13 +51,13 @@ const ResponsiveGridExample = () => {
     title: titles[i % titles.length],
     excerpt: excerpts[i % excerpts.length],
   }));
-  const [renderedIndeces, setRenderedIndeces] = useState({ startIndex: 0, endIndex: 0 });
-  const { startIndex, endIndex } = renderedIndeces;
+  const [renderedIndices, setRenderedIndices] = useState({ startIndex: 0, endIndex: 0 });
+  const { startIndex, endIndex } = renderedIndices;
   const total = endIndex - startIndex + 1;
 
   const getApi = useCallback((api: ILayoutVirtual) => {
     api.on('onAfterItemsRendered', (startIndex, endIndex) => {
-      setRenderedIndeces({ startIndex, endIndex });
+      setRenderedIndices({ startIndex, endIndex });
     });
   }, []);
 

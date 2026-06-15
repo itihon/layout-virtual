@@ -89,7 +89,7 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
 
   removeRange(startIndex: number, endIndex: number, _?: ScrollDirection) {
     const itemsToRemove: Element[] = [];
-    const renderedIndeces = this._renderedIndexRegistry;
+    const renderedIndices = this._renderedIndexRegistry;
     const renderedItems = this._renderedItemsRegistry;
     const rowGap = this._scrollableContainer.getRowGap();
     let startRange = Infinity;
@@ -109,7 +109,7 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
 
         itemsToRemove.push(itemToRemove);
         renderedItems.delete(idx);
-        renderedIndeces.delete(itemToRemove);
+        renderedIndices.delete(itemToRemove);
       }
     }
 
