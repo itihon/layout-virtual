@@ -12,7 +12,7 @@ import VueRenderer from './VueRenderer';
 import type { VirtualizedListVueProps, ListItemProps } from './types';
 
 const props = defineProps<VirtualizedListVueProps<T>>();
-const { overscanHeight = 200, data, scrollerRef, getApi } = props;
+const { overscanHeight = 200, scrollerRef, getApi } = props;
 const { scrollerClass, viewportClass, contentLayerClass } = props;
 const containerRef = ref<HTMLDivElement>();
 const scrollHeightFillerRef = ref<HTMLDivElement>();
@@ -36,6 +36,7 @@ watch(externalScrollerClassHolder, () => {
 });
 
 let renderer: VueRenderer<T> | undefined;
+let list: LayoutVirtual<T> | undefined;
 
 onMounted(() => {
   renderer = new VueRenderer({
@@ -50,12 +51,19 @@ onMounted(() => {
   });
 
   const layout = new DynamicListLayout({ overscanHeight, renderer });
-  const list = new LayoutVirtual({ layout });
+  list = new LayoutVirtual({ layout });
 
-  list.setData(data);
+  list.setData(props.data);
 
   getApi?.(list);
 });
+
+watch(
+  [() => props.data],
+  ([data]) => {
+    list?.setData(data);
+  },
+);
 
 onUpdated(() => {
   renderer?.commit(renderedRangeRefPool);
@@ -95,4 +103,3 @@ onUpdated(() => {
     </div>
   </div>
 </template>
-

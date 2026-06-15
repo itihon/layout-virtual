@@ -14,7 +14,7 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import type { AfterViewInit, ElementRef } from '@angular/core';
+import type { AfterViewInit, ElementRef, SimpleChanges } from '@angular/core';
 import type { ILayoutVirtual, IRangeRenderer } from 'layout-virtual/types';
 import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import AngularRenderer from './AngularRenderer';
@@ -81,6 +81,7 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
 
   visibleItems: ListItemProps<T>[] = [];
   private renderer: AngularRenderer<T> | undefined;
+  private list: LayoutVirtual | undefined;
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   ngAfterViewInit() {
@@ -101,13 +102,21 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
       renderer: this.renderer as unknown as IRangeRenderer,
     });
 
-    const list = new LayoutVirtual({
+    this.list = new LayoutVirtual({
       layout,
     } as unknown as ConstructorParameters<typeof LayoutVirtual>[0]);
     
-    list.setData(this.data);
+    this.list.setData(this.data);
 
-    this.getApi?.(list);
+    this.getApi?.(this.list);
+  }
+  
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.data) {
+      if (this.list) {
+        this.list.setData(this.data);
+      }
+    }
   }
 
   trackByIndex(_position: number, item: ListItemProps<T>) {

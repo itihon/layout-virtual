@@ -22,6 +22,7 @@ export default function VirtualizedListReact<ItemData = unknown>(props: Virtuali
   const bottomSpacerRef = useRef<HTMLDivElement>(null);
   const [visibleItems, setVisibleItems] = useState<React.ReactNode[]>([]);
   const renderer = useRef<ReactRenderer<ItemData> | undefined>(undefined);
+  const list = useRef<LayoutVirtual<ItemData, ItemRenderer<ItemData>> | undefined>(undefined);
 
   useLayoutEffect(() => {
     renderer.current = new ReactRenderer<ItemData>({
@@ -36,10 +37,8 @@ export default function VirtualizedListReact<ItemData = unknown>(props: Virtuali
     });
 
     const layout = new DynamicListLayout<ItemData, ItemRenderer<ItemData>>({ overscanHeight, renderer: renderer.current });
-    const list = new LayoutVirtual<ItemData, ItemRenderer<ItemData>>({ layout });
-
-    list.setData(data);
-    list.setRenderItem(renderItem);
+    
+    list.current = new LayoutVirtual<ItemData, ItemRenderer<ItemData>>({ layout });
 
     const scroller = scrollerRef?.current;
 
@@ -47,8 +46,16 @@ export default function VirtualizedListReact<ItemData = unknown>(props: Virtuali
       scroller.classList.add(scrollerClass || '');
     }
 
-    getApi?.(list);
+    getApi?.(list.current);
   }, []);
+
+  useEffect(() => {
+    if (list.current) {
+      list.current.setData(data);
+      list.current.setRenderItem(renderItem);
+      getApi?.(list.current);
+    }
+  }, [data, renderItem, getApi]);
 
   useEffect(() => {
     renderer.current?.commit();
