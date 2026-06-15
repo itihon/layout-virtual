@@ -12,7 +12,8 @@ const styling: VirtualizedListVueClasses = {
 
 type Data = { i: number };
 
-const data = Array.from({ length: itemsCount }, (_, i): Data => ({ i }));
+const data = ref(Array.from({ length: itemsCount }, (_, i): Data => ({ i })));
+const insertionIndex = ref(data.value.length - 1);
 const startIndex = ref(0);
 const endIndex = ref(0);
 const total = computed(() => endIndex.value - startIndex.value + 1);
@@ -22,6 +23,13 @@ function extraLines(i: number) {
          i % 3 === 0 ? ['Second line.', 'Third line.'] :
          i % 2 === 0 ? ['Second line.'] :
          [];
+}
+
+function addItem() {
+  data.value = data.value.slice(0, insertionIndex.value).concat(
+    { i: data.value.length },
+    data.value.slice(insertionIndex.value),
+  );
 }
 
 const getApi = (api: ILayoutVirtual) => {
@@ -42,4 +50,9 @@ const getApi = (api: ILayoutVirtual) => {
       </div>
     </template>
   </VirtualizedListVue>
+  <div>
+    <button @click="addItem">Add item</button>
+    <label for="insertion-index">At index:</label>
+    <input id="insertion-index" v-model.number="insertionIndex" type="number" :min="0" :max="data.length" />
+  </div>
 </template>

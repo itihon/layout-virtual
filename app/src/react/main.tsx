@@ -31,10 +31,16 @@ function ListItem({ data, ref, index }: ListItemProps<Data>) {
 };
 
 function App() {
-  const data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
+  const [data, setData] = useState(Array.from({ length: itemsCount }, (_, i) => ({ i })));
+  const [insertionIndex, setInsertionIndex] = useState(data.length - 1);
   const [renderedIndices, setRenderedIndices] = useState({ startIndex: 0, endIndex: 0 });
   const { startIndex, endIndex } = renderedIndices;
   const total = endIndex - startIndex + 1;
+
+  const addItem = () => {
+    const newData = data.slice(0, insertionIndex).concat({ i: data.length }, data.slice(insertionIndex));
+    setData(newData);
+  };
 
   const getApi = useCallback((api: ILayoutVirtual) => {
     api.on('onAfterItemsRendered', (startIndex, endIndex) => {
@@ -46,6 +52,11 @@ function App() {
     <>
       <div>Rendered indices {startIndex} - {endIndex}, total {total} of {data.length}.</div>
       <VirtualizedListReact<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} getApi={getApi} />
+      <div>
+        <button onClick={addItem}>Add item</button>
+        <label htmlFor="insertion-index">At index:</label>
+        <input type="number" id="insertion-index" min={0} max={data.length} onChange={({ target }) => setInsertionIndex(Number(target.value))} value={insertionIndex}/>
+      </div>
     </>
   );
 }

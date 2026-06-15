@@ -24,6 +24,11 @@ type Data = { i: number };
         </div>
       </ng-template>
     </layout-virtual>
+    <div>
+      <button (click)="addItem()">Add item</button>
+      <label for="insertion-index">At index:</label>
+      <input id="insertion-index" [value]="insertionIndex" (input)="insertionIndex = $event.target.value" type="number" min="0" [max]="data.length" />
+    </div>
   `,
 })
 
@@ -32,6 +37,7 @@ class AppComponent {
   data = Array.from({ length: itemsCount }, (_, i): Data => ({ i }));
   startIndex = 0;
   endIndex = 0;
+  insertionIndex = this.data.length - 1;
   
   styling: VirtualizedListAngularClasses = {
     scrollerClass: 'lv-scroller',
@@ -42,6 +48,13 @@ class AppComponent {
   get total() {
     return this.endIndex - this.startIndex + 1;
   }
+
+  addItem = () => {
+    this.data = this.data.slice(0, this.insertionIndex).concat(
+      { i: this.data.length },
+      this.data.slice(this.insertionIndex),
+    );
+  };
 
   getApi = (api: ILayoutVirtual) => {
     api.on('onAfterItemsRendered', (startIndex, endIndex) => {

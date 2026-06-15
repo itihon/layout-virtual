@@ -1,6 +1,7 @@
 import VirtualizedList, { type ListItemProps, type VirtualizedListDOMClasses } from 'layout-virtual';
 import '../../tests/e2e/loadFrameValidation';
 import type { ILayoutVirtual } from 'layout-virtual/types';
+import type { LayoutVirtual } from 'layout-virtual/core';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
 const styling: VirtualizedListDOMClasses = {
@@ -35,16 +36,47 @@ function ListItem({ data, index }: ListItemProps<Data>) {
   return listItem;
 };
 
+function addItem() {
+  if (layoutVirtualApi) {
+    const insertionIndex = Number(addItemInput.value);
+    data = data.slice(0, insertionIndex).concat({ i: data.length }, data.slice(insertionIndex));
+
+    layoutVirtualApi.setData(data);
+  }
+
+  addItemInput.max = data.length.toString();
+}
+
 function getApi(api: ILayoutVirtual) {
+  layoutVirtualApi = api as LayoutVirtual;
+
   api.on('onAfterItemsRendered', (startIndex, endIndex) => {
     const total = endIndex - startIndex + 1;
     stats.textContent = `Rendered indices ${startIndex} - ${endIndex}, total ${total} of ${data.length}.`;
   });
 }
 
-const data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
+let layoutVirtualApi: LayoutVirtual | undefined;
+let data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
 const container = VirtualizedList({ overscanHeight: 100, data, renderItem: ListItem, ...styling, getApi });
 const stats = document.createElement('div');
-
+const addItemContainer = document.createElement('div');
+const addItemButton = document.createElement('button');
+const addItemLabel = document.createElement('label');
+const addItemInput = document.createElement('input');
 const app = document.getElementById('app')!;
-app.append(stats, container);
+
+addItemButton.textContent = 'Add item';
+addItemButton.addEventListener('click', addItem);
+
+addItemLabel.textContent = 'At index:';
+addItemLabel.htmlFor = 'insertion-index';
+
+addItemInput.type = 'number';
+addItemInput.id = 'insertion-index';
+addItemInput.min = '0';
+addItemInput.max = data.length.toString();
+addItemInput.value = (data.length - 1).toString();
+
+addItemContainer.append(addItemButton, addItemLabel, addItemInput);
+app.append(stats, container, addItemContainer);
