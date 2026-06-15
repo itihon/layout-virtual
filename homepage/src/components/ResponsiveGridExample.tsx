@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 import Resizer from './Resizer';
 import VirtualizedGrid, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
 import type { ILayoutVirtual } from 'layout-virtual/types';
@@ -40,7 +40,7 @@ function ListItem({ data, ref, index }: ListItemProps<Data>) {
 };
 
 const ResponsiveGridExample = () => {
-  const data = Array.from({ length: 1000 }, (_, i) => ({ i }));
+  const data = useMemo(() => Array.from({ length: 1000 }, (_, i) => ({ i })), []);
   const [renderedIndices, setRenderedIndices] = useState({ startIndex: 0, endIndex: 0 });
   const { startIndex, endIndex } = renderedIndices;
   const total = endIndex - startIndex + 1;

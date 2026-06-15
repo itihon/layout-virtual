@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 import LayoutVirtual, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
 import type { ILayoutVirtual } from 'layout-virtual/types';
 
@@ -45,12 +45,12 @@ function ArticleCard({ data, ref, index }: ListItemProps<Data>) {
 }
 
 const ResponsiveGridExample = () => {
-  const data = Array.from({ length: 1000 }, (_, i) => ({
+  const data = useMemo(() => Array.from({ length: 1000 }, (_, i) => ({
     i,
     image: i % 3 ? undefined : `https://picsum.photos/seed/${i}/400/240`,
     title: titles[i % titles.length],
     excerpt: excerpts[i % excerpts.length],
-  }));
+  })), []);
   const [renderedIndices, setRenderedIndices] = useState({ startIndex: 0, endIndex: 0 });
   const { startIndex, endIndex } = renderedIndices;
   const total = endIndex - startIndex + 1;
