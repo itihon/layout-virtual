@@ -83,7 +83,7 @@ function getApi(api: ILayoutVirtual) {
 }
 
 const title = document.createElement('h4');
-title.textContent = 'Try to resize the container and scroll.';
+title.textContent = 'Try resizing the container and scroll.';
 
 const container = LayoutVirtual({ overscanHeight: 200, data, renderItem: ArticleCard, ...styling, getApi });
 

@@ -48,7 +48,7 @@ const getApi = (api: ILayoutVirtual) => {
 </script>
 
 <template>
-  <h4>Try to resize the container and scroll.</h4>
+  <h4>Try resizing the container and scroll.</h4>
   <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
   <layout-virtual :overscanHeight="200" :data="data" v-bind="styling" :get-api="getApi">
     <template #renderItem="{ data: itemData, ref, index }">
