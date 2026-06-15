@@ -1,5 +1,11 @@
 # vue-layout-virtual
 
+## 0.3.2
+
+### Patch Changes
+
+- de65274: Add re-rendering on data change.
+
 ## 0.3.1
 
 ### Patch Changes
