@@ -1,5 +1,11 @@
 # react-layout-virtual
 
+## 0.4.1
+
+### Patch Changes
+
+- 206c5fd: Fix. Remove flushSync call into a microtask.
+
 ## 0.4.0
 
 ### Minor Changes

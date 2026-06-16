@@ -1,6 +1,6 @@
 {
   "name": "react-layout-virtual",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "React virtual scrolling component for responsive lists and grids with dynamic item sizes.",
   "keywords": [
     "virtual",
