@@ -5,7 +5,7 @@
  */
 
 <script setup lang="ts" generic="T">
-import { onMounted, onUpdated, ref, watch, useAttrs, watchEffect, type Ref } from 'vue';
+import { onMounted, onUpdated, ref, watch, watchEffect, type Ref } from 'vue';
 import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import VueRenderer from './VueRenderer';
 import type { VirtualizedListVueProps, ListItemProps } from './types';
@@ -13,7 +13,6 @@ import type { LayoutVirtualEventsArray } from 'layout-virtual/types';
 
 defineOptions({ inheritAttrs: false });
 const props = defineProps<VirtualizedListVueProps<T>>();
-const attrs = useAttrs();
 const { overscanHeight = 200, scrollerRef } = props;
 const { scrollerClass, viewportClass, contentLayerClass } = props;
 const containerRef = ref<HTMLDivElement>();
@@ -41,9 +40,9 @@ let renderer: VueRenderer<T> | undefined;
 let list: LayoutVirtual<T> | undefined;
 
 const setEventListeners = () => {
-  (Object.entries(attrs) as LayoutVirtualEventsArray).forEach(([attrName, attrValue]) => {
-    if (attrName.startsWith('on')) {
-      list?.setEventListener(attrName, attrValue);
+  (Object.entries(props) as LayoutVirtualEventsArray).forEach(([propName, propValue]) => {
+    if (propName.startsWith('on')) {
+      list?.setEventListener(propName, propValue);
     }
   });
 };
