@@ -71,7 +71,8 @@ export default class ReactRenderer<DataType = unknown> extends BaseRenderer impl
   clear() {
     super.clear();
     this._listItems = [];
-    this._itemsSetter(this._listItems);
+    // this._itemsSetter(this._listItems);
+    return this.flush(); // Fixes the bug with duplicating items that appeared on scroll after insertion.
   }
 
   setData(store: DataType[]) {
