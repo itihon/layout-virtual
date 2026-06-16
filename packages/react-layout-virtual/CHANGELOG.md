@@ -1,5 +1,11 @@
 # react-layout-virtual
 
+## 0.4.2
+
+### Patch Changes
+
+- e97731c: Fixed the bug with duplicating items that appeared on scroll after insertion.
+
 ## 0.4.1
 
 ### Patch Changes
