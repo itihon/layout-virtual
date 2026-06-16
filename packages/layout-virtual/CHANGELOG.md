@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.5.0
+
+### Minor Changes
+
+- 7744614: Remove getApi method, add event callbacks as props.
+
 ## 0.4.1
 
 ### Patch Changes

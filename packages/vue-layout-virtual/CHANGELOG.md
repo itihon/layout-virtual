@@ -1,5 +1,16 @@
 # vue-layout-virtual
 
+## 0.4.0
+
+### Minor Changes
+
+- 7744614: Remove getApi method, add event callbacks as props.
+
+### Patch Changes
+
+- Updated dependencies [7744614]
+  - layout-virtual@0.5.0
+
 ## 0.3.2
 
 ### Patch Changes
