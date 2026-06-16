@@ -1,5 +1,4 @@
 import LayoutVirtual, { type ListItemProps, type VirtualizedListDOMClasses } from 'layout-virtual';
-import type { ILayoutVirtual } from 'layout-virtual/types';
 
 const styling: VirtualizedListDOMClasses = {
   scrollerClass: 'lv-scroller',
@@ -75,17 +74,17 @@ const data = Array.from({ length: 1000 }, (_, i): Data => ({
   excerpt: excerpts[i % excerpts.length],
 }));
 
-function getApi(api: ILayoutVirtual) {
-  api.on('onAfterItemsRendered', (startIndex, endIndex) => {
-    const total = endIndex - startIndex + 1;
-    stats.textContent = `Rendered indices ${startIndex} - ${endIndex}, total ${total} of ${data.length}.`;
-  });
+function updateStats(startIndex: number, endIndex: number) {
+  const total = endIndex - startIndex + 1;
+  stats.textContent = `Rendered indices ${startIndex} - ${endIndex}, total ${total} of ${data.length}.`;
 }
 
 const title = document.createElement('h4');
 title.textContent = 'Try resizing the container and scroll.';
 
-const container = LayoutVirtual({ overscanHeight: 200, data, renderItem: ArticleCard, ...styling, getApi });
+const container = LayoutVirtual({ 
+  overscanHeight: 200, data, renderItem: ArticleCard, ...styling, onAfterItemsRendered: updateStats,
+});
 
 const stats = document.createElement('div');
 const app = document.getElementById('app')!;

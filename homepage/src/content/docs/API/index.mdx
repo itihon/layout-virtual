@@ -8,7 +8,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Layout Virtual is split into a framework-agnostic engine and thin framework adapters.
 
-The `layout-virtual` package contains the core layout classes, DOM renderer, scroll container, event bus, and the vanilla JS/TS component. The React, Vue, and Angular packages wrap the same core layout and renderer contract with framework-specific rendering primitives. That means the virtualization behavior, sizing model, overscan option, CSS class hooks, and `getApi` callback are intentionally the same across frameworks.
+The `layout-virtual` package contains the core layout classes, DOM renderer, scroll container, event bus, and the vanilla JS/TS component. The React, Vue, and Angular packages wrap the same core layout and renderer contract with framework-specific rendering primitives. That means the virtualization behavior, sizing model, overscan option, CSS class hooks, and event callbacks are intentionally the same across frameworks.
 
 ## Packages
 
@@ -34,7 +34,6 @@ All components render a scrollable container with a viewport and content layer. 
 | `scrollerClass` | framework-specific class value | optional | Class applied to the scroll container. |
 | `viewportClass` | framework-specific class value | optional | Class applied to the viewport element inside the scroller. |
 | `contentLayerClass` | framework-specific class value | optional | Class applied to the element that contains rendered items. |
-| `getApi` | `(api: ILayoutVirtual) => void` | optional | Called once after the virtual list is created. Use it to subscribe to layout events. |
 
 The current wrappers initialize the virtual list when the component mounts or when the vanilla function is called. Treat `data`, `renderItem`, and `overscanHeight` as initialization inputs in the current API.
 
@@ -183,29 +182,6 @@ const scroller = document.querySelector('[data-lv-scroller]');
 const viewport = document.querySelector('[data-lv-viewport]');
 const contentLayer = document.querySelector('[data-lv-content-layer]');
 ```
-
-## `getApi`
-
-`getApi` receives the underlying virtual list instance after initialization:
-
-```ts
-import type { ILayoutVirtual } from 'layout-virtual/types';
-
-function getApi(api: ILayoutVirtual) {
-  api.on('onAfterItemsRendered', (startIndex, endIndex, items) => {
-    console.log(startIndex, endIndex, items.length);
-  });
-}
-```
-
-### Methods
-
-| Method | Description |
-| --- | --- |
-| `api.on(event, callback)` | Subscribes to a virtual list event. There is currently no public `off` method on `ILayoutVirtual`, so register stable callbacks and clean up at the component boundary if needed. |
-| `api.scrollToIndex()` | Reserved in the public type, but not implemented yet. |
-
-The concrete class also has `setData(data)` and `setRenderItem(renderItem)` methods used internally by the adapters. They are not part of the typed `ILayoutVirtual` API exposed by `getApi`.
 
 ### Events
 

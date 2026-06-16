@@ -1,9 +1,8 @@
 import '@angular/compiler';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import LayoutVirtual, { type VirtualizedListAngularClasses } from 'angular-layout-virtual';
-import type { ILayoutVirtual } from 'layout-virtual/types';
 
 type Data = { i: number; image?: string; title: string; excerpt: string };
 
@@ -32,7 +31,7 @@ const excerpts = [
   template: `
     <h4>Try resizing the container and scroll.</h4>
     <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
-    <layout-virtual [overscanHeight]="200" [data]="data" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" [getApi]="getApi">
+    <layout-virtual [overscanHeight]="200" [data]="data" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" (afterItemsRendered)="updateStats(...$event)">
       <ng-template #renderItem let-data="data" let-index="index">
         <div class="article-card" [attr.data-index]="index">
           <div class="ac-index">#{{ data.i }}</div>
@@ -48,8 +47,6 @@ const excerpts = [
   `,
 })
 class AppComponent {
-  private readonly changeDetectorRef = inject(ChangeDetectorRef);
-
   data = Array.from({ length: 1000 }, (_, i): Data => ({
     i,
     image: i % 3 ? undefined : `https://picsum.photos/seed/${i}/400/240`,
@@ -69,12 +66,9 @@ class AppComponent {
     return this.endIndex - this.startIndex + 1;
   }
 
-  getApi = (api: ILayoutVirtual) => {
-    api.on('onAfterItemsRendered', (startIndex, endIndex) => {
-      this.startIndex = startIndex;
-      this.endIndex = endIndex;
-      this.changeDetectorRef.markForCheck();
-    });
+  updateStats = (startIndex: number, endIndex: number) => {
+    this.startIndex = startIndex;
+    this.endIndex = endIndex;
   };
 }
 

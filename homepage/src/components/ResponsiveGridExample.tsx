@@ -1,7 +1,6 @@
 import { useCallback, useState, useMemo } from 'react';
 import Resizer from './Resizer';
 import VirtualizedGrid, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
-import type { ILayoutVirtual } from 'layout-virtual/types';
 import classes from './ResponsiveGridExample.module.css';
 import ItemIcon from '../assets/list-item.svg?react';
 
@@ -45,10 +44,8 @@ const ResponsiveGridExample = () => {
   const { startIndex, endIndex } = renderedIndices;
   const total = endIndex - startIndex + 1;
 
-  const getApi = useCallback((api: ILayoutVirtual) => {
-    api.on('onAfterItemsRendered', (startIndex, endIndex) => {
-      setRenderedIndices({ startIndex, endIndex });
-    });
+  const updateStats = useCallback((startIndex: number, endIndex: number) => {
+    setRenderedIndices({ startIndex, endIndex });
   }, []);
 
   return (
@@ -73,7 +70,7 @@ const ResponsiveGridExample = () => {
           </div>
         </div>
 
-        <VirtualizedGrid<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} getApi={getApi} />
+        <VirtualizedGrid<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} onAfterItemsRendered={updateStats} />
 
         <div className={classes['resize-hint']}>
           <span className={classes['live-dot']} />

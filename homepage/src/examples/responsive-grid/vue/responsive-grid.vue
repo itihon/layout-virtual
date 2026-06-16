@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import LayoutVirtual from 'vue-layout-virtual';
-import type { ILayoutVirtual } from 'layout-virtual/types';
 
 const styling = {
   scrollerClass: 'lv-scroller',
@@ -39,18 +38,16 @@ const startIndex = ref(0);
 const endIndex = ref(0);
 const total = computed(() => endIndex.value - startIndex.value + 1);
 
-const getApi = (api: ILayoutVirtual) => {
-  api.on('onAfterItemsRendered', (start, end) => {
-    startIndex.value = start;
-    endIndex.value = end;
-  });
+const updateStats = (start: number, end: number) => {
+  startIndex.value = start;
+  endIndex.value = end;
 };
 </script>
 
 <template>
   <h4>Try resizing the container and scroll.</h4>
   <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
-  <layout-virtual :overscanHeight="200" :data="data" v-bind="styling" :get-api="getApi">
+  <layout-virtual :overscanHeight="200" :data="data" v-bind="styling" @after-items-rendered="updateStats">
     <template #renderItem="{ data: itemData, ref, index }">
       <div :ref="ref" class="article-card" :data-index="index">
         <div class="ac-index">{{ `#${itemData.i}` }}</div>
