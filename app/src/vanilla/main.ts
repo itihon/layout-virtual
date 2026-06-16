@@ -47,18 +47,14 @@ function addItem() {
   addItemInput.max = data.length.toString();
 }
 
-function getApi(api: ILayoutVirtual) {
-  layoutVirtualApi = api as LayoutVirtual;
-
-  api.on('onAfterItemsRendered', (startIndex, endIndex) => {
-    const total = endIndex - startIndex + 1;
-    stats.textContent = `Rendered indices ${startIndex} - ${endIndex}, total ${total} of ${data.length}.`;
-  });
+function updateStats(startIndex: number, endIndex: number) {
+  const total = endIndex - startIndex + 1;
+  stats.textContent = `Rendered indices ${startIndex} - ${endIndex}, total ${total} of ${data.length}.`;
 }
 
 let layoutVirtualApi: LayoutVirtual | undefined;
 let data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
-const container = VirtualizedList({ overscanHeight: 100, data, renderItem: ListItem, ...styling, getApi });
+const container = VirtualizedList({ overscanHeight: 100, data, renderItem: ListItem, ...styling, onAfterItemsRendered: updateStats });
 const stats = document.createElement('div');
 const addItemContainer = document.createElement('div');
 const addItemButton = document.createElement('button');

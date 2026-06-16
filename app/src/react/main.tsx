@@ -2,7 +2,6 @@ import { createRoot } from 'react-dom/client';
 import { useCallback, useState } from 'react';
 import VirtualizedListReact, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
 import '../../tests/e2e/loadFrameValidation';
-import type { ILayoutVirtual } from 'layout-virtual/types';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
 const styling: VirtualizedListReactClasses = {
@@ -42,16 +41,14 @@ function App() {
     setData(newData);
   };
 
-  const getApi = useCallback((api: ILayoutVirtual) => {
-    api.on('onAfterItemsRendered', (startIndex, endIndex) => {
-      setRenderedIndices({ startIndex, endIndex });
-    });
+  const updateStats = useCallback((startIndex: number, endIndex: number) => {
+    setRenderedIndices({ startIndex, endIndex });
   }, []);
 
   return (
     <>
       <div>Rendered indices {startIndex} - {endIndex}, total {total} of {data.length}.</div>
-      <VirtualizedListReact<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} getApi={getApi} />
+      <VirtualizedListReact<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} onAfterItemsRendered={updateStats} />
       <div>
         <button onClick={addItem}>Add item</button>
         <label htmlFor="insertion-index">At index:</label>

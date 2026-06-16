@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import VirtualizedListVue, { type VirtualizedListVueClasses } from 'vue-layout-virtual';
-import type { ILayoutVirtual } from 'layout-virtual/types';
+import VirtualizedList, { type VirtualizedListVueClasses } from 'vue-layout-virtual';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
 const styling: VirtualizedListVueClasses = {
@@ -32,24 +31,22 @@ function addItem() {
   );
 }
 
-const getApi = (api: ILayoutVirtual) => {
-  api.on('onAfterItemsRendered', (start, end) => {
-    startIndex.value = start;
-    endIndex.value = end;
-  });
-};
+function updateStats(start: number, end: number) {
+  startIndex.value = start;
+  endIndex.value = end;
+}
 </script>
 
 <template>
   <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
-  <VirtualizedListVue :data="data" :overscan-height="100" v-bind="styling" :get-api="getApi">
+  <virtualized-list :data="data" :overscan-height="100" v-bind="styling" @after-items-rendered="updateStats">
     <template #renderItem="{ data, index, ref }">
       <div :ref="ref" class="list-item" :id="`item-${data.i}`" :data-index="index">
         Item {{ data.i }}.
         <div v-for="(text, idx) in extraLines(data.i)" :key="idx">{{ text }}</div>
       </div>
     </template>
-  </VirtualizedListVue>
+  </virtualized-list>
   <div>
     <button @click="addItem">Add item</button>
     <label for="insertion-index">At index:</label>
