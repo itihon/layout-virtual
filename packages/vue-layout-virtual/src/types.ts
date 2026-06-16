@@ -5,7 +5,7 @@
  */
 
 import { type ClassValue, type Ref } from 'vue';
-import type { VirtualScrollStructure, ILayoutVirtual } from 'layout-virtual/types';
+import type { VirtualScrollStructure, ILayoutVirtualEvents } from 'layout-virtual/types';
 
 export interface ListItemProps<T = unknown> {
   data: T;
@@ -22,9 +22,8 @@ export interface VirtualizedListVueClasses {
   contentLayerClass?: ClassValue;
 }
 
-export interface VirtualizedListVueProps<T> extends VirtualizedListVueClasses {
+export interface VirtualizedListVueProps<T> extends VirtualizedListVueClasses, Partial<ILayoutVirtualEvents> {
   scrollerRef?: Ref<HTMLElement>;
   overscanHeight?: number; 
   data: T[];
-  getApi?: (api: ILayoutVirtual) => void;
 }

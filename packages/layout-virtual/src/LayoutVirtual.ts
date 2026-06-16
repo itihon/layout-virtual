@@ -8,13 +8,14 @@ import type {
   IDynamicListLayout,
   IEventMap, 
   ILayoutVirtual, 
-  IVirtualizedDynamicListOptions, 
+  IVirtualizedDynamicListOptions,
 } from "./types/types";
 import EventBus from "./EventBus/EventBus";
 
 export default class VirtualizedList<ItemData = unknown, ItemRenderer = Function> implements ILayoutVirtual {
   private _eventBus = new EventBus<IEventMap>();
   private _layout: IDynamicListLayout<ItemData, ItemRenderer>;
+  private _publicEvents = new Map<keyof IEventMap, IEventMap[keyof IEventMap]>();
 
   constructor({ layout }: IVirtualizedDynamicListOptions<ItemData, ItemRenderer>) {
     this._layout = layout;
@@ -31,8 +32,15 @@ export default class VirtualizedList<ItemData = unknown, ItemRenderer = Function
     this._eventBus.emit('onChange');
   }
 
-  on<K extends keyof IEventMap>(event: K, cb: IEventMap[K]) {
-    this._eventBus.on(event, cb);
+  setEventListener<K extends keyof IEventMap>(event: K, cb?: IEventMap[K]) {
+    if (cb) {
+      this._eventBus.on(event, cb);
+      this._publicEvents.set(event, cb);
+    }
+    else {
+      const attachedCb = this._publicEvents.get(event) as IEventMap[typeof event];
+      this._eventBus.off(event, attachedCb);
+    }
   }
 
   scrollToIndex() {

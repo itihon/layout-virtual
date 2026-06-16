@@ -79,6 +79,12 @@ export interface ILayoutVirtualEvents {
   onAfterItemsRendered: (startIndex: number, endIndex: number, items: HTMLCollection) => void;
 }
 
+// Create a union of valid [Key, Value] pairs
+type VirtualEventEntries<K extends keyof ILayoutVirtualEvents = keyof ILayoutVirtualEvents> = 
+  K extends any ? [K, ILayoutVirtualEvents[K]] : never;
+
+export type LayoutVirtualEventsArray = Array<VirtualEventEntries>;
+
 export type IEventMap = IVirtualizedListEvents & IScrollableContainerEvents & ILayoutVirtualEvents;
 
 export interface IEventEmitter<T extends { [K in keyof T]: (...args: any[]) => void }> {
@@ -98,6 +104,6 @@ export interface IVirtualizedDynamicListOptions<ItemData = unknown, ItemRenderer
 }
 
 export interface ILayoutVirtual<T = IEventMap> {
-  on<K extends keyof T>(event: K, cb: T[K]): void;
+  setEventListener<K extends keyof T>(event: K, cb: T[K]): void;
   scrollToIndex(): void;
 }

@@ -5,14 +5,16 @@
  */
 
 <script setup lang="ts" generic="T">
-import { type Ref } from 'vue';
-import { onMounted, onUpdated, ref, watch } from 'vue';
+import { onMounted, onUpdated, ref, watch, useAttrs, watchEffect, type Ref } from 'vue';
 import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import VueRenderer from './VueRenderer';
 import type { VirtualizedListVueProps, ListItemProps } from './types';
+import type { LayoutVirtualEventsArray } from 'layout-virtual/types';
 
+defineOptions({ inheritAttrs: false });
 const props = defineProps<VirtualizedListVueProps<T>>();
-const { overscanHeight = 200, scrollerRef, getApi } = props;
+const attrs = useAttrs();
+const { overscanHeight = 200, scrollerRef } = props;
 const { scrollerClass, viewportClass, contentLayerClass } = props;
 const containerRef = ref<HTMLDivElement>();
 const scrollHeightFillerRef = ref<HTMLDivElement>();
@@ -38,6 +40,14 @@ watch(externalScrollerClassHolder, () => {
 let renderer: VueRenderer<T> | undefined;
 let list: LayoutVirtual<T> | undefined;
 
+const setEventListeners = () => {
+  (Object.entries(attrs) as LayoutVirtualEventsArray).forEach(([attrName, attrValue]) => {
+    if (attrName.startsWith('on')) {
+      list?.setEventListener(attrName, attrValue);
+    }
+  });
+};
+
 onMounted(() => {
   renderer = new VueRenderer({
     container: scrollerRef?.value || containerRef.value!,
@@ -55,7 +65,7 @@ onMounted(() => {
 
   list.setData(props.data);
 
-  getApi?.(list);
+  setEventListeners();
 });
 
 watch(
@@ -64,6 +74,8 @@ watch(
     list?.setData(data);
   },
 );
+
+watchEffect(setEventListeners);
 
 onUpdated(() => {
   renderer?.commit(renderedRangeRefPool);

@@ -10,12 +10,13 @@ import {
   Component,
   ContentChild,
   Input,
+  Output,
   TemplateRef,
   ViewChild,
   inject,
 } from '@angular/core';
-import type { AfterViewInit, ElementRef, SimpleChanges } from '@angular/core';
-import type { ILayoutVirtual, IRangeRenderer } from 'layout-virtual/types';
+import { EventEmitter, type AfterViewInit, type ElementRef, type SimpleChanges } from '@angular/core';
+import type { ILayoutVirtualEvents, IRangeRenderer } from 'layout-virtual/types';
 import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import AngularRenderer from './AngularRenderer';
 import type { AngularClassAttribute, ListItemProps } from './types';
@@ -35,15 +36,8 @@ export type VirtualizedListItemContext<T> = ListItemProps<T> & {
         <div #scrollCanvas>
           <div #topSpacer></div>
           <div #contentLayer [class]="contentLayerClass">
-            <ng-container
-              *ngFor="let item of visibleItems; trackBy: trackByIndex"
-            >
-              <ng-container
-                *ngTemplateOutlet="
-                  renderItemTemplate;
-                  context: getItemContext(item)
-                "
-              ></ng-container>
+            <ng-container *ngFor="let item of visibleItems; trackBy: trackByIndex" >
+              <ng-container *ngTemplateOutlet=" renderItemTemplate; context: getItemContext(item) "></ng-container>
             </ng-container>
           </div>
           <div #bottomSpacer></div>
@@ -59,7 +53,7 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
   @Input() scrollerClass?: AngularClassAttribute;
   @Input() viewportClass?: AngularClassAttribute;
   @Input() contentLayerClass?: AngularClassAttribute;
-  @Input() getApi?: (api: ILayoutVirtual) => void;
+  @Output() afterItemsRendered = new EventEmitter<Parameters<ILayoutVirtualEvents['onAfterItemsRendered']>>();
 
   @ContentChild('renderItem', { read: TemplateRef })
   renderItemTemplate!: TemplateRef<VirtualizedListItemContext<T>>;
@@ -108,7 +102,9 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
     
     this.list.setData(this.data);
 
-    this.getApi?.(this.list);
+    this.list.setEventListener('onAfterItemsRendered', (...payload) => {
+      this.afterItemsRendered.emit(payload);
+    });
   }
   
   ngOnChanges(changes: SimpleChanges) {

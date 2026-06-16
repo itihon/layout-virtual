@@ -11,8 +11,9 @@ import ReactRenderer from './ReactRenderer';
 import type { ItemRenderer, VirtualizedListReactProps } from './types';
 
 export default function VirtualizedListReact<ItemData = unknown>(props: VirtualizedListReactProps<ItemData>) {
-  const { overscanHeight = 200, data, renderItem, scrollerRef, getApi } = props;
+  const { overscanHeight = 200, data, renderItem, scrollerRef } = props;
   const { scrollerClass, viewportClass, contentLayerClass } = props;
+  const { onAfterItemsRendered } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollHeightFillerRef = useRef<HTMLDivElement>(null);
   const viewportContainerRef = useRef<HTMLDivElement>(null);
@@ -45,17 +46,20 @@ export default function VirtualizedListReact<ItemData = unknown>(props: Virtuali
     if (scroller) {
       scroller.classList.add(scrollerClass || '');
     }
-
-    getApi?.(list.current);
   }, []);
 
   useEffect(() => {
     if (list.current) {
       list.current.setData(data);
       list.current.setRenderItem(renderItem);
-      getApi?.(list.current);
     }
-  }, [data, renderItem, getApi]);
+  }, [data, renderItem]);
+
+  useEffect(() => {
+    if (list.current) {
+      list.current.setEventListener('onAfterItemsRendered', onAfterItemsRendered);
+    }
+  }, [onAfterItemsRendered]);
 
   useEffect(() => {
     renderer.current?.commit();
