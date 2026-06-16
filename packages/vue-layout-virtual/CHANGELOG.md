@@ -1,5 +1,11 @@
 # vue-layout-virtual
 
+## 0.4.1
+
+### Patch Changes
+
+- e57f26e: Read event callbacks from props instead of attributes.
+
 ## 0.4.0
 
 ### Minor Changes
