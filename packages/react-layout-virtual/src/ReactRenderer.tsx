@@ -17,7 +17,8 @@ export default class ReactRenderer<DataType = unknown> extends BaseRenderer impl
   private _itemsSetter: React.Dispatch<React.SetStateAction<React.ReactNode[]>>;
   private _renderedRangeRefPool = new Map<number, IndexedRef>();
   private _listItems: React.ReactNode[] = [];
-  private _flushItems = () => { this._itemsSetter(this._listItems); };
+  private _flushItems = () => this._itemsSetter(this._listItems);
+  private _flushSync = () => flushSync(this._flushItems);
 
   constructor(opts: ReactRendererOptions) {
     super(opts);
@@ -82,8 +83,7 @@ export default class ReactRenderer<DataType = unknown> extends BaseRenderer impl
   }
 
   flush() {
-    flushSync(this._flushItems);
-    return Promise.resolve();
+    return Promise.resolve().then(this._flushSync);
   }
 
   commit() {
