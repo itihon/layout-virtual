@@ -63,49 +63,29 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     return { index, fraction };
   }
 
-  private _updateVisibleItems = () => {
+  private _updateVisibleItems = async () => {
     console.log('_updateVisibleItems')
     const scrollableContainer = this._scrollableContainer;
-
-    // scrollableContainer.refresh();
-
     const scrollPosition = scrollableContainer.getScrollTop();
     const scrollHeight = scrollableContainer.getScrollHeight();
     const clientHeight = scrollableContainer.getClientHeight();
 
     this._renderer.clear();
 
-    this._scrollContent(scrollPosition, 'down', 0)
-      .then(this._updateItemHeightRange)
-      .then(this._updateScrollHeight)
-      .then(() => {
-        // const firstRenderedIndex = this._renderer.getRenderedBoundaryIndex('first');
-        // const lastRenderedIndex = this._renderer.getRenderedBoundaryIndex('last');
+    await this._renderer.flush();
+    await this._scrollContent(scrollPosition, 'down', 0);
 
-        scrollableContainer.refresh();
+    this._updateItemHeightRange();
+    this._updateScrollHeight();
 
-        // const topSpacerBottom = scrollableContainer.getTopSpacerBottom();
-        // const viewportTop = scrollableContainer.getViewportTop();
-        const newScrollHeight = scrollableContainer.getScrollHeight();
-        const newClientHeight = scrollableContainer.getClientHeight();
-        const scrollHeightRatio = ((newScrollHeight - newClientHeight) || 1) / ((scrollHeight - clientHeight) || 1);
+    scrollableContainer.refresh();
 
-        // scrollableContainer.setViewportTop(Math.max(viewportTop, topSpacerBottom));
-        scrollableContainer.setScrollTop(scrollPosition * scrollHeightRatio);
-        // this._renderer.clear();
-        this._scrollContent(scrollPosition * scrollHeightRatio, 'down', 0);
+    const newScrollHeight = scrollableContainer.getScrollHeight();
+    const newClientHeight = scrollableContainer.getClientHeight();
+    const scrollHeightRatio = ((newScrollHeight - newClientHeight) || 1) / ((scrollHeight - clientHeight) || 1);
 
-        // this._renderer.clear();
-        // return this._scrollContent(position * scrollHeightRatio, 'down');
-
-        // if (scrollableContainer.getContentLayerHeight() < scrollableContainer.getViewportHeight()) {
-        //   if (dataSize && !(firstRenderedIndex === 0 && lastRenderedIndex === dataSize - 1)) {
-        //     // !--> This never happens if refresh in not called !!!
-        //     console.error('Not enough items to fill viewport.')
-        //     // return updateItems(position);
-        //   }
-        // }
-      });
+    scrollableContainer.setScrollTop(scrollPosition * scrollHeightRatio);
+    this._scrollContent(scrollPosition * scrollHeightRatio, 'down', 0);
   };
 
   private _renderItems = (viewportTop: number, direction: ScrollDirection) => {
@@ -320,7 +300,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
     const position = interpolatedTop - viewportAnchor;
 
-    console.log('_getScrollAnchorItemPosition:', index1, index2, fractionalRowIndex, indexFraction);
+    console.log('_getScrollAnchorItemPosition:', index1, index2, fractionalRowIndex, indexFraction, position);
 
     return position;
   }
