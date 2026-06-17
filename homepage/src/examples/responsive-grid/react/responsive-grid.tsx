@@ -27,11 +27,11 @@ const excerpts = [
   'Scrolling through a long feed should feel the same whether it has a hundred items or a hundred thousand, and that consistency comes from windowing the visible range and letting everything else stay unmounted until it is needed, then recycling the freed nodes for whatever scrolls into view next.',
 ];
 
-function ArticleCard({ data, ref, index }: ListItemProps<Data>) {
+function ArticleCard({ data, index }: ListItemProps<Data>) {
   const { image, title, excerpt } = data;
 
   return (
-    <div ref={ref} className={'article-card'} data-index={index}>
+    <div className={'article-card'} data-index={index}>
       <div className={'ac-index'}>{`#${data.i}`}</div>
       {image && <img className={'ac-image'} src={image} alt={''} loading={'lazy'} />}
       <div className={'ac-body'}>

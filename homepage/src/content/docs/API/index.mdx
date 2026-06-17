@@ -48,15 +48,7 @@ type ListItemProps<T> = {
 };
 ```
 
-React also passes a `ref` that must be attached to the root element returned by `renderItem`:
-
-```ts
-type ReactListItemProps<T> = {
-  data: T;
-  index: number;
-  ref: React.Ref<HTMLDivElement> | undefined;
-};
-```
+Assign the index to the `data-index` attribute of the item root element. This contract allows the library to track rendered elements.
 
 <Tabs syncKey="frameworks">
   <TabItem label="JS / TS" icon="third-party:ts">
@@ -73,9 +65,9 @@ function renderItem({ data, index }: ListItemProps<Item>) {
   return element;
 }
 
-const list = LayoutVirtual({ data, overscanHeight: 200, renderItem, scrollerClass: 'lv-scroller' });
+const { container } = LayoutVirtual({ data, overscanHeight: 200, renderItem, scrollerClass: 'lv-scroller' });
 
-document.getElementById('app')!.append(list);
+document.getElementById('app')!.append(container);
 ```
 
   </TabItem>
@@ -86,9 +78,9 @@ import LayoutVirtual, { type ListItemProps } from 'react-layout-virtual';
 
 type Item = { title: string };
 
-function Article({ data, index, ref }: ListItemProps<Item>) {
+function Article({ data, index }: ListItemProps<Item>) {
   return (
-    <article ref={ref} data-index={index}>
+    <article data-index={index}>
       {data.title}
     </article>
   );
@@ -109,8 +101,8 @@ type Item = { title: string };
 
 <template>
   <layout-virtual :data="data" :overscan-height="200" scroller-class="lv-scroller">
-    <template #renderItem="{ data: item, index, ref }">
-      <article :ref="ref" :data-index="index">
+    <template #renderItem="{ data: item, index }">
+      <article :data-index="index">
         {{ item.title }}
       </article>
     </template>

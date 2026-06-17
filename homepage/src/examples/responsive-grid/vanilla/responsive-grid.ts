@@ -82,7 +82,7 @@ function updateStats(startIndex: number, endIndex: number) {
 const title = document.createElement('h4');
 title.textContent = 'Try resizing the container and scroll.';
 
-const container = LayoutVirtual({ 
+const { container } = LayoutVirtual({ 
   overscanHeight: 200, data, renderItem: ArticleCard, ...styling, onAfterItemsRendered: updateStats,
 });
 

@@ -48,8 +48,8 @@ const updateStats = (start: number, end: number) => {
   <h4>Try resizing the container and scroll.</h4>
   <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
   <layout-virtual :overscanHeight="200" :data="data" v-bind="styling" @after-items-rendered="updateStats">
-    <template #renderItem="{ data: itemData, ref, index }">
-      <div :ref="ref" class="article-card" :data-index="index">
+    <template #renderItem="{ data: itemData, index }">
+      <div class="article-card" :data-index="index">
         <div class="ac-index">{{ `#${itemData.i}` }}</div>
         <img v-if="itemData.image" class="ac-image" :src="itemData.image" alt="" loading="lazy">
         <div class="ac-body">

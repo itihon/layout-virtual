@@ -22,14 +22,14 @@ const descriptions = [
   'A much longer description text that wraps to the next lines at different card sizes.',
 ];
 
-function ListItem({ data, ref, index }: ListItemProps<Data>) {
+function ListItem({ data, index }: ListItemProps<Data>) {
   const i = data.i;
 
   const header = i % 2 ? headers[0] : headers[1];
   const description = i % 2 ? descriptions[0] : descriptions[1];
 
   return (
-    <div ref={ref} className={classes['list-item']} id={`item-${i}`} data-index={index}>
+    <div className={classes['list-item']} id={`item-${i}`} data-index={index}>
       <ItemIcon className={classes['li-icon']} />
       <div className={classes['li-index']}>{`#${i}`}</div>
       <div className={classes['li-header']}>{ header }</div>
