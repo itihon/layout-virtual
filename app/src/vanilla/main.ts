@@ -1,7 +1,5 @@
 import VirtualizedList, { type ListItemProps, type VirtualizedListDOMClasses } from 'layout-virtual';
 import '../../tests/e2e/loadFrameValidation';
-import type { ILayoutVirtual } from 'layout-virtual/types';
-import type { LayoutVirtual } from 'layout-virtual/core';
 
 const itemsCount = Number(new URLSearchParams(window.location.search).get('itemsCount')) || 1000;
 const styling: VirtualizedListDOMClasses = {
@@ -37,13 +35,10 @@ function ListItem({ data, index }: ListItemProps<Data>) {
 };
 
 function addItem() {
-  if (layoutVirtualApi) {
-    const insertionIndex = Number(addItemInput.value);
-    data = data.slice(0, insertionIndex).concat({ i: data.length }, data.slice(insertionIndex));
+  const insertionIndex = Number(addItemInput.value);
+  data = data.slice(0, insertionIndex).concat({ i: data.length }, data.slice(insertionIndex));
 
-    layoutVirtualApi.setData(data);
-  }
-
+  api.setData(data);
   addItemInput.max = data.length.toString();
 }
 
@@ -52,9 +47,8 @@ function updateStats(startIndex: number, endIndex: number) {
   stats.textContent = `Rendered indices ${startIndex} - ${endIndex}, total ${total} of ${data.length}.`;
 }
 
-let layoutVirtualApi: LayoutVirtual | undefined;
 let data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
-const container = VirtualizedList({ overscanHeight: 100, data, renderItem: ListItem, ...styling, onAfterItemsRendered: updateStats });
+const { container, api } = VirtualizedList({ overscanHeight: 100, data, renderItem: ListItem, ...styling, onAfterItemsRendered: updateStats });
 const stats = document.createElement('div');
 const addItemContainer = document.createElement('div');
 const addItemButton = document.createElement('button');

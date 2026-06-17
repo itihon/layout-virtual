@@ -40,8 +40,8 @@ function updateStats(start: number, end: number) {
 <template>
   <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
   <virtualized-list :data="data" :overscan-height="100" v-bind="styling" @after-items-rendered="updateStats">
-    <template #renderItem="{ data, index, ref }">
-      <div :ref="ref" class="list-item" :id="`item-${data.i}`" :data-index="index">
+    <template #renderItem="{ data, index }">
+      <div class="list-item" :id="`item-${data.i}`" :data-index="index">
         Item {{ data.i }}.
         <div v-for="(text, idx) in extraLines(data.i)" :key="idx">{{ text }}</div>
       </div>

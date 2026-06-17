@@ -12,7 +12,7 @@ const styling: VirtualizedListReactClasses = {
 
 type Data = { i: number };
 
-function ListItem({ data, ref, index }: ListItemProps<Data>) {
+function ListItem({ data, index }: ListItemProps<Data>) {
   const i = data.i;
 
   const extraLines =
@@ -22,7 +22,7 @@ function ListItem({ data, ref, index }: ListItemProps<Data>) {
     [];
 
   return (
-    <div ref={ref} className="list-item" id={`item-${i}`} data-index={index}>
+    <div className="list-item" id={`item-${i}`} data-index={index}>
       {`Item ${i}.`}
       {extraLines.map((text, idx) => <div key={idx}>{text}</div>)}
     </div>
