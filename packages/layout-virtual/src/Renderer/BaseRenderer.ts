@@ -191,6 +191,9 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
   flush(): Promise<void> {
     return new Promise((resolve) => {
       this._itemsRegistered = resolve;
+
+      // resolve this promise in case there are no items changes
+      requestAnimationFrame(this._itemsRegistered);
     });
   } 
 
