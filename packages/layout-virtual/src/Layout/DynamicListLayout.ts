@@ -88,11 +88,11 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
         // const viewportTop = scrollableContainer.getViewportTop();
         const newScrollHeight = scrollableContainer.getScrollHeight();
         const newClientHeight = scrollableContainer.getClientHeight();
-        const scrollHeightRatio = (newScrollHeight - newClientHeight) / (scrollHeight - clientHeight);
+        const scrollHeightRatio = ((newScrollHeight - newClientHeight) || 1) / ((scrollHeight - clientHeight) || 1);
 
         // scrollableContainer.setViewportTop(Math.max(viewportTop, topSpacerBottom));
         scrollableContainer.setScrollTop(scrollPosition * scrollHeightRatio);
-        this._renderer.clear();
+        // this._renderer.clear();
         this._scrollContent(scrollPosition * scrollHeightRatio, 'down', 0);
 
         // this._renderer.clear();
@@ -332,7 +332,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const scrollHeight = scrollableContainer.getScrollHeight();
     const viewportHeight = scrollableContainer.getViewportHeight();
     const scrollCanvasHeight = scrollableContainer.getScrollCanvasHeight();
-    const scrollRangeRatio = (scrollCanvasHeight - viewportHeight) / (scrollHeight - clientHeight);
+    const scrollRangeRatio = ((scrollCanvasHeight - viewportHeight) || 1) / ((scrollHeight - clientHeight) || 1);
     const viewportTop = scrollableContainer.getViewportTop() + scrollDelta * scrollRangeRatio;
     
     await this._renderItems(viewportTop, direction);
