@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.6.1
+
+### Patch Changes
+
+- 42dfabb: Fix initial render, add flushing after clearing items.
+
 ## 0.6.0
 
 ### Minor Changes

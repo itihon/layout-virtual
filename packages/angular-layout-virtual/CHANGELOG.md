@@ -1,5 +1,13 @@
 # angular-layout-virtual
 
+## 0.5.1
+
+### Patch Changes
+
+- 42dfabb: Fix initial render, add flushing after clearing items.
+- Updated dependencies [42dfabb]
+  - layout-virtual@0.6.1
+
 ## 0.5.0
 
 ### Minor Changes
