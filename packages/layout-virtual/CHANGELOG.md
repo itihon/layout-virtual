@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.6.0
+
+### Minor Changes
+
+- 5dcd78d: Remove refs passing to components, remove commit phase, instead add tracking rendered items by data-index attribute in MutationObserver.
+
 ## 0.5.0
 
 ### Minor Changes
