@@ -8,7 +8,6 @@ import type { VirtualScrollStructure, ILayoutVirtualEvents } from "layout-virtua
 
 export interface ListItemProps<T = unknown> {
   data: T;
-  ref: React.Ref<HTMLDivElement> | undefined;
   index: number;
 }
 

@@ -29,7 +29,6 @@ export default class DOMRenderer<DataType = unknown> extends BaseRenderer implem
 
         if (element) {
           fragment.append(element);
-          this.registerElement(index, element);
         }
       }
     }
@@ -68,7 +67,7 @@ export default class DOMRenderer<DataType = unknown> extends BaseRenderer implem
   }
 
   flush() {
-    return Promise.resolve();
+    return super.flush();
   }
 
   get dataSize() {

@@ -23,9 +23,45 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
   protected _scrollableContainer: ScrollableContainer;
   protected _renderedIndexRegistry = new Map<Element, number>();
   protected _renderedItemsRegistry = new Map<number, Element>();
+  private _itemsRegistered = () => {};
+
+  private _registerElement = (node: Node) => {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      const element = node as HTMLElement;
+      const index = Number(element.dataset.index);
+
+      console.log('_registerElement index:', index);
+
+      this._renderedIndexRegistry.set(element, index);
+      this._renderedItemsRegistry.set(index, element);
+    }
+  };
+
+  private _unregisterElement = (node: Node) => {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      const element = node as HTMLElement;
+      const index = Number(element.dataset.index);
+
+      console.log('_unregisterElement index:', index);
+
+      this._renderedIndexRegistry.delete(element);
+      this._renderedItemsRegistry.delete(index);
+    }
+  };
+
+  private _updateRenderedElementsRegistry = (record: MutationRecord) => {
+    record.addedNodes.forEach(this._registerElement);
+    record.removedNodes.forEach(this._unregisterElement);
+  };
 
   constructor(opts: VirtualScrollStructure) {
     this._scrollableContainer = new ScrollableContainer({ ...opts });
+
+    new MutationObserver((records) => {
+      records.forEach(this._updateRenderedElementsRegistry);
+
+      this._itemsRegistered();
+    }).observe(this._scrollableContainer.getContentLayer(), { childList: true  });
   }
 
   render(startIndex: number, endIndex: number, direction: ScrollDirection): number {
@@ -79,7 +115,7 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
 
     if (renderStartIndex <= renderEndIndex) {
       this.renderRange(renderStartIndex, renderEndIndex, direction);
-      console.log('items to be added:', renderStartIndex, renderEndIndex);
+      console.log('items to be added:', renderStartIndex, renderEndIndex, 'firstRenderedIndex:', firstRenderedIndex, 'lasteRenderedIndex:', lastRenderedIndex);
     }
 
     return removedHeight;
@@ -120,9 +156,9 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
   }
 
   clear() {
-    console.warn('Clearing items.');
-    this._renderedIndexRegistry.clear();
-    this._renderedItemsRegistry.clear();
+    console.warn('BaseRenderer: Clearing items.');
+    // this._renderedIndexRegistry.clear();
+    // this._renderedItemsRegistry.clear();
   }
 
   getRenderedBoundaryIndex(boundary: 'first' | 'last'): number | undefined {
@@ -134,6 +170,8 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
           : null;
 
     if (!renderedItem) return;
+
+    console.log('getRenderedBoundaryIndex: ', boundary, (renderedItem as HTMLElement).dataset.index, this.getIndex(renderedItem))
 
     return this.getIndex(renderedItem);
   }
@@ -150,14 +188,13 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
     return this._scrollableContainer;
   }
 
+  flush(): Promise<void> {
+    return new Promise((resolve) => {
+      this._itemsRegistered = resolve;
+    });
+  } 
+
   abstract setData(store: ItemData[]): void;
   abstract setRenderItem(renderItem: ItemRenderer): void;
   abstract get dataSize(): number;
-
-  protected registerElement(index: number, element: Element) {
-    this._renderedIndexRegistry.set(element, index);
-    this._renderedItemsRegistry.set(index, element);
-  }
-
-  abstract flush(): Promise<void>;
 }

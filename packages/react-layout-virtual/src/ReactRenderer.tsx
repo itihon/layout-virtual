@@ -9,13 +9,10 @@ import { BaseRenderer } from 'layout-virtual/core';
 import type { IRangeRenderer, ScrollDirection } from "layout-virtual/types";
 import type { ItemRenderer, ReactRendererOptions } from './types';
 
-type IndexedRef = React.RefObject<HTMLDivElement | null> & { idx: number };
-
 export default class ReactRenderer<DataType = unknown> extends BaseRenderer implements IRangeRenderer<DataType, ItemRenderer<DataType>> {
   private _store: DataType[] = [];
   private _renderItem: ItemRenderer<DataType> | null = null;
   private _itemsSetter: React.Dispatch<React.SetStateAction<React.ReactNode[]>>;
-  private _renderedRangeRefPool = new Map<number, IndexedRef>();
   private _listItems: React.ReactNode[] = [];
   private _flushItems = () => this._itemsSetter(this._listItems);
   private _flushSync = () => flushSync(this._flushItems);
@@ -29,7 +26,6 @@ export default class ReactRenderer<DataType = unknown> extends BaseRenderer impl
     const store = this._store;
     const listItems = this._listItems;
     const itemsToAdd: React.ReactNode[] = [];
-    const refPool = this._renderedRangeRefPool;
 
     for (let index = startIndex; index <= endIndex; index++) {
       const data = store[index];
@@ -38,10 +34,7 @@ export default class ReactRenderer<DataType = unknown> extends BaseRenderer impl
         const ListItem = this._renderItem;
 
         if (ListItem) {
-          const ref: IndexedRef = refPool.get(index) || { current: null, idx: index };
-
-          refPool.set(index, ref);
-          itemsToAdd.push(<ListItem data={data} key={index} ref={ref} index={index} />);
+          itemsToAdd.push(<ListItem data={data} key={index} index={index} />);
         }
       }
     }
@@ -69,10 +62,11 @@ export default class ReactRenderer<DataType = unknown> extends BaseRenderer impl
   }
 
   clear() {
+    console.warn('ReactRenderer: Clearing items.');
     super.clear();
     this._listItems = [];
-    // this._itemsSetter(this._listItems);
-    return this.flush(); // Fixes the bug with duplicating items that appeared on scroll after insertion.
+    this._itemsSetter(this._listItems);
+    // return this.flush(); // Fixes the bug with duplicating items that appeared on scroll after insertion.
   }
 
   setData(store: DataType[]) {
@@ -83,22 +77,9 @@ export default class ReactRenderer<DataType = unknown> extends BaseRenderer impl
     this._renderItem = renderItem;
   }
 
-  flush() {
-    return Promise.resolve().then(this._flushSync);
-  }
-
-  commit() {
-    const renderedRefs = this._renderedRangeRefPool;
-
-    for (const ref of renderedRefs.values()) {
-      const { idx, current: element } = ref;
-
-      if (element) {
-        this.registerElement(idx, element);
-      }
-    }
-
-    renderedRefs.clear();
+  flush(): Promise<void> {
+    Promise.resolve().then(this._flushSync);
+    return super.flush();
   }
 
   get dataSize() {

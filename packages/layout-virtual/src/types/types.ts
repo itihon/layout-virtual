@@ -52,8 +52,8 @@ export interface IRangeRenderer<ItemData = unknown, ItemRenderer = Function> {
   setData: (store: ItemData[]) => void;
   setRenderItem: (renderItem: ItemRenderer) => void;
   readonly dataSize: number;
-  clear: () => void;
-  flush: () => Promise<void>;
+  clear(): void;
+  flush(): Promise<void>;
   scrollableContainer: IScrollableContainer;
 }
 

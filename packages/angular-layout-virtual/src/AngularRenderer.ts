@@ -74,15 +74,7 @@ export default class AngularRenderer<DataType = unknown> extends BaseRenderer im
   flush() {
     this._itemsSetter(this._listItems);
     this._itemsFlusher();
-    return Promise.resolve();
-  }
-
-  commit(renderedRefs: Map<number, Element>) {
-    for (const [idx, element] of renderedRefs.entries()) {
-      this.registerElement(idx, element);
-    }
-
-    renderedRefs.clear();
+    return super.flush();
   }
 
   get dataSize() {

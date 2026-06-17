@@ -61,10 +61,6 @@ export default function VirtualizedListReact<ItemData = unknown>(props: Virtuali
     }
   }, [onAfterItemsRendered]);
 
-  useEffect(() => {
-    renderer.current?.commit();
-  }, [visibleItems]);
-
   const scrollerContent = <>
     <div ref={scrollHeightFillerRef}></div>
     <div className={viewportClass} ref={viewportContainerRef}>

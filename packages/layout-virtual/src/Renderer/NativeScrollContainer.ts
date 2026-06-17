@@ -187,6 +187,10 @@ export default class ScrollableContainer implements IScrollableContainer {
     return this._contentLayer.DOMRoot.children;
   }
 
+  getContentLayer(): HTMLElement {
+    return this._contentLayer.DOMRoot;
+  }
+
   clear() {
     const contentLayer = this._contentLayer.DOMRoot;
 

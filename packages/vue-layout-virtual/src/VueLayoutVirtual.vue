@@ -5,7 +5,7 @@
  */
 
 <script setup lang="ts" generic="T">
-import { onMounted, onUpdated, ref, watch, watchEffect, type Ref } from 'vue';
+import { onMounted, ref, watch, watchEffect, type Ref } from 'vue';
 import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import VueRenderer from './VueRenderer';
 import type { VirtualizedListVueProps, ListItemProps } from './types';
@@ -75,11 +75,6 @@ watch(
 );
 
 watchEffect(setEventListeners);
-
-onUpdated(() => {
-  renderer?.commit(renderedRangeRefPool);
-});
-
 </script>
 
 <template>

@@ -133,23 +133,5 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
 
   private flushVisibleItems = () => {
     this.changeDetectorRef.detectChanges();
-    this.commit();
   };
-
-  private commit() {
-    const renderedRefs = new Map<number, Element>();
-    const itemElements = Array.from(
-      this.contentLayerRef.nativeElement.children,
-    );
-
-    itemElements.forEach((element, position) => {
-      const item = this.visibleItems[position];
-
-      if (item) {
-        renderedRefs.set(item.index, element);
-      }
-    });
-
-    this.renderer?.commit(renderedRefs);
-  }
 }

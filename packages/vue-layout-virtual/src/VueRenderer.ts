@@ -4,7 +4,6 @@
  * @author Alexandr Kalabin
  */
 
-import { nextTick, type Ref } from 'vue';
 import { BaseRenderer } from 'layout-virtual/core';
 import type { IRangeRenderer, ScrollDirection } from 'layout-virtual/types';
 import type { ListItemProps, VueRendererOptions } from './types';
@@ -71,17 +70,7 @@ export default class VueRenderer<DataType = unknown> extends BaseRenderer implem
 
   flush() {
     this._itemsSetter(this._listItems);
-    return nextTick();
-  }
-
-  commit(renderedRefs: Map<number, Ref<HTMLElement | undefined>>) {
-    for (const [idx, { value: element }] of renderedRefs.entries()) {
-      if (element) {
-        this.registerElement(idx, element);
-      }
-    }
-
-    renderedRefs.clear();
+    return super.flush();
   }
 
   get dataSize() {
