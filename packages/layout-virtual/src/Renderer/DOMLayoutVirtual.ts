@@ -26,7 +26,7 @@ export interface VirtualizedListDOMProps<ItemData> extends VirtualizedListDOMCla
   renderItem: (props: ListItemProps<ItemData>) => HTMLElement;
 }
 
-export default function VirtualizedListDOM<ItemData>(props: VirtualizedListDOMProps<ItemData>): HTMLElement {
+export default function VirtualizedListDOM<ItemData>(props: VirtualizedListDOMProps<ItemData>): { container: HTMLElement, api: LayoutVirtual<ItemData, ItemRenderer<ItemData>> } {
   const { overscanHeight = 200, data, renderItem, scrollerRef } = props;
   const callbacks = Object.entries(props).filter(([key]) => key.startsWith('on')) as LayoutVirtualEventsArray;
   const { scrollerClass, viewportClass, contentLayerClass } = props;
@@ -48,5 +48,5 @@ export default function VirtualizedListDOM<ItemData>(props: VirtualizedListDOMPr
     list.setEventListener(cbName, cb);
   });
 
-  return container;
+  return { container, api: list };
 }
