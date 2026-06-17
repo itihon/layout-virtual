@@ -53,8 +53,8 @@ a:hover {
 .lv-scroller {
   border: 16px solid gray;
   resize: both;
-  width: 200px;
-  height: 300px;
+  width: 400px;
+  height: 600px;
   overflow-y: auto;
 }
 
