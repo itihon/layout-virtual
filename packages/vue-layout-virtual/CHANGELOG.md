@@ -1,5 +1,13 @@
 # vue-layout-virtual
 
+## 0.5.3
+
+### Patch Changes
+
+- 45bffea: Fix repetetive event callback assigning.
+- Updated dependencies [45bffea]
+  - layout-virtual@0.6.3
+
 ## 0.5.2
 
 ### Patch Changes

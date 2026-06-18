@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.6.3
+
+### Patch Changes
+
+- 45bffea: Fix repetetive event callback assigning.
+
 ## 0.6.2
 
 ### Patch Changes
