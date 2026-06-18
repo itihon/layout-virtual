@@ -35,4 +35,8 @@ export default class EventBus<T extends { [K in keyof T]: (...args: any[]) => vo
       listeners.forEach(listener => listener(...args));
     }
   }
+
+  clear() {
+    this._bus.clear();
+  }
 }

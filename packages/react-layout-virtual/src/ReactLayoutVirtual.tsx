@@ -38,14 +38,19 @@ export default function VirtualizedListReact<ItemData = unknown>(props: Virtuali
     });
 
     const layout = new DynamicListLayout<ItemData, ItemRenderer<ItemData>>({ overscanHeight, renderer: renderer.current });
-    
-    list.current = new LayoutVirtual<ItemData, ItemRenderer<ItemData>>({ layout });
+    const layoutVirtual = new LayoutVirtual<ItemData, ItemRenderer<ItemData>>({ layout });
+
+    list.current = layoutVirtual;
 
     const scroller = scrollerRef?.current;
 
     if (scroller) {
       scroller.classList.add(scrollerClass || '');
     }
+
+    return () => {
+      layoutVirtual.dispose();
+    };
   }, []);
 
   useEffect(() => {

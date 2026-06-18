@@ -7,12 +7,12 @@
  * @author Alexandr Kalabin
  */
 
-import type { IEventEmitter, IEventMap, IScrollableContainer, VirtualScrollStructure } from '../types/types';
+import type { IDisposable, IEventEmitter, IEventMap, IScrollableContainer, VirtualScrollStructure } from '../types/types';
 import DOMConstructor from '../Renderer/DOMConstructor';
 import ScrollRelay from './ScrollRelay';
 import classes from './NativeScrollContainer.module.css';
 
-export default class ScrollableContainer implements IScrollableContainer {
+export default class ScrollableContainer implements IScrollableContainer, IDisposable {
   private _container: HTMLElement;
   private _scrollHeightFiller: DOMConstructor;
   private _viewportContainer: DOMConstructor;
@@ -24,6 +24,7 @@ export default class ScrollableContainer implements IScrollableContainer {
   private _containerScroller: ScrollRelay;
   private _viewportScroller: ScrollRelay;
   private _contentLayerStyles: CSSStyleDeclaration;
+  private _resizeObserver: ResizeObserver;
 
   private _handleResize: ResizeObserverCallback = () => {
 
@@ -64,10 +65,10 @@ export default class ScrollableContainer implements IScrollableContainer {
     this._viewportContainer.DOMRoot.setAttribute('data-lv-viewport', '');
     this._contentLayer.DOMRoot.setAttribute('data-lv-content-layer', '');
 
-    const resizeObserver = new ResizeObserver(this._handleResize);
+    this._resizeObserver = new ResizeObserver(this._handleResize);
     
-    resizeObserver.observe(this._container);
-    resizeObserver.observe(this._viewportContainer.DOMRoot);
+    this._resizeObserver.observe(this._container);
+    this._resizeObserver.observe(this._viewportContainer.DOMRoot);
 
     requestAnimationFrame(() => {
       this._container.scrollTop = 0;
@@ -204,5 +205,12 @@ export default class ScrollableContainer implements IScrollableContainer {
     this._viewportScroller.refresh();
     this._topSpacer.refresh();
     this._bottomSpacer.refresh();
+  }
+
+  dispose() {
+    this._containerScroller.dispose();
+    this._viewportScroller.dispose();
+    this._resizeObserver.disconnect();    
+    this._eventBus = null;
   }
 }

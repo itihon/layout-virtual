@@ -5,6 +5,7 @@
  */
 
 import type { 
+  IDisposable,
   IDynamicListLayout,
   IEventMap, 
   ILayoutVirtual, 
@@ -12,7 +13,7 @@ import type {
 } from "./types/types";
 import EventBus from "./EventBus/EventBus";
 
-export default class VirtualizedList<ItemData = unknown, ItemRenderer = Function> implements ILayoutVirtual {
+export default class VirtualizedList<ItemData = unknown, ItemRenderer = Function> implements ILayoutVirtual, IDisposable {
   private _eventBus = new EventBus<IEventMap>();
   private _layout: IDynamicListLayout<ItemData, ItemRenderer>;
   private _publicEvents = new Map<keyof IEventMap, IEventMap[keyof IEventMap]>();
@@ -45,5 +46,10 @@ export default class VirtualizedList<ItemData = unknown, ItemRenderer = Function
 
   scrollToIndex() {
 
+  }
+
+  dispose() {
+    this._layout.dispose();
+    this._eventBus.clear();
   }
 }

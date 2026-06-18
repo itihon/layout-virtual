@@ -85,4 +85,12 @@ export default class ReactRenderer<DataType = unknown> extends BaseRenderer impl
   get dataSize() {
     return this._store.length;
   }
+
+  dispose() {
+    super.dispose();    
+    this.clear();
+    this._store = [];
+    this._itemsSetter = () => {};
+    this._renderItem = null;
+  }
 }

@@ -5,7 +5,7 @@
  */
 
 <script setup lang="ts" generic="T">
-import { onMounted, ref, watch, watchEffect, type Ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch, watchEffect, type Ref } from 'vue';
 import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import VueRenderer from './VueRenderer';
 import type { VirtualizedListVueProps, ListItemProps } from './types';
@@ -65,6 +65,10 @@ onMounted(() => {
   list.setData(props.data);
 
   setEventListeners();
+});
+
+onUnmounted(() => {
+  list?.dispose();
 });
 
 watch(

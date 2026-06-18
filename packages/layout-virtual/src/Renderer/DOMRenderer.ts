@@ -73,4 +73,11 @@ export default class DOMRenderer<DataType = unknown> extends BaseRenderer implem
   get dataSize() {
     return this._store.length;
   }
+
+  dispose() {
+    super.dispose();    
+    this.clear();
+    this._store = [];
+    this._renderItem = null;
+  }
 }

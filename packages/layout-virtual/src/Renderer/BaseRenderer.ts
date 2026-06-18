@@ -5,6 +5,7 @@
  */
 
 import type {
+  IDisposable,
   IRangeRenderer,
   ScrollDirection,
   VirtualScrollStructure,
@@ -19,10 +20,11 @@ function nextDivisible(i: number, div: number): number {
   return i + (div - i % div) % div;
 }
 
-export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Function> implements IRangeRenderer<ItemData, ItemRenderer> {
+export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Function> implements IRangeRenderer<ItemData, ItemRenderer>, IDisposable {
   protected _scrollableContainer: ScrollableContainer;
   protected _renderedIndexRegistry = new Map<Element, number>();
   protected _renderedItemsRegistry = new Map<number, Element>();
+  private _itemsRegistrator: MutationObserver;
   private _itemsRegistered = () => {};
 
   private _registerElement = (node: Node) => {
@@ -55,13 +57,16 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
   };
 
   constructor(opts: VirtualScrollStructure) {
+    console.log('🏗️ BaseRenderer is constructed.')
     this._scrollableContainer = new ScrollableContainer({ ...opts });
 
-    new MutationObserver((records) => {
+    this._itemsRegistrator = new MutationObserver((records) => {
       records.forEach(this._updateRenderedElementsRegistry);
 
       this._itemsRegistered();
-    }).observe(this._scrollableContainer.getContentLayer(), { childList: true  });
+    });
+    
+    this._itemsRegistrator.observe(this._scrollableContainer.getContentLayer(), { childList: true  });
   }
 
   render(startIndex: number, endIndex: number, direction: ScrollDirection): number {
@@ -196,6 +201,12 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
       requestAnimationFrame(this._itemsRegistered);
     });
   } 
+
+  dispose() {
+    console.log('🗑 BaseRenderer is disposed.')
+    this._scrollableContainer.dispose();    
+    this._itemsRegistrator.disconnect();
+  }
 
   abstract setData(store: ItemData[]): void;
   abstract setRenderItem(renderItem: ItemRenderer): void;

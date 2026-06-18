@@ -4,6 +4,10 @@
  * @author Alexandr Kalabin
  */
 
+export interface IDisposable {
+ dispose(): void;
+}
+
 export interface IScrollableContainer {
     attach(eventBus: IEventEmitter<IEventMap>): void;
     scroll(top: number): void;
@@ -42,7 +46,7 @@ export interface IVirtualizedListEvents {
 
 export type ScrollDirection = 'down' | 'up';
 
-export interface IRangeRenderer<ItemData = unknown, ItemRenderer = Function> {
+export interface IRangeRenderer<ItemData = unknown, ItemRenderer = Function> extends IDisposable {
   render: (startIndex: number, endIndex: number, direction: ScrollDirection) => number;
   renderRange: (startIndex: number, endIndex: number, direction: ScrollDirection) => void;
   removeRange: (startIndex: number, endIndex: number, direction?: ScrollDirection) => { itemsToRemove: Element[], removedHeight: number };
@@ -93,10 +97,9 @@ export interface IEventEmitter<T extends { [K in keyof T]: (...args: any[]) => v
   emit<K extends keyof T>(event: K, ...args: Parameters<T[K]>): void;
 }
 
-export interface IDynamicListLayout<ItemData = unknown, ItemRenderer = Function> {
+export interface IDynamicListLayout<ItemData = unknown, ItemRenderer = Function> extends IDisposable {
   readonly renderer: IRangeRenderer<ItemData, ItemRenderer>;
   attach: (eventBus: IEventEmitter<IEventMap>) => void;
-  detach: () => void;
 }
 
 export interface IVirtualizedDynamicListOptions<ItemData = unknown, ItemRenderer = Function> {

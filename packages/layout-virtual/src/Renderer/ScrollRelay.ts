@@ -4,14 +4,15 @@
  * @author Alexandr Kalabin
  */
 
-import type { IEventEmitter, IEventMap } from '../types/types';
+import type { IDisposable, IEventEmitter, IEventMap } from '../types/types';
 import ElementMetricsCache from '../Renderer/ElementMetricsCache';
 
-export default class ScrollRelay extends ElementMetricsCache {
+export default class ScrollRelay extends ElementMetricsCache implements IDisposable {
   private _container: HTMLElement;
   private _eventBus: IEventEmitter<IEventMap> | null = null;
   private _eventType: 'onScroll' | 'onContentScroll' | null = null;
   private _ignoreNextScroll = false;
+  private _ignoreTimer: number = 0;
 
   handleEvent() {
     if (this._ignoreNextScroll) {
@@ -49,7 +50,7 @@ export default class ScrollRelay extends ElementMetricsCache {
 
     if (scrollTop < .1 || scrollTop >= maxScrollRange) {
       // There will not be scroll evenets anymore.
-      setTimeout(() => { this._ignoreNextScroll = false; }, 32);
+      this._ignoreTimer = setTimeout(() => { this._ignoreNextScroll = false; }, 32) as unknown as number;
     }
 
     this._ignoreNextScroll = true;
@@ -60,5 +61,12 @@ export default class ScrollRelay extends ElementMetricsCache {
   attach(eventBus: IEventEmitter<IEventMap>, eventType: 'onScroll' | 'onContentScroll') {
     this._eventBus = eventBus;
     this._eventType = eventType;
+  }
+
+  dispose() {
+    this._container.removeEventListener('scroll', this);
+    this._eventBus = null;
+    this._eventType = null;
+    clearTimeout(this._ignoreTimer);
   }
 }

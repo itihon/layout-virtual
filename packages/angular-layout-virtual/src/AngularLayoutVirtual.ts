@@ -14,6 +14,7 @@ import {
   TemplateRef,
   ViewChild,
   inject,
+  type OnDestroy,
 } from '@angular/core';
 import { EventEmitter, type AfterViewInit, type ElementRef, type SimpleChanges } from '@angular/core';
 import type { ILayoutVirtualEvents, IRangeRenderer } from 'layout-virtual/types';
@@ -46,7 +47,7 @@ export type VirtualizedListItemContext<T> = ListItemProps<T> & {
     </div>
   `,
 })
-export default class VirtualizedListAngular<T> implements AfterViewInit {
+export default class VirtualizedListAngular<T> implements AfterViewInit, OnDestroy {
   @Input({ required: true }) data: T[] = [];
   @Input() overscanHeight = 200;
   @Input() scrollerRef?: ElementRef<HTMLElement>;
@@ -105,6 +106,10 @@ export default class VirtualizedListAngular<T> implements AfterViewInit {
     this.list.setEventListener('onAfterItemsRendered', (...payload) => {
       this.afterItemsRendered.emit(payload);
     });
+  }
+
+  ngOnDestroy() {
+    this.list?.dispose(); 
   }
   
   ngOnChanges(changes: SimpleChanges) {

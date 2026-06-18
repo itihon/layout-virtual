@@ -11,6 +11,7 @@ import type {
   IRangeRenderer,
   IDynamicListLayout,
   IScrollableContainer,
+  IDisposable,
 } from "../types/types";
 
 type DynamicListLayoutOptions<ItemData = unknown, ItemRenderer = Function> = { 
@@ -18,7 +19,7 @@ type DynamicListLayoutOptions<ItemData = unknown, ItemRenderer = Function> = {
   renderer: IRangeRenderer<ItemData, ItemRenderer>; 
 };
 
-export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Function> implements IDynamicListLayout<ItemData, ItemRenderer> {
+export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Function> implements IDynamicListLayout<ItemData, ItemRenderer>, IDisposable {
   private _overscanHeight: number;
   private _eventBus: IEventEmitter<IEventMap> | null = null;
   private _renderer: IRangeRenderer<ItemData, ItemRenderer>;
@@ -516,6 +517,8 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     console.log('attached')
   } 
 
-  detach() {
+  dispose() {
+    this._renderer.dispose();
+    this._eventBus = null;
   }
 }
