@@ -34,13 +34,12 @@ export default class VirtualizedList<ItemData = unknown, ItemRenderer = Function
   }
 
   setEventListener<K extends keyof IEventMap>(event: K, cb?: IEventMap[K]) {
+    const attachedCb = this._publicEvents.get(event) as IEventMap[typeof event];
+    this._eventBus.off(event, attachedCb);
+
     if (cb) {
       this._eventBus.on(event, cb);
       this._publicEvents.set(event, cb);
-    }
-    else {
-      const attachedCb = this._publicEvents.get(event) as IEventMap[typeof event];
-      this._eventBus.off(event, attachedCb);
     }
   }
 
