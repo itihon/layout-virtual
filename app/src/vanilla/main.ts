@@ -42,18 +42,46 @@ function addItem() {
   addItemInput.max = data.length.toString();
 }
 
+function clearItems() {
+  data = [];
+  api.setData(data);
+}
+
+function toggleVirtualizedList() {
+  showVirtualizedList = !showVirtualizedList;
+  toggleMountButton.textContent = showVirtualizedList ? 'Unmount' : 'Mount';
+
+  api.dispose();
+  container.remove();
+
+  if (showVirtualizedList) {
+    const list = createVirtualizedList();
+    container = list.container;
+    api = list.api;
+    stats.insertAdjacentElement('afterend', container);
+  }
+}
+
 function updateStats(startIndex: number, endIndex: number) {
   const total = endIndex - startIndex + 1;
   stats.textContent = `Rendered indices ${startIndex} - ${endIndex}, total ${total} of ${data.length}.`;
 }
 
+function createVirtualizedList() {
+  return VirtualizedList({ overscanHeight: 100, data, renderItem: ListItem, ...styling, onAfterItemsRendered: updateStats });
+}
+
 let data = Array.from({ length: itemsCount }, (_, i) => ({ i }));
-const { container, api } = VirtualizedList({ overscanHeight: 100, data, renderItem: ListItem, ...styling, onAfterItemsRendered: updateStats });
+let showVirtualizedList = true;
+let { container, api } = createVirtualizedList();
 const stats = document.createElement('div');
 const addItemContainer = document.createElement('div');
 const addItemButton = document.createElement('button');
 const addItemLabel = document.createElement('label');
 const addItemInput = document.createElement('input');
+const clearItemsContainer = document.createElement('div');
+const clearItemsButton = document.createElement('button');
+const toggleMountButton = document.createElement('button');
 const app = document.getElementById('app')!;
 
 addItemButton.textContent = 'Add item';
@@ -68,5 +96,12 @@ addItemInput.min = '0';
 addItemInput.max = data.length.toString();
 addItemInput.value = (data.length - 1).toString();
 
+clearItemsButton.textContent = 'Clear items';
+clearItemsButton.addEventListener('click', clearItems);
+
+toggleMountButton.textContent = 'Unmount';
+toggleMountButton.addEventListener('click', toggleVirtualizedList);
+
 addItemContainer.append(addItemButton, addItemLabel, addItemInput);
-app.append(stats, container, addItemContainer);
+clearItemsContainer.append(clearItemsButton, toggleMountButton);
+app.append(stats, container, addItemContainer, clearItemsContainer);

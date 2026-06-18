@@ -15,7 +15,7 @@ type Data = { i: number };
   imports: [CommonModule, VirtualizedListAngular],
   template: `
     <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
-    <layout-virtual [data]="data" [overscanHeight]="100" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" (afterItemsRendered)="updateStats(...$event)">
+    <layout-virtual *ngIf="showVirtualizedList" [data]="data" [overscanHeight]="100" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" (afterItemsRendered)="updateStats(...$event)">
       <ng-template #renderItem let-data="data" let-index="index">
         <div class="list-item" [id]="'item-' + data.i" [attr.data-index]="index">
           Item {{ data.i }}.
@@ -28,11 +28,16 @@ type Data = { i: number };
       <label for="insertion-index">At index:</label>
       <input id="insertion-index" [value]="insertionIndex" (input)="insertionIndex = $event.target.value" type="number" min="0" [max]="data.length" />
     </div>
+    <div>
+      <button (click)="clearItems()">Clear items</button>
+      <button (click)="toggleVirtualizedList()">{{ showVirtualizedList ? 'Unmount' : 'Mount' }}</button>
+    </div>
   `,
 })
 
 class AppComponent {
   data = Array.from({ length: itemsCount }, (_, i): Data => ({ i }));
+  showVirtualizedList = true;
   startIndex = 0;
   endIndex = 0;
   insertionIndex = this.data.length - 1;
@@ -52,6 +57,14 @@ class AppComponent {
       { i: this.data.length },
       this.data.slice(this.insertionIndex),
     );
+  };
+
+  clearItems = () => {
+    this.data = [];
+  };
+
+  toggleVirtualizedList = () => {
+    this.showVirtualizedList = !this.showVirtualizedList;
   };
 
   updateStats = (startIndex: number, endIndex: number) => {

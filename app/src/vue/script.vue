@@ -12,6 +12,7 @@ const styling: VirtualizedListVueClasses = {
 type Data = { i: number };
 
 const data = ref(Array.from({ length: itemsCount }, (_, i): Data => ({ i })));
+const showVirtualizedList = ref(true);
 const insertionIndex = ref(data.value.length - 1);
 const startIndex = ref(0);
 const endIndex = ref(0);
@@ -31,6 +32,14 @@ function addItem() {
   );
 }
 
+function clearItems() {
+  data.value = [];
+};
+
+function toggleVirtualizedList() {
+  showVirtualizedList.value = !showVirtualizedList.value;
+};
+
 function updateStats(start: number, end: number) {
   startIndex.value = start;
   endIndex.value = end;
@@ -39,7 +48,7 @@ function updateStats(start: number, end: number) {
 
 <template>
   <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
-  <virtualized-list :data="data" :overscan-height="100" v-bind="styling" @after-items-rendered="updateStats">
+  <virtualized-list v-if="showVirtualizedList" :data="data" :overscan-height="100" v-bind="styling" @after-items-rendered="updateStats">
     <template #renderItem="{ data, index }">
       <div class="list-item" :id="`item-${data.i}`" :data-index="index">
         Item {{ data.i }}.
@@ -51,5 +60,9 @@ function updateStats(start: number, end: number) {
     <button @click="addItem">Add item</button>
     <label for="insertion-index">At index:</label>
     <input id="insertion-index" v-model.number="insertionIndex" type="number" :min="0" :max="data.length" />
+  </div>
+  <div>
+    <button @click="clearItems">Clear items</button>
+    <button @click="toggleVirtualizedList">{{ showVirtualizedList ? 'Unmount' : 'Mount' }}</button>
   </div>
 </template>

@@ -1,3 +1,4 @@
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useCallback, useState } from 'react';
 import VirtualizedListReact, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
@@ -31,6 +32,7 @@ function ListItem({ data, index }: ListItemProps<Data>) {
 
 function App() {
   const [data, setData] = useState(Array.from({ length: itemsCount }, (_, i) => ({ i })));
+  const [showVirtualizedList, setShowVirtualizedList] = useState(true);
   const [insertionIndex, setInsertionIndex] = useState(data.length - 1);
   const [renderedIndices, setRenderedIndices] = useState({ startIndex: 0, endIndex: 0 });
   const { startIndex, endIndex } = renderedIndices;
@@ -41,6 +43,14 @@ function App() {
     setData(newData);
   };
 
+  const clearItems = () => {
+    setData([]);
+  };
+
+  const toggleVirtualizedList = () => {
+    setShowVirtualizedList(prev => !prev);
+  };
+
   const updateStats = useCallback((startIndex: number, endIndex: number) => {
     setRenderedIndices({ startIndex, endIndex });
   }, []);
@@ -48,15 +58,26 @@ function App() {
   return (
     <>
       <div>Rendered indices {startIndex} - {endIndex}, total {total} of {data.length}.</div>
-      <VirtualizedListReact<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} onAfterItemsRendered={updateStats} />
+      {
+        showVirtualizedList &&
+        <VirtualizedListReact<Data> overscanHeight={100} data={data} renderItem={ListItem} {...styling} onAfterItemsRendered={updateStats} />
+      }
       <div>
         <button onClick={addItem}>Add item</button>
         <label htmlFor="insertion-index">At index:</label>
         <input type="number" id="insertion-index" min={0} max={data.length} onChange={({ target }) => setInsertionIndex(Number(target.value))} value={insertionIndex}/>
+      </div>
+      <div>
+        <button onClick={clearItems}>Clear items</button>
+        <button onClick={toggleVirtualizedList}>{showVirtualizedList ? 'Unmount' : 'Mount'}</button>
       </div>
     </>
   );
 }
 
 const root = createRoot(document.getElementById('app')!);
-root.render(<App />);
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
