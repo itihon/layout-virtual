@@ -1,5 +1,13 @@
 # angular-layout-virtual
 
+## 0.5.2
+
+### Patch Changes
+
+- 7854634: Add disposing the engine resources on component unmount.
+- Updated dependencies [7854634]
+  - layout-virtual@0.6.2
+
 ## 0.5.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.6.2
+
+### Patch Changes
+
+- 7854634: Add disposing the engine resources on component unmount.
+
 ## 0.6.1
 
 ### Patch Changes
