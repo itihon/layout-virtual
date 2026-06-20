@@ -17,6 +17,7 @@ export default class VirtualizedList<ItemData = unknown, ItemRenderer = Function
   private _eventBus = new EventBus<IEventMap>();
   private _layout: IDynamicListLayout<ItemData, ItemRenderer>;
   private _publicEvents = new Map<keyof IEventMap, IEventMap[keyof IEventMap]>();
+  private _renderItem: ItemRenderer | null = null;
 
   constructor({ layout }: IVirtualizedDynamicListOptions<ItemData, ItemRenderer>) {
     this._layout = layout;
@@ -30,7 +31,11 @@ export default class VirtualizedList<ItemData = unknown, ItemRenderer = Function
 
   setRenderItem(renderItem: ItemRenderer) {
     this._layout.renderer.setRenderItem(renderItem);
-    this._eventBus.emit('onChange');
+    
+    if (this._renderItem !== renderItem) {
+      this._renderItem = renderItem;
+      this._eventBus.emit('onChange');
+    }
   }
 
   setEventListener<K extends keyof IEventMap>(event: K, cb?: IEventMap[K]) {
@@ -50,5 +55,6 @@ export default class VirtualizedList<ItemData = unknown, ItemRenderer = Function
   dispose() {
     this._layout.dispose();
     this._eventBus.clear();
+    this._renderItem = null;
   }
 }
