@@ -1,5 +1,13 @@
 # angular-layout-virtual
 
+## 0.5.4
+
+### Patch Changes
+
+- c119db4: Fix bugs, add a dedicated event handler for updating visible items on data change (required for implementing infinite scroll).
+- Updated dependencies [c119db4]
+  - layout-virtual@0.6.4
+
 ## 0.5.3
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "layout-virtual",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Virtualization engine for scrollable responsive lists and grids with dynamic item sizes. Includes the core layout virtualizer and DOM renderer.",
   "keywords": [
     "virtual",
