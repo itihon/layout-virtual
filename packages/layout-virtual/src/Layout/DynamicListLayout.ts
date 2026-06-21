@@ -548,6 +548,11 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
   dispose() {
     this._renderer.dispose();
+    this._eventBus?.off('onChange', this._updateVisibleItemsOnDataChange);
+    this._eventBus?.off('onResize', this._updateVisibleItems);
+    this._eventBus?.off('onContentScroll', this._renderItems);
+    this._eventBus?.off('onContentScroll', this._updateScrollbar);
+    this._eventBus?.off('onScroll', this._scrollContent);
     this._eventBus = null;
   }
 }
