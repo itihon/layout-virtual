@@ -89,7 +89,32 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     this._scrollContent(scrollPosition * scrollHeightRatio, 'down', 0);
   };
 
-  private _renderItems = (viewportTop: number, direction: ScrollDirection) => {
+  private _updateVisibleItemsOnDataChange = async () => {
+    const scrollableContainer = this._scrollableContainer;
+    const renderer = this._renderer;
+
+    scrollableContainer.refresh();
+
+    const viewportTop = scrollableContainer.getViewportTop();
+    const scrollTop = scrollableContainer.getScrollTop();
+    const firstRenderedIndex = renderer.getRenderedBoundaryIndex('first');
+
+    scrollableContainer.setTopSpacerHeight(scrollableContainer.getTopSpacerHeight()); // fix top spacer height before removing items to prevent layout shift
+
+    renderer.clear();
+    await renderer.flush();
+
+    await this._renderItems(viewportTop, 'down', 0, firstRenderedIndex); // starting from the first rendered index, otherwise layout shifts
+
+    this._updateItemHeightRange();
+    this._updateScrollHeight();
+
+    scrollableContainer.setScrollTop(scrollTop);
+    
+    console.log('_updateVisisbleItemsOnDataChange');
+  };
+
+  private _renderItems = async (viewportTop: number, direction: ScrollDirection, _?: number, fromIndex?: number) => {
     const scrollableContainer = this._scrollableContainer;
     const overscanHeight = this._overscanHeight;
     const spareSpace = this._spareSpace;
@@ -186,7 +211,11 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
       }
     }
 
-    console.log('_renderItems renderStartIndex:', renderStartIndex, 'middleIndex:', middleIndex, 'renderEndIndex:', renderEndIndex, 'total items count to be rendered:', renderEndIndex - renderStartIndex + 1, 'minVisibleIndex:', minVisibleIndex, 'maxVisibleIndex:', maxVisibleIndex);
+    console.log('_renderItems', 'viewportTop:', viewportTop, 'renderStartIndex:', renderStartIndex, 'middleIndex:', middleIndex, 'renderEndIndex:', renderEndIndex, 'total items count to be rendered:', renderEndIndex - renderStartIndex + 1, 'minVisibleIndex:', minVisibleIndex, 'maxVisibleIndex:', maxVisibleIndex);
+
+    if (fromIndex !== undefined) {
+      renderStartIndex = fromIndex;
+    }
 
     const removedHeight = this._renderer.render(renderStartIndex, renderEndIndex, direction);
     
@@ -508,7 +537,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     this._eventBus = eventBus;
     this._scrollableContainer.attach(this._eventBus);
 
-    this._eventBus.on('onChange', this._updateVisibleItems);
+    this._eventBus.on('onChange', this._updateVisibleItemsOnDataChange);
     this._eventBus.on('onResize', this._updateVisibleItems);
     this._eventBus.on('onContentScroll', this._renderItems);
     this._eventBus.on('onContentScroll', this._updateScrollbar);
