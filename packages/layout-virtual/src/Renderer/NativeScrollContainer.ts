@@ -212,5 +212,14 @@ export default class ScrollableContainer implements IScrollableContainer, IDispo
     this._viewportScroller.dispose();
     this._resizeObserver.disconnect();    
     this._eventBus = null;
+
+    // for damned React leaving stale closures and sometimes making problems in Firefox on initial load
+    const dummyContainer = document.createElement('div');
+    this._scrollHeightFiller = new DOMConstructor(dummyContainer, []);
+    this._viewportContainer = new DOMConstructor(dummyContainer, []);
+    this._scrollCanvas = new DOMConstructor(dummyContainer, []);
+    this._topSpacer = new DOMConstructor(dummyContainer, []);
+    this._contentLayer = new DOMConstructor(dummyContainer, []);
+    this._bottomSpacer = new DOMConstructor(dummyContainer, []);
   }
 }
