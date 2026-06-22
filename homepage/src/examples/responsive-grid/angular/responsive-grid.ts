@@ -46,7 +46,7 @@ const excerpts = [
     </layout-virtual>
   `,
 })
-class AppComponent {
+export default class ResponsiveGridExample {
   data = Array.from({ length: 1000 }, (_, i): Data => ({
     i,
     image: i % 3 ? undefined : `https://picsum.photos/seed/${i}/400/240`,
@@ -72,6 +72,6 @@ class AppComponent {
   };
 }
 
-bootstrapApplication(AppComponent).catch((error: unknown) => {
+bootstrapApplication(ResponsiveGridExample).catch((error: unknown) => {
   console.error(error);
 });

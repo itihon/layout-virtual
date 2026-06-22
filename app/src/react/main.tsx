@@ -1,5 +1,3 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
 import { useCallback, useState } from 'react';
 import VirtualizedListReact, { type VirtualizedListReactClasses, type ListItemProps } from 'react-layout-virtual';
 import '../../tests/e2e/loadFrameValidation';
@@ -30,7 +28,7 @@ function ListItem({ data, index }: ListItemProps<Data>) {
   );
 };
 
-function App() {
+export default function App() {
   const [data, setData] = useState(Array.from({ length: itemsCount }, (_, i) => ({ i })));
   const [showVirtualizedList, setShowVirtualizedList] = useState(true);
   const [insertionIndex, setInsertionIndex] = useState(data.length - 1);
@@ -55,6 +53,10 @@ function App() {
     setRenderedIndices({ startIndex, endIndex });
   }, []);
 
+  const refresh = () => {
+    setData(prev => prev.slice(0));
+  };
+
   return (
     <>
       <div>Rendered indices {startIndex} - {endIndex}, total {total} of {data.length}.</div>
@@ -70,14 +72,8 @@ function App() {
       <div>
         <button onClick={clearItems}>Clear items</button>
         <button onClick={toggleVirtualizedList}>{showVirtualizedList ? 'Unmount' : 'Mount'}</button>
+        <button onClick={refresh}>Refresh</button>
       </div>
     </>
   );
 }
-
-const root = createRoot(document.getElementById('app')!);
-root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);

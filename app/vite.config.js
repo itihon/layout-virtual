@@ -13,6 +13,13 @@ export default defineConfig(({ mode }) => {
       server: {
         host: "0.0.0.0",
       },
+      esbuild: {
+        tsconfigRaw: {
+          compilerOptions: {
+            experimentalDecorators: true, // apply globally, regardless of tsconfig location
+          },
+        },
+      },
       resolve: {
         alias: [
           // Core package routing

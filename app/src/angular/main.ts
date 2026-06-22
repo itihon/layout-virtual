@@ -35,7 +35,7 @@ type Data = { i: number };
   `,
 })
 
-class AppComponent {
+export default class AppComponent {
   data = Array.from({ length: itemsCount }, (_, i): Data => ({ i }));
   showVirtualizedList = true;
   startIndex = 0;
