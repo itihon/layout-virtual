@@ -26,7 +26,7 @@ type Data = { i: number };
     <div>
       <button (click)="addItem()">Add item</button>
       <label for="insertion-index">At index:</label>
-      <input id="insertion-index" [value]="insertionIndex" (input)="insertionIndex = $event.target.value" type="number" min="0" [max]="data.length" />
+      <input id="insertion-index" [value]="insertionIndex" (input)="insertionIndex = $event.target.valueAsNumber" type="number" min="0" [max]="data.length" />
     </div>
     <div>
       <button (click)="clearItems()">Clear items</button>
@@ -67,7 +67,7 @@ export default class AppComponent {
     this.showVirtualizedList = !this.showVirtualizedList;
   };
 
-  updateStats = (startIndex: number, endIndex: number) => {
+  updateStats = (startIndex: number, endIndex: number, _: unknown) => {
     this.startIndex = startIndex;
     this.endIndex = endIndex;
   };
