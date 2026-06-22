@@ -31,8 +31,8 @@ const excerpts = [
 const data = Array.from({ length: 1000 }, (_, i): Data => ({
   i,
   image: i % 3 ? undefined : `https://picsum.photos/seed/${i}/400/240`,
-  title: titles[i % titles.length],
-  excerpt: excerpts[i % excerpts.length],
+  title: titles[i % titles.length]!,
+  excerpt: excerpts[i % excerpts.length]!,
 }));
 const startIndex = ref(0);
 const endIndex = ref(0);

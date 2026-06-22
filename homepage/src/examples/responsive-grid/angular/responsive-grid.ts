@@ -50,8 +50,8 @@ export default class ResponsiveGridExample {
   data = Array.from({ length: 1000 }, (_, i): Data => ({
     i,
     image: i % 3 ? undefined : `https://picsum.photos/seed/${i}/400/240`,
-    title: titles[i % titles.length],
-    excerpt: excerpts[i % excerpts.length],
+    title: titles[i % titles.length]!,
+    excerpt: excerpts[i % excerpts.length]!,
   }));
   startIndex = 0;
   endIndex = 0;
@@ -66,7 +66,7 @@ export default class ResponsiveGridExample {
     return this.endIndex - this.startIndex + 1;
   }
 
-  updateStats = (startIndex: number, endIndex: number) => {
+  updateStats = (startIndex: number, endIndex: number, _: unknown) => {
     this.startIndex = startIndex;
     this.endIndex = endIndex;
   };

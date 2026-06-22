@@ -47,8 +47,8 @@ const ResponsiveGridExample = () => {
   const data = useMemo(() => Array.from({ length: 1000 }, (_, i) => ({
     i,
     image: i % 3 ? undefined : `https://picsum.photos/seed/${i}/400/240`,
-    title: titles[i % titles.length],
-    excerpt: excerpts[i % excerpts.length],
+    title: titles[i % titles.length]!,
+    excerpt: excerpts[i % excerpts.length]!,
   })), []);
   const [renderedIndices, setRenderedIndices] = useState({ startIndex: 0, endIndex: 0 });
   const { startIndex, endIndex } = renderedIndices;
