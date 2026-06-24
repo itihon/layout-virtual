@@ -98,8 +98,11 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const viewportTop = scrollableContainer.getViewportTop();
     const scrollTop = scrollableContainer.getScrollTop();
     const firstRenderedIndex = renderer.getRenderedBoundaryIndex('first');
+    const topSpacerHeight = scrollableContainer.getTopSpacerHeight();
 
-    scrollableContainer.setTopSpacerHeight(scrollableContainer.getTopSpacerHeight()); // fix top spacer height before removing items to prevent layout shift
+    scrollableContainer.setScrollTop(scrollTop);
+    scrollableContainer.setViewportTop(viewportTop);
+    scrollableContainer.setTopSpacerHeight(topSpacerHeight); // fix top spacer height before removing items to prevent layout shift
 
     renderer.clear();
     // await renderer.flush();
@@ -109,9 +112,14 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     this._updateItemHeightRange();
     this._updateScrollHeight();
 
+    scrollableContainer.refresh();
+
+    const topSpacerHeightDelta = topSpacerHeight - scrollableContainer.getTopSpacerHeight();
+
     scrollableContainer.setScrollTop(scrollTop);
+    scrollableContainer.setViewportTop(viewportTop - topSpacerHeightDelta); // spacers have flex-shrink: 0 by default 
     
-    console.log('_updateVisisbleItemsOnDataChange');
+    console.log('🔃 _updateVisisbleItemsOnDataChange');
   };
 
   private _renderItems = async (viewportTop: number, direction: ScrollDirection, _?: number, fromIndex?: number) => {
