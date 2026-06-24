@@ -57,6 +57,7 @@ export interface IRangeRenderer<ItemData = unknown, ItemRenderer = Function> ext
   setRenderItem: (renderItem: ItemRenderer) => void;
   readonly dataSize: number;
   clear(): void;
+  getInvalidationID(): number;
   flush(): Promise<void>;
   scrollableContainer: IScrollableContainer;
 }

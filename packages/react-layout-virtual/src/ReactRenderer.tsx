@@ -26,6 +26,7 @@ export default class ReactRenderer<DataType = unknown> extends BaseRenderer impl
     const store = this._store;
     const listItems = this._listItems;
     const itemsToAdd: React.ReactNode[] = [];
+    const invalidationID = this.getInvalidationID();
 
     for (let index = startIndex; index <= endIndex; index++) {
       const data = store[index];
@@ -34,7 +35,7 @@ export default class ReactRenderer<DataType = unknown> extends BaseRenderer impl
         const ListItem = this._renderItem;
 
         if (ListItem) {
-          itemsToAdd.push(<ListItem data={data} key={index} index={index} />);
+          itemsToAdd.push(<ListItem data={data} key={index + invalidationID} index={index} />);
         }
       }
     }

@@ -26,6 +26,7 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
   protected _renderedItemsRegistry = new Map<number, Element>();
   private _itemsRegistrator: MutationObserver;
   private _itemsRegistered = () => {};
+  private _invalidationID = 0;
 
   private _registerElement = (node: Node) => {
     if (node.nodeType === Node.ELEMENT_NODE) {
@@ -162,8 +163,13 @@ export default abstract class BaseRenderer<ItemData = unknown, ItemRenderer = Fu
 
   clear() {
     console.warn('BaseRenderer: Clearing items.');
-    // this._renderedIndexRegistry.clear();
-    // this._renderedItemsRegistry.clear();
+    this._renderedIndexRegistry.clear();
+    this._renderedItemsRegistry.clear();
+    this._invalidationID = Math.random();
+  }
+
+  getInvalidationID() {
+    return this._invalidationID;
   }
 
   getRenderedBoundaryIndex(boundary: 'first' | 'last'): number | undefined {

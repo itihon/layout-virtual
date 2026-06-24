@@ -5,7 +5,7 @@
  */
 
 <script setup lang="ts" generic="T">
-import { onMounted, onUnmounted, ref, watch, watchEffect, type Ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 import { LayoutVirtual, DynamicListLayout } from 'layout-virtual/core';
 import VueRenderer from './VueRenderer';
 import type { VirtualizedListVueProps, ListItemProps } from './types';
@@ -23,9 +23,9 @@ const topSpacerRef = ref<HTMLDivElement>();
 const contentLayerRef = ref<HTMLDivElement>();
 const bottomSpacerRef = ref<HTMLDivElement>();
 const visibleItems = ref<ListItemProps<T>[]>();
-const renderedRangeRefPool = new Map<number, Ref<HTMLElement | undefined>>();
+// const renderedRangeRefPool = new Map<number, Ref<HTMLElement | undefined>>();
 const setVisibleItems = (items: ListItemProps<T>[]) => { console.log('setVisibleItems:', items); visibleItems.value = items; };
-const getRef = (index: number) => renderedRangeRefPool.get(index) || renderedRangeRefPool.set(index, ref()).get(index);
+// const getRef = (index: number) => renderedRangeRefPool.get(index) || renderedRangeRefPool.set(index, ref()).get(index);
 const externalScrollerClassHolder = ref<HTMLElement>();
 
 watch(externalScrollerClassHolder, () => {
@@ -89,8 +89,8 @@ watchEffect(setEventListeners);
       <div ref="scrollCanvasRef">
         <div ref="topSpacerRef"></div>
         <div ref="contentLayerRef" :class="contentLayerClass">
-          <template v-for="item in visibleItems" :key="item.index" >
-            <slot name="renderItem" :data="item.data" :index="item.index" :ref="getRef(item.index)" />
+          <template v-for="item in visibleItems" :key="item.index + (renderer?.getInvalidationID() || 0)" >
+            <slot name="renderItem" :data="item.data" :index="item.index" />
           </template>
         </div>
         <div ref="bottomSpacerRef"></div>
@@ -104,8 +104,8 @@ watchEffect(setEventListeners);
       <div ref="scrollCanvasRef">
         <div ref="topSpacerRef"></div>
         <div ref="contentLayerRef" :class="contentLayerClass">
-          <template v-for="item in visibleItems" :key="item.index" >
-            <slot name="renderItem" :data="item.data" :index="item.index" :ref="getRef(item.index)" />
+          <template v-for="item in visibleItems" :key="item.index + (renderer?.getInvalidationID() || 0)" >
+            <slot name="renderItem" :data="item.data" :index="item.index" />
           </template>
         </div>
         <div ref="bottomSpacerRef"></div>

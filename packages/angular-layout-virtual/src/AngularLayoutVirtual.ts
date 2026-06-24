@@ -120,9 +120,9 @@ export default class VirtualizedListAngular<T> implements AfterViewInit, OnDestr
     }
   }
 
-  trackByIndex(_position: number, item: ListItemProps<T>) {
-    return item.index;
-  }
+  trackByIndex = (_position: number, item: ListItemProps<T>) => {
+    return item.index + (this.renderer?.getInvalidationID() || 0);
+  };
 
   getItemContext(item: ListItemProps<T>): VirtualizedListItemContext<T> {
     return {

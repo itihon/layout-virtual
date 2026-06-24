@@ -73,7 +73,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
     this._renderer.clear();
 
-    await this._renderer.flush();
+    // await this._renderer.flush();
     await this._scrollContent(scrollPosition, 'down', 0);
 
     this._updateItemHeightRange();
@@ -102,7 +102,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     scrollableContainer.setTopSpacerHeight(scrollableContainer.getTopSpacerHeight()); // fix top spacer height before removing items to prevent layout shift
 
     renderer.clear();
-    await renderer.flush();
+    // await renderer.flush();
 
     await this._renderItems(viewportTop, 'down', 0, firstRenderedIndex); // starting from the first rendered index, otherwise layout shifts
 
