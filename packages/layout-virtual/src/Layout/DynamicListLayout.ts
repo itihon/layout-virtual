@@ -142,6 +142,8 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const rowGap = scrollableContainer.getRowGap();
     const viewportHeight = scrollableContainer.getViewportHeight();
     // const viewportTop = scrollableContainer.getViewportTop();
+    const topSpacerBottom = scrollableContainer.getTopSpacerBottom();
+    const bottomSpacerTop = scrollableContainer.getBottomSpacerTop();
     const scrollRatio = this._getScrollRatio();
     const { dataSize } = this._renderer;
 
@@ -152,18 +154,21 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
 
     const overscanAbove = direction === 'up' ? overscanHeight : 0;
     const overscanBelow = direction === 'down' ? overscanHeight : 0;
+    const isContentIntersectingViewport = (topSpacerBottom <= viewportTop + viewportHeight) && (bottomSpacerTop >= viewportTop);
 
     for (const item of scrollableContainer.getItems()) {
       const { offsetTop, offsetHeight } = item as HTMLElement;
 
-      // find the first visible index taking into account overscan height
-      if (minVisibleIndex === undefined && offsetTop + offsetHeight >= viewportTop - overscanAbove) {
-        minVisibleIndex = this._renderer.getIndex(item);
-      }
+      if (isContentIntersectingViewport) {
+        // find the first visible index taking into account overscan height
+        if (minVisibleIndex === undefined && offsetTop + offsetHeight >= viewportTop - overscanAbove) {
+          minVisibleIndex = this._renderer.getIndex(item);
+        }
 
-      // find the last visible index taking into account overscan height
-      if (maxVisibleIndex === undefined && offsetTop >= viewportTop + viewportHeight + overscanBelow) {
-        maxVisibleIndex = this._renderer.getIndex(item);
+        // find the last visible index taking into account overscan height
+        if (maxVisibleIndex === undefined && offsetTop >= viewportTop + viewportHeight + overscanBelow) {
+          maxVisibleIndex = this._renderer.getIndex(item);
+        }
       }
 
       // update min and max item height
@@ -190,19 +195,23 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     // const isFastScroll = (direction === 'down' && scrollableContainer.getBottomSpacerTop() < scrollTop)
     //   || (direction === 'up' && scrollableContainer.getTopSpacerBottom() > scrollTop + viewportHeight);
 
-    if (minVisibleIndex === undefined) { // all rendered items are above the viewport
-      minVisibleIndex = firstRenderedIndex;
-    }
+    // if (minVisibleIndex === undefined) { // all rendered items are above the viewport
+    //   minVisibleIndex = firstRenderedIndex;
+    // }
 
-    if (maxVisibleIndex === undefined) { // all rendered items are above the viewport
-      maxVisibleIndex = lastRenderedIndex;
-    }
+    // if (maxVisibleIndex === undefined) { // all rendered items are above the viewport
+    //   maxVisibleIndex = lastRenderedIndex;
+    // }
 
     if (minVisibleIndex !== undefined && maxVisibleIndex !== undefined) {
       if (direction === 'down' && renderEndIndex < dataSize - 1) {
         // renderStartIndex = minVisibleIndex === firstRenderedIndex ? minVisibleIndex : Math.max(renderStartIndex, Math.min(minVisibleIndex, middleIndex));
-        renderStartIndex = Math.max(renderStartIndex, Math.min(minVisibleIndex, middleIndex));
+        // renderStartIndex = Math.max(renderStartIndex, Math.min(minVisibleIndex, middleIndex));
         // renderStartIndex = Math.min(minVisibleIndex, middleIndex);
+
+        // if (renderStartIndex < minVisibleIndex) {
+          renderStartIndex = Math.min(minVisibleIndex, middleIndex);
+        // }
 
         // if (!isFastScroll) {
           renderEndIndex = maxVisibleIndex === lastRenderedIndex ? renderEndIndex : Math.max(maxVisibleIndex, middleIndex);
@@ -214,8 +223,12 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
         // }
 
         // renderEndIndex = maxVisibleIndex === lastRenderedIndex ? maxVisibleIndex : Math.min(renderEndIndex, Math.max(maxVisibleIndex, middleIndex));
-        renderEndIndex = Math.min(renderEndIndex, Math.max(maxVisibleIndex, middleIndex));
+        // renderEndIndex = Math.min(renderEndIndex, Math.max(maxVisibleIndex, middleIndex));
         // renderEndIndex = Math.max(maxVisibleIndex, middleIndex);
+
+        // if (renderEndIndex > maxVisibleIndex) {
+          renderEndIndex = Math.max(maxVisibleIndex, middleIndex);
+        // }
       }
     }
 
