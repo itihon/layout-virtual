@@ -65,7 +65,7 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
   }
 
   private _updateVisibleItems = async () => {
-    console.log('_updateVisibleItems')
+    console.log('🔄 _updateVisibleItems')
     const scrollableContainer = this._scrollableContainer;
     const scrollPosition = scrollableContainer.getScrollTop();
     const scrollHeight = scrollableContainer.getScrollHeight();
