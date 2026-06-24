@@ -1,0 +1,37 @@
+---
+title: Infinite scroll
+description: How to create a responsive virtualized grid with dynamic sized items and infinite scrolling using layout-virtual.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import Playground from '../../../components/Playground';
+import infiniteScrollStyles from '../../../examples/infinite-scroll/styles.css?raw'
+import infiniteScrollVanilla from '../../../examples/infinite-scroll/vanilla/infinite-scroll?raw';
+import infiniteScrollReact from '../../../examples/infinite-scroll/react/infinite-scroll?raw';
+import infiniteScrollVue from '../../../examples/infinite-scroll/vue/infinite-scroll.vue?raw';
+import infiniteScrollAngular from '../../../examples/infinite-scroll/angular/infinite-scroll?raw';
+import importsAngular from '../../../examples/infinite-scroll/angular/imports';
+
+Scroll to the bottom to trigger the next page of posts, which are fetched from a remote API and appended seamlessly to the existing list. A spinner item appears at the end while the request is in flight, then is replaced by the incoming posts.
+
+No total item count needs to be known upfront.
+
+The sentinel pattern drives pagination: when the last real item scrolls into the rendered range, the next fetch is triggered automatically.
+
+You can also resize the scrolling container — the items adapt to the available width just as they would in a normal document flow.
+
+<Tabs syncKey='frameworks'>
+  <TabItem label="JS / TS" icon='third-party:ts'>
+    <Playground client:visible params={{ ts: infiniteScrollVanilla, css: infiniteScrollStyles, html: '<div id="app"></div>' }} />
+  </TabItem>
+  <TabItem label="React" icon='third-party:react'>
+    <Playground client:visible params={{ tsx: infiniteScrollReact, css: infiniteScrollStyles }} />
+  </TabItem>
+  <TabItem label="Vue" icon='third-party:vue'>
+    <Playground client:visible params={{ vue: infiniteScrollVue, css: infiniteScrollStyles }} />
+  </TabItem>
+  <TabItem label="Angular" icon='third-party:angular'>
+    <Playground client:visible params={{ ts: infiniteScrollAngular,  css: infiniteScrollStyles, html: '<div id="app"></div>', imports: importsAngular }} />
+  </TabItem>
+</Tabs>
