@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.6.5
+
+### Patch Changes
+
+- aefdc2e: Fix layout shift bug in updating visible items on data change, fix incorrect visible items range calculation.
+
 ## 0.6.4
 
 ### Patch Changes
