@@ -24,10 +24,10 @@ Framework agnostic virtualization engine for responsive list and grid layout.
 
 | Package | Bundle size |
 | -------- | -------- |
-| layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=layout-virtual)](https://bundlejs.com/?q=layout-virtual) |
-| react-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}})](https://bundlejs.com/?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}}) |
-| vue-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}})](https://bundlejs.com/?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}}) |
-| angular-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}})](https://bundlejs.com/?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}}) |
+|<img width="24" height="24" src="./homepage/src/assets/js-svgrepo-com.svg" /> layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=layout-virtual)](https://bundlejs.com/?q=layout-virtual) |
+|<img width="24" height="24" src="./homepage/src/assets/react-svgrepo-com.svg" /> react-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}})](https://bundlejs.com/?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}}) |
+|<img width="24" height="24" src="./homepage/src/assets/vue-svgrepo-com.svg" /> vue-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}})](https://bundlejs.com/?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}}) |
+|<img width="24" height="24" src="./homepage/src/assets/angular-svgrepo-com.svg" /> angular-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}})](https://bundlejs.com/?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}}) |
 
 
 
