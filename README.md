@@ -17,16 +17,18 @@ Framework agnostic virtualization engine for responsive list and grid layout.
   - **No** item wrappers. Renders items as is, as if they are sitting in a regular container. 
   - **No** measurements; **no** estimated sizes are required from the application code.
   - **No** separate components for lists and grids; the difference is only in CSS styling. 
-  - **No** binary search, **no** tree-like data structures, **no** item size caching under the hood. Just pure math and precise scroll position calculation regardless of item sizes, margins, and gaps.
+  - **No** binary search, **no** tree-like data structures, **no** item size caching under the hood, which results in faster list initialization, lower memory consumption, and smaller bundle size. Just pure math and precise scroll position calculation regardless of item sizes, margins, and gaps.
 
 ## 🕑 Developing...
 
 | Package | Bundle size |
 | -------- | -------- |
-| layout-virtual | ![size](https://badgen.net/bundlephobia/minzip/layout-virtual) |
-| react-layout-virtual | ![size](https://badgen.net/bundlephobia/minzip/react-layout-virtual) |
-| vue-layout-virtual | ![size](https://badgen.net/bundlephobia/minzip/vue-layout-virtual) |
-| angular-layout-virtual | ![size](https://badgen.net/bundlephobia/minzip/angular-layout-virtual) |
+| layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=layout-virtual)](https://bundlejs.com/?q=layout-virtual) |
+| react-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}})](https://bundlejs.com/?q=react-layout-virtual) |
+| vue-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}})](https://bundlejs.com/?q=vue-layout-virtual) |
+| angular-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}})](https://bundlejs.com/?q=angular-layout-virtual) |
+
+
 
 
 ## Installation and usage
