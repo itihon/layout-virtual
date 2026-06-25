@@ -24,9 +24,9 @@ Framework agnostic virtualization engine for responsive list and grid layout.
 | Package | Bundle size |
 | -------- | -------- |
 | layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=layout-virtual)](https://bundlejs.com/?q=layout-virtual) |
-| react-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}})](https://bundlejs.com/?q=react-layout-virtual) |
-| vue-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}})](https://bundlejs.com/?q=vue-layout-virtual) |
-| angular-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}})](https://bundlejs.com/?q=angular-layout-virtual) |
+| react-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}})](https://bundlejs.com/?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}}) |
+| vue-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}})](https://bundlejs.com/?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}}) |
+| angular-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}})](https://bundlejs.com/?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}}) |
 
 
 
