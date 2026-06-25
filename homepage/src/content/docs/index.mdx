@@ -17,18 +17,19 @@ hero:
 ---
 
 import { 
+  Icon,
   Card, 
   CardGrid, 
   Tabs, 
   TabItem, 
-  LinkCard, 
+  Badge,
 } from '@astrojs/starlight/components';
 
 import ResponsiveGridExample from '../../components/ResponsiveGridExample';
 
 ## Framework agnostic virtualized layout
 
-#### Installation
+#### <Icon name="seti:npm" class='header-icon' color='coral' /> Installation
 
 <Tabs syncKey='frameworks'>
   <TabItem label="JS/TS" icon='third-party:ts'>
@@ -53,6 +54,12 @@ import ResponsiveGridExample from '../../components/ResponsiveGridExample';
   </TabItem>
 </Tabs>
 
+#### <Icon name="seti:webpack" class='header-icon' color='lightblue' /> Bundle size
+
+##### ~ 5 - 6 kB (gzip)
+
+<hr/>
+
 ## Built for content that refuses to stay one size
 
 <ResponsiveGridExample client:load />
@@ -60,46 +67,40 @@ import ResponsiveGridExample from '../../components/ResponsiveGridExample';
 #### Features
 
 <CardGrid stagger>
-	<Card title="Dynamic heights" icon="pencil">
-		Items render naturally, then the layout adapts as their measured size changes.
+	<Card title="Dynamic heights" icon="seti:smarty">
+		Items render naturally, then the layout adapts to their sizes.
 	</Card>
-	<Card title="Responsive grids" icon="document">
+	<Card title="Responsive grids" icon="seti:smarty">
     A list can become a grid as the container grows, without manual row math.
 	</Card>
-	<Card title="Framework adapters" icon="add-document">
+	<Card title="Framework adapters" icon="seti:smarty">
 		Use the core engine directly or reach for React, Vue, and Angular packages.
 	</Card>
-	<Card title="Window scrolling" icon="setting">
+	<Card title="Window scrolling" icon="seti:smarty">
     Virtualize inside a local scroller or coordinate with the document viewport.
+    <Badge text="soon" variant="note" />
 	</Card>
 </CardGrid>
 
 ## Use cases
 
 <CardGrid>
-  <LinkCard
-    title="Unknown height article feeds"
-    href="/guides/i18n/"
-    description="No need to crop article titles and adjust all cards to one fixed size."
-  />
-  <LinkCard
-    title="Contact lists with sticky groups"
-    href="/guides/i18n/"
-    description="Group list items easily."
-  />
-  <LinkCard
-    title="Chat messages and live insertion"
-    href="/guides/i18n/"
-    description="A list with scroll to bottom functionality."
-  />
-  <LinkCard
-    title="Grids with dynamic row heights and column number"
-    href="/guides/i18n/"
-    description="No need to calculate rows and columns manually."
-  />
-  <LinkCard
-    title="Lazy loaded ranges at arbitrary scroll position"
-    href="/guides/i18n/"
-    description="Not necessary to load all items before the user reaches intended scroll position."
-  />
+  <Card title="Unknown height article feeds" icon="seti:happenings">
+    No need to crop article titles and adjust all cards to one fixed size.
+  </Card>
+  <Card title="Contact lists with sticky groups" icon="seti:notebook">
+    Group list items easily.
+    <Badge text="soon" variant="note" />
+  </Card>
+  <Card title="Chat messages and live insertion" icon="comment-alt">
+    A list with scroll to bottom functionality.
+    <Badge text="soon" variant="note" />
+  </Card>
+  <Card title="Grids with dynamic row heights and column number" icon="pnpm">
+    No need to calculate rows and columns manually.
+  </Card>
+  <Card title="Lazy loaded ranges at arbitrary scroll position" icon="seti:default">
+    Not necessary to load all items before the user reaches intended scroll position.
+    <Badge text="soon" variant="note" />
+  </Card>
 </CardGrid>
