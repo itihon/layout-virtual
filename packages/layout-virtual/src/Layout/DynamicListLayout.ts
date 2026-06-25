@@ -71,12 +71,13 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const scrollHeight = scrollableContainer.getScrollHeight();
     const clientHeight = scrollableContainer.getClientHeight();
 
+    this._updateItemHeightRange();
+
     this._renderer.clear();
 
     // await this._renderer.flush();
-    await this._scrollContent(scrollPosition, 'down', 0);
+    // await this._renderItems(scrollPosition, 'down', 0);
 
-    this._updateItemHeightRange();
     this._updateScrollHeight();
 
     scrollableContainer.refresh();
@@ -84,9 +85,10 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     const newScrollHeight = scrollableContainer.getScrollHeight();
     const newClientHeight = scrollableContainer.getClientHeight();
     const scrollHeightRatio = ((newScrollHeight - newClientHeight) || 1) / ((scrollHeight - clientHeight) || 1);
+    const newScrollPosition = scrollPosition * scrollHeightRatio;
 
-    scrollableContainer.setScrollTop(scrollPosition * scrollHeightRatio);
-    this._scrollContent(scrollPosition * scrollHeightRatio, 'down', 0);
+    scrollableContainer.setScrollTop(newScrollPosition);
+    this._scrollContent(newScrollPosition, 'down', 0);
   };
 
   private _updateVisibleItemsOnDataChange = async () => {
@@ -112,12 +114,8 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
     this._updateItemHeightRange();
     this._updateScrollHeight();
 
-    scrollableContainer.refresh();
-
-    const topSpacerHeightDelta = topSpacerHeight - scrollableContainer.getTopSpacerHeight();
-
     scrollableContainer.setScrollTop(scrollTop);
-    scrollableContainer.setViewportTop(viewportTop - topSpacerHeightDelta); // spacers have flex-shrink: 0 by default 
+    scrollableContainer.setViewportTop(viewportTop); // spacers have flex-shrink: 1 by default 
     
     console.log('🔃 _updateVisisbleItemsOnDataChange');
   };
@@ -420,11 +418,23 @@ export default class DynamicListLayout<ItemData = unknown, ItemRenderer = Functi
   }
 
   private _updateScrollHeight = () => {
+    const scrollableContainer = this._scrollableContainer;
     const avgItemHeight = this._getAvgItemHeight();
-    const columnCount = this._scrollableContainer.getColumnCount();
+    const columnCount = scrollableContainer.getColumnCount();
     const scrollHeight = avgItemHeight * (this._renderer.dataSize / columnCount);
-    this._scrollableContainer.setScrollHeight(scrollHeight);
-    this._scrollableContainer.setScrollCanvasHeight(scrollHeight);
+    const viewportHeight = scrollableContainer.getViewportHeight();
+    const scrollCanvasHeight = scrollableContainer.getScrollCanvasHeight();
+    
+    scrollableContainer.setScrollHeight(scrollHeight);
+
+    if (scrollHeight <= viewportHeight) {
+      scrollableContainer.setScrollCanvasHeight(viewportHeight);
+      scrollableContainer.setTopSpacerHeight(0);
+      scrollableContainer.setBottomSpacerHeight('auto');
+    }
+    else {
+      scrollableContainer.setScrollCanvasHeight(Math.max(scrollCanvasHeight, scrollHeight));
+    }
 
     console.log('_updateScrollHeight, minItemHeight:', this._minItemHeight, 'maxItemHeight:', this._maxItemHeight, 'avgHeight:', avgItemHeight, 'scrollHeight:', scrollHeight)
   };
