@@ -1,5 +1,6 @@
 :root {
   --sl-content-width: 76rem;
+  --sl-color-gray-5: #525d72;
 }
 
 :root[data-theme="light"] {
@@ -7,7 +8,7 @@
   --sl-color-bg-nav: #c4d2e4;
   --sl-color-bg-sidebar: #c4d2e4; */
   --sl-color-black: aliceblue;
-  --sl-color-gray-5: slategray;
+  --sl-color-gray-5: #bbc5ce;
   --sl-color-gray-6: whitesmoke;
   --sl-color-gray-7: rgb(242, 247, 251);
 }

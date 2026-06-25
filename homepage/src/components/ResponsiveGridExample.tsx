@@ -19,7 +19,7 @@ const headers = [
 
 const descriptions = [
   'A very short description.',
-  'A much longer description text that wraps to the next lines at different card sizes.',
+  'A much longer description that wraps to the next line on different card sizes, occupying more vertical space and increasing the card\'s height. This is often the case, especially for blog posts, comments or news feeds.',
 ];
 
 function ListItem({ data, index }: ListItemProps<Data>) {
