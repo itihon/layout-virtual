@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.6.6
+
+### Patch Changes
+
+- 691cdb5: Fix layout shifting after adding new items and content trembling on resize.
+
 ## 0.6.5
 
 ### Patch Changes

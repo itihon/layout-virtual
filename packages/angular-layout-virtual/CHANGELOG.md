@@ -1,5 +1,13 @@
 # angular-layout-virtual
 
+## 0.5.6
+
+### Patch Changes
+
+- 691cdb5: Fix layout shifting after adding new items and content trembling on resize.
+- Updated dependencies [691cdb5]
+  - layout-virtual@0.6.6
+
 ## 0.5.5
 
 ### Patch Changes
