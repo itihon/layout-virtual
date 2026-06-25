@@ -20,7 +20,6 @@ Framework agnostic virtualization engine for responsive list and grid layout.
   - **No** binary search, **no** tree-like data structures, **no** item size caching under the hood, which results in faster list initialization, lower memory consumption, and smaller bundle size. Just pure math and precise scroll position calculation regardless of item sizes, margins, and gaps.
   - **No** empty canvas in desktop Chrome during fast scrolling.
 
-## 🕑 Developing...
 
 | Package | Bundle size |
 | -------- | -------- |
