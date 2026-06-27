@@ -75,19 +75,17 @@ function loadMore(limit: number, skip: number) {
 
   api.setData(getListData());
 
-  setTimeout(() => {
-    fetch(apiUrl)
-      .then(r => r.json())
-      .then(result => {
-        dataLimit = result.total;
-        data = data.concat(result.posts);
-      })
-      .catch(console.error)
-      .finally(() => {
-        isLoading = false;
-        api.setData(getListData());
-      });
-  }, 5000)
+  fetch(apiUrl)
+    .then(r => r.json())
+    .then(result => {
+      dataLimit = result.total;
+      data = data.concat(result.posts);
+    })
+    .catch(console.error)
+    .finally(() => {
+      isLoading = false;
+      api.setData(getListData());
+    });
 }
 
 const title = document.createElement('h4');

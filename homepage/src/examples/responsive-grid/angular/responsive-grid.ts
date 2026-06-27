@@ -2,7 +2,7 @@ import '@angular/compiler';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import LayoutVirtual, { type VirtualizedListAngularClasses } from 'angular-layout-virtual';
+import LayoutVirtual from 'angular-layout-virtual';
 
 type Data = { i: number; image?: string; title: string; excerpt: string };
 
@@ -31,18 +31,26 @@ const excerpts = [
   template: `
     <h4>Try resizing the container and scroll.</h4>
     <div>Rendered indices {{ startIndex }} - {{ endIndex }}, total {{ total }} of {{ data.length }}.</div>
-    <layout-virtual [overscanHeight]="200" [data]="data" [scrollerClass]="styling.scrollerClass" [viewportClass]="styling.viewportClass" [contentLayerClass]="styling.contentLayerClass" (afterItemsRendered)="updateStats(...$event)">
-      <ng-template #renderItem let-data="data" let-index="index">
-        <div class="article-card" [attr.data-index]="index">
-          <div class="ac-index">#{{ data.i }}</div>
-          <img *ngIf="data.image" class="ac-image" [src]="data.image" alt="" loading="lazy">
-          <div class="ac-body">
-            <h3 class="ac-title">{{ data.title }}</h3>
-            <p class="ac-excerpt">{{ data.excerpt }}</p>
-            <button class="ac-button">Learn more</button>
+    <layout-virtual 
+      [overscanHeight]="200" 
+      [data]="data" 
+      scrollerClass="lv-scroller"
+      viewportClass="lv-viewport"
+      contentLayerClass="lv-content-layer"
+      (afterItemsRendered)="updateStats(...$event)">
+        <ng-template #renderItem let-data="data" let-index="index">
+          <div class="article-card" [attr.data-index]="index">
+            <div class="ac-index">#{{ data.i }}</div>
+            @if (data.image) {
+              <img class="ac-image" [src]="data.image" alt="" loading="lazy">
+            }
+            <div class="ac-body">
+              <h3 class="ac-title">{{ data.title }}</h3>
+              <p class="ac-excerpt">{{ data.excerpt }}</p>
+              <button class="ac-button">Learn more</button>
+            </div>
           </div>
-        </div>
-      </ng-template>
+        </ng-template>
     </layout-virtual>
   `,
 })
@@ -55,12 +63,6 @@ export default class ResponsiveGridExample {
   }));
   startIndex = 0;
   endIndex = 0;
-
-  styling: VirtualizedListAngularClasses = {
-    scrollerClass: 'lv-scroller',
-    viewportClass: 'lv-viewport',
-    contentLayerClass: 'lv-content-layer',
-  };
 
   get total() {
     return this.endIndex - this.startIndex + 1;
