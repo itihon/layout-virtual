@@ -35,9 +35,10 @@ Framework agnostic virtualization engine for responsive list and grid layout.
 
 See the library homepage <font size="+1">**[Layout Virtual](https://itihon.github.io/layout-virtual/)**</font> for details.
 
+<img src="./homepage/src/assets/simplescreenrecorder-2026-07-06_15.08.42-ezgif.com-optimize.gif" >
 
-<video controls width="480" loop>
+<!-- <video controls width="480" loop>
   <source src="./homepage/src/assets/simplescreenrecorder-2026-07-06_15.08.42-ezgif.com-mkv-to-webm-converter.webm" type="video/webm" />
 
   <source src="./homepage/src/assets/simplescreenrecorder-2026-07-06_15.08.42-ezgif.com-video-compressor.mp4" type="video/mp4" />
-</video>
+</video> -->
