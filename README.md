@@ -33,7 +33,7 @@ Framework agnostic virtualization engine for responsive list and grid layout.
 
 ## Installation and usage
 
-See the library homepage <font size="+1">**[Layout Virtual](https://itihon.github.io/layout-virtual/)**</font> for details.
+See the <font size="+1">**[library homepage](https://itihon.github.io/layout-virtual/)**</font> for details.
 
 <img src="./homepage/src/assets/simplescreenrecorder-2026-07-06_15.08.42-ezgif.com-optimize.gif" >
 
