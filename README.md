@@ -18,7 +18,7 @@ Framework agnostic virtualization engine for responsive list and grid layout.
   - **No** measurements; **no** estimated sizes are required from the application code.
   - **No** separate components for lists and grids; the difference is only in CSS styling. 
   - **No** binary search, **no** tree-like data structures, **no** item size caching under the hood, which results in faster list initialization, lower memory consumption, and smaller bundle size. Just pure math and precise scroll position calculation regardless of item sizes, margins, and gaps.
-  - **No** empty canvas in desktop Chrome during fast scrolling.
+  - **No** blank canvas in desktop Chrome during fast scrolling.
 
 
 | Package | Bundle size |
@@ -33,4 +33,11 @@ Framework agnostic virtualization engine for responsive list and grid layout.
 
 ## Installation and usage
 
-See the library homepage <font size="+1">**[Layout Virtual](https://itihon.github.io/layout-virtual/)**</font>
+See the library homepage <font size="+1">**[Layout Virtual](https://itihon.github.io/layout-virtual/)**</font> for details.
+
+
+<video controls width="480" loop>
+  <source src="./homepage/src/assets/simplescreenrecorder-2026-07-06_15.08.42-ezgif.com-mkv-to-webm-converter.webm" type="video/webm" />
+
+  <source src="./homepage/src/assets/simplescreenrecorder-2026-07-06_15.08.42-ezgif.com-video-compressor.mp4" type="video/mp4" />
+</video>
