@@ -1,5 +1,13 @@
 # angular-layout-virtual
 
+## 0.5.7
+
+### Patch Changes
+
+- fb806a0: Fix Angular NG0203 token injection failed.
+- Updated dependencies [fb806a0]
+  - layout-virtual@0.6.7
+
 ## 0.5.6
 
 ### Patch Changes
