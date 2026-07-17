@@ -42,3 +42,7 @@ See the <font size="+1">**[library homepage](https://itihon.github.io/layout-vir
 
   <source src="./homepage/src/assets/simplescreenrecorder-2026-07-06_15.08.42-ezgif.com-video-compressor.mp4" type="video/mp4" />
 </video> -->
+
+## How it works
+
+See the <font size="+1">**[article on Medium.com](https://medium.com/@kalabin.alexandr/virtualizing-dynamic-lists-and-responsive-grids-without-offset-tables-or-estimated-heights-b379b28e4a22)**</font>.
