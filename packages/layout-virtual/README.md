@@ -1,5 +1,7 @@
 # layout-virtual
 
+[![LLM Friendly docs](https://img.shields.io/badge/LLM-Friendly-blue)](https://itihon.github.io/layout-virtual/llms.txt)
+
 Virtualization engine for scrollable responsive lists and grids with dynamic item sizes. Includes the core layout virtualizer and DOM renderer.
 
 - Homepage: [https://itihon.github.io/layout-virtual/](https://itihon.github.io/layout-virtual/)
