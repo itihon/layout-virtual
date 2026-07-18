@@ -4,7 +4,7 @@ Framework-agnostic virtualization engine for dynamic-height lists and responsive
 
 ## Useful Docs For AI Agents
 
-- [Full LLM documentation](/llms-full.md): install commands, API contracts, framework usage, examples, and minimal CSS.
+- [Full LLM documentation](https://itihon.github.io/layout-virtual/llms-full.md): install commands, API contracts, framework usage, examples, and minimal CSS.
 - [README](https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/README.md): project overview and feature summary.
 - [Homepage intro](https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/content/docs/index.mdx): installation tabs, feature list, and use cases.
 - [API docs](https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/content/docs/API/index.mdx): props, renderer contracts, DOM hooks, events, and framework type notes.
