@@ -1,5 +1,13 @@
 # vue-layout-virtual
 
+## 0.5.8
+
+### Patch Changes
+
+- bb35af9: Add LLM docs link to README.md
+- Updated dependencies [bb35af9]
+  - layout-virtual@0.6.8
+
 ## 0.5.7
 
 ### Patch Changes

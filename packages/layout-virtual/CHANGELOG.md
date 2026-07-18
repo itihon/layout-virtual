@@ -1,5 +1,11 @@
 # layout-virtual
 
+## 0.6.8
+
+### Patch Changes
+
+- bb35af9: Add LLM docs link to README.md
+
 ## 0.6.7
 
 ### Patch Changes
