@@ -4,6 +4,7 @@
 [![NPM Package]](https://npmjs.org/package/layout-virtual)
 [![Code Coverage]](https://codecov.io/gh/itihon/layout-virtual)
 [![semantic-release]](https://github.com/semantic-release/semantic-release)
+[![LLM Friendly docs](https://img.shields.io/badge/LLM-Friendly-blue)](https://itihon.github.io/layout-virtual/llms.txt)
 
 [License]: https://img.shields.io/badge/License-MIT-blue.svg
 [Build Status]: https://github.com/itihon/layout-virtual/actions/workflows/deploy-homepage.yml/badge.svg

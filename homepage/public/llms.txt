@@ -1,0 +1,40 @@
+# Layout Virtual
+
+Framework-agnostic virtualization engine for dynamic-height lists and responsive grids. It renders only the visible range plus overscan while allowing items to keep normal DOM structure, CSS layout, margins, gaps, and dynamic sizes.
+
+## Useful Docs For AI Agents
+
+- [Full LLM documentation](/llms-full.md): install commands, API contracts, framework usage, examples, and minimal CSS.
+- [README](https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/README.md): project overview and feature summary.
+- [Homepage intro](https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/content/docs/index.mdx): installation tabs, feature list, and use cases.
+- [API docs](https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/content/docs/API/index.mdx): props, renderer contracts, DOM hooks, events, and framework type notes.
+- [Responsive grid docs](https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/content/docs/examples/responsive-grid-with-dynamic-card-sizes.mdx): responsive dynamic-card grid example.
+- [Infinite scroll docs](https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/content/docs/examples/infinite-scroll.mdx): pagination example using `onAfterItemsRendered`.
+
+## Example Source Paths
+
+- Responsive grid CSS: `https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/examples/responsive-grid/styles.css`
+- Responsive grid JS/TS: `https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/examples/responsive-grid/vanilla/responsive-grid.ts`
+- Responsive grid React: `https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/examples/responsive-grid/react/responsive-grid.tsx`
+- Responsive grid Vue: `https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/examples/responsive-grid/vue/responsive-grid.vue`
+- Responsive grid Angular: `https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/examples/responsive-grid/angular/responsive-grid.ts`
+- Infinite scroll CSS: `https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/examples/infinite-scroll/styles.css`
+- Infinite scroll JS/TS: `https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/examples/infinite-scroll/vanilla/infinite-scroll.ts`
+- Infinite scroll React: `https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/examples/infinite-scroll/react/infinite-scroll.tsx`
+- Infinite scroll Vue: `https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/examples/infinite-scroll/vue/infinite-scroll.vue`
+- Infinite scroll Angular: `https://raw.githubusercontent.com/itihon/layout-virtual/refs/heads/main/homepage/src/examples/infinite-scroll/angular/infinite-scroll.ts`
+
+## Packages
+
+- `layout-virtual`: vanilla DOM component and core engine.
+- `react-layout-virtual`: React adapter.
+- `vue-layout-virtual`: Vue adapter.
+- `angular-layout-virtual`: Angular adapter.
+
+## Critical Implementation Notes
+
+- Every rendered item root must include `data-index` set to the provided `index`.
+- Use `scrollerClass`, `viewportClass`, and `contentLayerClass` to style the generated DOM layers.
+- Put grid/flex layout CSS on the content layer class, not on each item.
+- Use `onAfterItemsRendered(startIndex, endIndex, items)` for rendered-range tracking and infinite-scroll sentinels.
+- The vanilla component returns `{ container, api }`; call `api.setData(nextData)` to update data imperatively.
