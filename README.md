@@ -1,14 +1,16 @@
 # Layout virtual
 [![License][]](https://opensource.org/licenses/MIT)
 [![Build Status]](https://github.com/itihon/layout-virtual/actions/workflows/deploy-homepage.yml)
-[![NPM Package]](https://npmjs.org/package/layout-virtual)
 [![Code Coverage]](https://codecov.io/gh/itihon/layout-virtual)
 [![semantic-release]](https://github.com/semantic-release/semantic-release)
 [![LLM Friendly docs](https://img.shields.io/badge/LLM-Friendly-blue)](https://itihon.github.io/layout-virtual/llms.txt)
 
 [License]: https://img.shields.io/badge/License-MIT-blue.svg
 [Build Status]: https://github.com/itihon/layout-virtual/actions/workflows/deploy-homepage.yml/badge.svg
-[NPM Package]: https://img.shields.io/npm/v/layout-virtual.svg
+[NPM Package layout-virtual]: https://img.shields.io/npm/v/layout-virtual.svg
+[NPM Package react-layout-virtual]: https://img.shields.io/npm/v/react-layout-virtual.svg
+[NPM Package vue-layout-virtual]: https://img.shields.io/npm/v/vue-layout-virtual.svg
+[NPM Package angular-layout-virtual]: https://img.shields.io/npm/v/angular-layout-virtual.svg
 [Code Coverage]: https://codecov.io/gh/itihon/layout-virtual/branch/master/graph/badge.svg
 [semantic-release]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
 
@@ -22,12 +24,12 @@ Framework agnostic virtualization engine for responsive list and grid layout.
   - **No** blank canvas in desktop Chrome during fast scrolling.
 
 
-| Package | Bundle size |
-| -------- | -------- |
-|<img width="24" height="24" src="./homepage/src/assets/js-svgrepo-com.svg" /> layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=layout-virtual)](https://bundlejs.com/?q=layout-virtual) |
-|<img width="24" height="24" src="./homepage/src/assets/react-svgrepo-com.svg" /> react-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}})](https://bundlejs.com/?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}}) |
-|<img width="24" height="24" src="./homepage/src/assets/vue-svgrepo-com.svg" /> vue-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}})](https://bundlejs.com/?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}}) |
-|<img width="24" height="24" src="./homepage/src/assets/angular-svgrepo-com.svg" /> angular-layout-virtual | [![Bundle size](https://deno.bundlejs.com/badge?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}})](https://bundlejs.com/?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}}) |
+| Package | Version | Bundle size |
+| -------- | ------- | -------- |
+|<img width="24" height="24" src="./homepage/src/assets/js-svgrepo-com.svg" /> layout-virtual | [![NPM Package layout-virtual]](https://npmjs.org/package/layout-virtual) | [![Bundle size](https://deno.bundlejs.com/badge?q=layout-virtual)](https://bundlejs.com/?q=layout-virtual) |
+|<img width="24" height="24" src="./homepage/src/assets/react-svgrepo-com.svg" /> react-layout-virtual | [![NPM Package react-layout-virtual]](https://npmjs.org/package/react-layout-virtual) | [![Bundle size](https://deno.bundlejs.com/badge?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}})](https://bundlejs.com/?q=react-layout-virtual&config={"esbuild":{"external":["react","react-dom"]}}) |
+|<img width="24" height="24" src="./homepage/src/assets/vue-svgrepo-com.svg" /> vue-layout-virtual | [![NPM Package vue-layout-virtual]](https://npmjs.org/package/vue-layout-virtual) | [![Bundle size](https://deno.bundlejs.com/badge?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}})](https://bundlejs.com/?q=vue-layout-virtual&config={"esbuild":{"external":["vue"]}}) |
+|<img width="24" height="24" src="./homepage/src/assets/angular-svgrepo-com.svg" /> angular-layout-virtual | [![NPM Package angular-layout-virtual]](https://npmjs.org/package/angular-layout-virtual) | [![Bundle size](https://deno.bundlejs.com/badge?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}})](https://bundlejs.com/?q=angular-layout-virtual&config={"esbuild":{"external":["@angular/core","@angular/common"]}}) |
 
 
 
