@@ -13,6 +13,35 @@ import responsiveGridVue from '../../../examples/responsive-grid/vue/responsive-
 import responsiveGridAngular from '../../../examples/responsive-grid/angular/responsive-grid?raw';
 import importsAngular from '../../../examples/responsive-grid/angular/imports';
 
+<div style="height: 0; overflow: hidden;">
+  <h2>Example code</h2>
+
+  <h3>Styling</h3>
+  <pre>
+    <code>{responsiveGridStyles}</code>
+  </pre>
+
+  <h3>Vanilla</h3>
+  <pre>
+    <code>{responsiveGridVanilla}</code>
+  </pre>
+
+  <h3>React</h3>
+  <pre>
+    <code>{responsiveGridReact}</code>
+  </pre>
+
+  <h3>Vue</h3>
+  <pre>
+    <code>{responsiveGridVue}</code>
+  </pre>
+
+  <h3>Angular</h3>
+  <pre>
+    <code>{responsiveGridAngular}</code>
+  </pre>
+</div>
+
 Try resizing the scroller: the same items adapt to the available width, collapsing into a single-column list when the container becomes too narrow and expanding back into a grid when there's room again.
 
 As the column width changes, text wraps across different numbers of lines, so each card's height is dynamic and depends on its actual content. No separate list/grid component, no item wrapper, manual measurement step, or estimated item sizes are required. Only data, a render function/template, and ordinary CSS classes need to be provided.

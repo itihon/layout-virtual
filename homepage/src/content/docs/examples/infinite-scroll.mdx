@@ -13,6 +13,35 @@ import infiniteScrollVue from '../../../examples/infinite-scroll/vue/infinite-sc
 import infiniteScrollAngular from '../../../examples/infinite-scroll/angular/infinite-scroll?raw';
 import importsAngular from '../../../examples/infinite-scroll/angular/imports';
 
+<div style="height: 0; overflow: hidden;">
+  <h2>Example code</h2>
+
+  <h3>Styling</h3>
+  <pre>
+    <code>{infiniteScrollStyles}</code>
+  </pre>
+
+  <h3>Vanilla</h3>
+  <pre>
+    <code>{infiniteScrollVanilla}</code>
+  </pre>
+
+  <h3>React</h3>
+  <pre>
+    <code>{infiniteScrollReact}</code>
+  </pre>
+
+  <h3>Vue</h3>
+  <pre>
+    <code>{infiniteScrollVue}</code>
+  </pre>
+
+  <h3>Angular</h3>
+  <pre>
+    <code>{infiniteScrollAngular}</code>
+  </pre>
+</div>
+
 Scroll to the bottom to trigger the next page of posts, which are fetched from a remote API and appended seamlessly to the existing list. A spinner item appears at the end while the request is in flight, then is replaced by the incoming posts.
 
 No total item count needs to be known upfront.
